@@ -30,7 +30,7 @@ from django.conf.urls import url
 urlpatterns = [
     
     # INICIO TABLERO DE MANDO
-    path('', inicioTableroMando, name='inicio'),
+    path('inicio-TableroMando/', inicioTableroMando, name='inicio'),
     # PROGRAMACION
     path('programacion/', programacion),
 
