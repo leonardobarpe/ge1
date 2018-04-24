@@ -26,7 +26,8 @@
 		</div>
 
 		<div class="card card-block bg-light col-md-12 my-3">
-			<legend>VARIABLES</legend>
+			<legend style="margin-top:10px;">VARIABLES</legend>
+			<div class="var_formula" style="margin-left:20px;">
 			<div class="row">
 				<div class="form-group col-md-3">
 					<label for="nombre_variable_1">NOMBRE</label>
@@ -94,7 +95,7 @@
 			</div>
 
 			<div class="row">
-				<div class="form-group col-md-6">
+				<div class="form-group col-md-7">
 					<label for="formula">FORMULA</label>
 					<div id="contenedor_formula" class="math-tex">
 						`{{medicion.formula}}`
@@ -102,51 +103,51 @@
 					<input type="hidden" id="formula" name="formula">
 				</div>
 				<div class="form-group col-md-2">
-					<button class="btn btn-success btn-sm" type="button" id="btn_actualizar"><i class="fas fa-sync-alt"></i> Actualizar formula</button>
+					<button class="btn btn-default btn-sm" type="button" id="btn_actualizar"><i class="fas fa-sync-alt"></i> Actualizar formula</button>
 				</div>
 			</div>
-
-			<div class="row f_tasa_variacion">
-				<div class="form-group col-md-7">
-					<label for="interpretacion_resultado">INTERPRETACION</label>
-					{{ form_medicion.interpretacion_resultado }}
-				</div>
-				<div class="form-group col-md-5">
-					<label for="rangos_medicion">RANGOS DE MEDICION</label>
-					<div class="form-group">
-						<span><b>0</b> <input id="rangos_medicion" type="text" class="span2" value="" data-slider-min="0" data-slider-max="100" data-slider-step="10" data-slider-value="{% if medicion %}[{{medicion.rango_inicial}},{{medicion.rango_final}}]{% else %}[20,80]{% endif %}"/> <b>100</b></span>
-						{# <br> #}
-						{# <div id="graficaMedicion" style="width: 100%;"></div> #}
-					</div>
-					<span id="span_rangos" style="align:center;">30:60</span>
-				</div>
 			</div>
-			<legend class="f_tasa_variacion">RESPONSABLES</legend>
-			<div class="row f_tasa_variacion">
-				<div class="form-group col-md-3">
-					<label for="responsable_reporte">REPORTE</label>
-					{{ form_medicion.responsable_reporte }}
-				</div>
-				<div class="form-group col-md-3">
-					<label for="responsable_consolidacion">CONSOLIDACIÓN</label>
-					{{ form_medicion.responsable_consolidacion }}
-				</div>
-				<div class="form-group col-md-3">
-					<label for="responsable_analisis_seguimiento">ANALISIS Y SEGUIMIENTO</label>
-					{{ form_medicion.responsable_analisis_seguimiento }}
-				</div>
-				<div class="form-group col-md-3">
-					<label for="responsable_decisiones">DECISIONES</label>
-					{{ form_medicion.responsable_decisiones }}
-				</div>
+		</div>
+
+		<div class="row">
+			<div class="form-group col-md-7">
+				<label for="interpretacion_resultado">INTERPRETACION</label>
+				{{ form_medicion.interpretacion_resultado }}
 			</div>
-
-			<span class="dropdown-divider"></span>
-
-			<div class="form-group">
-				<button type="submit" id="guardar_medicion" name="guardar_medicion" class="btn btn-success float-right">GUARDAR MEDICION</button>
+			<div class="form-group col-md-5">
+				<label for="rangos_medicion">RANGOS DE MEDICION</label>
+				<div class="form-group">
+					<span><b>0</b> <input id="rangos_medicion" type="text" class="span2" value="" data-slider-min="0" data-slider-max="100" data-slider-step="10" data-slider-value="{% if medicion %}[{{medicion.rango_inicial}},{{medicion.rango_final}}]{% else %}[20,80]{% endif %}"/> <b>100</b></span>
+					{# <br> #}
+					{# <div id="graficaMedicion" style="width: 100%;"></div> #}
+				</div>
+				<span id="span_rangos" style="align:center;">30:60</span>
 			</div>
+		</div>
+		<legend>RESPONSABLES</legend>
+		<div class="row">
+			<div class="form-group col-md-3">
+				<label for="responsable_reporte">REPORTE</label>
+				{{ form_medicion.responsable_reporte }}
+			</div>
+			<div class="form-group col-md-3">
+				<label for="responsable_consolidacion">CONSOLIDACIÓN</label>
+				{{ form_medicion.responsable_consolidacion }}
+			</div>
+			<div class="form-group col-md-3">
+				<label for="responsable_analisis_seguimiento">ANALISIS Y SEGUIMIENTO</label>
+				{{ form_medicion.responsable_analisis_seguimiento }}
+			</div>
+			<div class="form-group col-md-3">
+				<label for="responsable_decisiones">DECISIONES</label>
+				{{ form_medicion.responsable_decisiones }}
+			</div>
+		</div>
 
+		<span class="dropdown-divider"></span>
+
+		<div class="form-group">
+			<button type="submit" id="guardar_medicion" name="guardar_medicion" class="btn btn-success float-right">GUARDAR MEDICION</button>
 		</div>
 	</div>
 </form>

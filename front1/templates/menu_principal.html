@@ -1,26 +1,54 @@
 <div id="menu" class="row">
 	<div class="container-fluid">
-		<nav class="navbar navbar-expand-sm navbar-dark" style="background-color: #0b458f;">
+		<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+			<a class="navbar-brand" href="{% url 'inicio' %}">GE</a>
 			<div class="collapse navbar-collapse" id="navbarSupportedContent">
 				<ul class="navbar-nav mr-auto">
-					<li class="nav-item dropdown">
-						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">VOLVER</a> 
-						<div class="dropdown-menu" aria-labelledby="navbarDropdown">
-					  		<a class="dropdown-item" href="http://190.14.255.23:8080/sinco/WelcomePresentation.po"><i class="fas fa-exchange-alt"></i> | REGRESAR</a>
-						</div>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link" href="{% url 'inicio' %}"><i class="fas fa-home"></i></a>
-					</li>
-					<li class="nav-item dropdown">
-						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">TABLERO DE MANDO</a>
-						<div class="dropdown-menu" aria-labelledby="navbarDropdown">
-							<a class="dropdown-item" href="{% url 'inicio' %}"><i class="fas fa-tachometer-alt"></i> | Indicadores</a>
-							<a class="dropdown-item disabled" href="#" >Tablero Plan de Desarrollo (en construccion) <i class="fas fa-wrench"></i></a>
-							<a class="dropdown-item disabled" href="#">Tablero Sistema de Gestion  (en construccion) <i class="fas fa-wrench"></i></a>
-							<a class="dropdown-item disabled" href="#">Tablero MIPG  (en construccion) <i class="fas fa-wrench"></i></a>
-						</div>
-					</li>
+				<li class="nav-item dropdown ">
+					<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Planeación estratégica</a>
+					<div class="dropdown-menu" aria-labelledby="navbarDropdown">
+						<a class="dropdown-item" href="#">Plan de desarrollo</a>
+						<a class="dropdown-item" href="#">Paln de accion</a>
+					</div>
+				</li>
+				<li class="nav-item dropdown">
+					<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Requerimientos</a>
+					<div class="dropdown-menu" aria-labelledby="navbarDropdown">
+						<a class="dropdown-item" href="#">Diligenciar Requerimiento</a>
+						<a class="dropdown-item" href="#">Atender</a>
+						<a class="dropdown-item" href="#">Consultas</a>
+						<a class="dropdown-item" href="#">Reportes</a>
+					</div>
+				</li>
+				<li class="nav-item dropdown">
+					<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Gestion contractual</a>
+					<div class="dropdown-menu" aria-labelledby="navbarDropdown">
+						<a class="dropdown-item" href="#">Imputacion presupuestal</a>
+						<a class="dropdown-item" href="#">Estudio previo</a>
+						<a class="dropdown-item" href="#">Tercero</a>
+						<a class="dropdown-item" href="#">Ver estudios previos</a>
+						<a class="dropdown-item" href="#">Ver Contratos</a>
+					</div>
+				</li>
+				<li class="nav-item dropdown">
+					<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Gestion de calidad</a>
+					<div class="dropdown-menu" aria-labelledby="navbarDropdown">
+						<a class="dropdown-item" href="#">Mapa de prcesos</a>
+						<a class="dropdown-item" href="#">Procesos</a>
+						<a class="dropdown-item" href="#">Consultas generales</a>
+					</div>
+				</li>
+				<li class="nav-item dropdown">
+					<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Tablero de mando</a>
+					<div class="dropdown-menu" aria-labelledby="navbarDropdown">
+						<a class="dropdown-item" href="{% url 'indicador' %}?listar_i">Indicadores</a>
+						<a class="dropdown-item" href="#">Tablero Plan de Desarrollo</a>
+						<a class="dropdown-item" href="#">Tablero Sistema de Gestion</a>
+						<a class="dropdown-item" href="#">Tablero MIPG</a>
+						<!--  -->
+						<!--  -->
+					</div>
+				</li>
 				</ul>
 			</div>
 		</nav>

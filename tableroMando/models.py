@@ -197,7 +197,6 @@ class Indicador(models.Model):
 
 	estado				= models.BooleanField(default=True)  #  estado para inactivar en caso de eliminar	
 	tipo	  			= models.SmallIntegerField(choices=TIPO_INDICADOR_OPCIONES, default=PLAN_DE_DESARROLLO)
-	prefijo    			= models.CharField(max_length = 6, blank=True, null=True)
 	consecutivo			= models.IntegerField()
 	nombre_identificador= models.CharField(max_length = 300,blank=True, null=True)
 	objetivo  			= models.TextField(blank=True, null=True)
@@ -220,9 +219,12 @@ class Indicador(models.Model):
 
 	# ARMONIZACION
 	
+	def get_prefijo(self):
+		return self.ABREBIATURA_INDICADORES[self.tipo-1][1]
+
 
 	def str_codigo(self):
-		return u'%s-%s' % (self.prefijo, self.consecutivo)
+		return u'%s-%s' % (self.get_prefijo(), self.consecutivo)
 
 
 	def save(self, *args, **kwargs):
@@ -234,7 +236,7 @@ class Indicador(models.Model):
 
 
 	def __str__(self):
-		return u'%s-%s %s' % (self.prefijo, self.consecutivo, self.nombre_identificador)
+		return u'%s-%s %s' % (self.get_prefijo(), self.consecutivo, self.nombre_identificador)
 
 
 

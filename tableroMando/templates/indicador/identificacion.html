@@ -1,94 +1,100 @@
 <form method="POST" role="form" id="formulario_indicador" method="multipart/form-data">
 {% csrf_token %}
-	<div class="row">
-		<div class="col-sm">
-			<div class="form-group">
-		    <label for="id_tipoIndicador">TIPO INDICADOR</label>
+	<div class="col-md-12">
+		<div class="row">
+			<div class="form-group col-md-3">
+			    <label for="id_tipoIndicador">TIPO INDICADOR</label>
 	    		{{ formulario.tipo }}
-		  	</div>		
-			<!--<div class="form-group">
-				<label for="id_nomenclador">NOMENCLADOR</label>
-				{{ formulario.nomenclador }}
-			</div>-->
-			<div class="form-group" style="margin-top: 38px">
-				<label for="id_ciclo">CICLO</label>
-				{{ formulario.ciclo }}
-			</div>
-			<!--<div class="form-group">
-				<label for="id_fehcaCreacion">CREACION</label>
-				{# {{ formulario.fechaCreacion }} #}
-			</div>-->
-			<div class="form-group">
-				<label for="id_version">VERSIÓN</label>
-				{{ formulario.version }}
-			</div>
-		</div>
-		<div class="col-sm">
-			<div class="form-group">
-				<label for="id_prefijo">PREFIJO</label>
-				{{ formulario.prefijo }}
-			</div>
-			<div class="form-group">
-				<label for="id_objetivo">OBJETIVO</label>
-				{{ formulario.objetivo }}
-			</div>
-			<div class="form-group">
-				<label for="id_periodicidad">PERIODICIDAD</label>
-				{{ formulario.periodicidad }}
-			</div>
-			<div class="form-group">
-				<label for="id_responsable">RESPONSABLE</label>
-				{{ formulario.responsable }}
-			</div>
-			<div class="form-group">
-				<label for="actualizacion">ACTUALIZACION</label>
-				<input type="date" class="form-control" id="actualizacion" name="actualizacion">
-				{{ formulario.fechaActualiza }}
-			</div>
-		</div>	
-		<div class="col-sm">
-			<div class="form-group">
-				<label for="consecutivo">CONSECUTIVO</label>
-				{{ formulario.consecutivo }}
+		  	</div>
+
+			<div class="form-group col-md-3" align="center">
+				<label for="id_consecutivo">CÓDIGO</label>
+				<div class="row">
+					<div class="form-group col-md-5" align="right" style="font-size: 25px;">
+						<b><span id="id_prefijo">{% if indicador %}{{indicador.get_prefijo}}{% else %}PDI{% endif %}</span></b> -
+					</div>
+					<div class="form-group col-md-7">
+					{{ formulario.consecutivo }}
+					</div>
+				</div>
 			</div>
 
-			<div class="form-group">
-				<label for="producto_mide">PRODUCTO QUE MIDE</label>
-				{{ formulario.producto_mide }}
-			</div>
-			<div class="form-group">
-				<label for="ambito">AMBITO</label>
-				{{ formulario.ambito }}  
-			</div>
-			<div class="form-group">
-				<label for="noratividad">NORMATIVIDAD APLICABLE</label>
-				{{ formulario.normatividad }}
-				<!--<select id="normatividad">
-				{% for n in formulario.normatividad %}
-						<option value="">{{n}}</option>
-				{% endfor %}
-				</select>-->
-			</div>
-		</div>
-		<div class="col-sm">
-			<div class="form-group">
+			<div class="form-group col-md-3">
 				<label for="id_nombre">NOMBRE</label>
 				{{ formulario.nombre_identificador }}
 			</div>
-			<div class="form-group">
-				<label for="tipoMedicion">TIPO DE MEDICION</label>
+
+			<div class="form-group col-md-3">
+				<label for="id_tipo_medicion">TIPO DE MEDICIÓN</label>
 				{{ formulario.tipo_medicion }}
-			</div>											
-			<div class="form-group" style="margin-top: 37px">
+			</div>	
+		</div>
+		
+		<div class="row">
+			<div class="form-group col-md-6">
+				<label for="id_objetivo">OBJETIVO</label>
+				{{ formulario.objetivo }}
+			</div>
+
+			<div class="form-group col-md-6">
+				<label for="producto_mide">PRODUCTO QUE MIDE</label>
+				{{ formulario.producto_mide }}
+			</div>
+		</div>
+	
+		<div class="row">
+			<div class="form-group col-md-2">
+				<label for="id_ciclo">CICLO</label>
+				{{ formulario.ciclo }}
+			</div>
+
+			<div class="form-group col-md-2">
+				<label for="id_periodicidad">PERIODICIDAD</label>
+				{{ formulario.periodicidad }}
+			</div>
+			
+			<div class="form-group col-md-2">
+				<label for="id_ambito">AMBITO</label>
+				{{ formulario.ambito }}  
+			</div>
+			
+			<div class="form-group col-md-2">
 				<label for="dimension">DIMENSION</label>
 				{{ formulario.dimension }}
 			</div>
-			<div class="form-group">
-				<label for="limite_reporte">LIMITE DEL REPORTE</label>
+
+			<div class="form-group col-md-4">
+				<label for="id_responsable">RESPONSABLE</label>
+				{{ formulario.responsable }}
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="form-group col-md-3">
+				<label for="id_noratividad">NORMATIVIDAD APLICABLE</label>
+				{{ formulario.normatividad }}
+			</div>
+			
+			{% if indicador %}
+				<div class="form-group col-md-3">
+					<label for="fecha_actualizacion">ACTUALIZACION</label>
+					<input type="date" class="form-control" id="fecha_actualizacion" name="fecha_actualizacion" value="{{indicador.fecha_actualizacion|date:'Y-m-d'}}">
+					{# {{ formulario.fecha_actualizacion }} #}
+				</div>
+			{% endif %}
+
+			<div class="form-group col-md-3">
+				<label for="id_limite_reporte">LIMITE DEL REPORTE</label>
 				{{ formulario.limite_reporte }}
 			</div>
-			<div class="form-group">
-				<label for="recurrencia">RECURRENCIA</label>
+
+			<div class="form-group col-md-1">
+				<label for="id_version">VERSIÓN</label>
+				{{ formulario.version }}
+			</div>
+
+			<div class="form-group col-md-2">
+				<label for="id_recurrencia">RECURRENCIA</label>
 				{{ formulario.recurrencia }}
 			</div>
 		</div>

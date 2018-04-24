@@ -39,19 +39,18 @@
 	</thead>
 	<tbody>
 	{{formulario.errors}}
-	{{form_medicion.errors}} 
+	{{form_medicion.errors}}
 	<tr>
 	<td>
 		<div class="card text-center">
 
-			<div class="card-header bg-light">
+			<div class="card-header bg-light" id="nav_tabs">
 				<ul class="nav nav-tabs card-header-tabs" id="myTab" role="tablist">
 					<li class="nav-item">
 						<a class="nav-link active" id="identificacion-tab" data-toggle="tab" href="#identificacion" role="tab" aria-controls="identificacion" aria-selected="true">IDENTIFICACIÓN</a>
 				  	</li>
 					<li class="nav-item">
-					    <a class="nav-link {% if not indicador %}disabled{% endif %}" id="armonizacion-tab" data-toggle="tab" href="
-					    #armonizacion" role="tab" aria-controls="armonizacion" aria-selected="false">ARMONIZACIÓN</a>
+					    <a class="nav-link {% if not indicador %}disabled{% endif %}" id="armonizacion-tab" data-toggle="tab" href="#armonizacion" role="tab" aria-controls="armonizacion" aria-selected="false">ARMONIZACIÓN</a>
 					</li>
 					<li class="nav-item">
 					    <a class="nav-link {% if not indicador %}disabled{% endif %}" id="medicion-tab" data-toggle="tab" href="#medicion" role="tab" aria-controls="medicion" aria-selected="false">MEDICIÓN</a>
@@ -61,7 +60,7 @@
 
 
 			<div class="card-body">
-				<div class="tab-content text-left" id="myTabContent">
+				<div class="tab-content text-left">
 					<div class="tab-pane fade show active" id="identificacion" role="tabpanel" aria-labelledby="identificacion-tab">
 						{% include 'indicador/identificacion.html' %}
 					</div>
@@ -203,6 +202,28 @@
 </tbody>
 </table>
 </div>
+
+
+<div class="modal" tabindex="-1" role="dialog" id="modal-mensajes">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Modal title</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<p>Modal body text goes here.</p>
+			</div>
+			<div class="modal-footer">
+				{# <button type="button" class="btn btn-primary">Save changes</button> #}
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+			</div>
+		</div>
+	</div>
+</div>
+
 {% endblock contenido %}
 
 {% block extra_script %}
@@ -276,7 +297,7 @@ $(document).on('change', '#id_tipo', function(){
 	var tipo_selecionado = parseInt($('#id_tipo option:selected').val());
 	{% for a in abrebiatura_indicadores %}
 		if (tipo_selecionado == parseInt('{{a.0}}')) {
-			$('#id_prefijo').val("{{a.1}}");
+			$('#id_prefijo').text("{{a.1}}");
 		}
 	{% endfor %}
 });
@@ -301,8 +322,6 @@ function actualizarRangos(){
 $(document).ready(function(){
 	$("#id_normatividad").chosen({width: "100%"}); 
 	$('[data-toggle="tooltip"]').tooltip(); 
-	$('#id_tipo').change();
-	$('#id_tipo_formula').change();
 
 	$('#id_nomenclaruta_respuesta').val('TDE');
 
@@ -323,7 +342,6 @@ $(document).ready(function(){
 
 function initIndicador(){
 	$('#id_tipo').val('{{indicador.tipo}}');
-	// $('#id_prefijo').val('{{indicador.prefijo}}');
 	$('#id_consecutivo').val('{{indicador.consecutivo}}');
 	$('#id_nombre_identificador').val('{{indicador.nombre_identificador}}');
 	$('#id_objetivo').val('{{indicador.objetivo}}');
@@ -333,7 +351,7 @@ function initIndicador(){
 	$('#id_periodicidad').val('{{indicador.periodicidad}}');
 	$('#id_ambito').val('{{indicador.ambito}}');
 	$('#id_dimension').val('{{indicador.dimension}}');
-	// $('#id_version').val('{{indicador.version}}');
+	$('#id_version').val('{{indicador.version}}');
 	$('#id_responsable').val('{{indicador.responsable}}');
 	// $('#id_normatividad').val('{{indicador.normatividad}}');
 	{% for n in indicador.normatividad %}
@@ -410,7 +428,9 @@ $(document).on('click', '#btn_actualizar', function(){
 
 $(document).on('click','#guardar_indicador', function(event){
 	event.preventDefault();
-	$("#formulario_indicador").submit();
+	if(validarIndicador()){
+		$("#formulario_indicador").submit();
+	}
 });
 
 $(document).on('click','#guardar_medicion', function(event){
@@ -422,8 +442,28 @@ $(document).on('click','#guardar_medicion', function(event){
 	$("#rango_final").val(parseInt(res[1]));
 
 	event.preventDefault();
-	$("#formulario_medicion").submit();
+	if($('#id_nombre_variable_1').val()==""){
+		alert("Digite un nombre para la variable");
+	}else{
+		$("#formulario_medicion").submit();
+	}
 });
+
+
+function validarIndicador(){
+	var is_valid = true;
+	if ($('#id_consecutivo').val() == "" || $('#id_nombre_identificador').val() == "" || $('#id_normatividad').val() == ""){
+		is_valid = false;
+	}
+	if($('#id_consecutivo').val() == ""){
+		alert("Digite un número codigo");
+	}else if ($('#id_nombre_identificador').val() == ""){
+		alert("Digite un nombre de indicador");
+	}else if($('#id_normatividad').val() == ""){
+		alert("Seleccione una o varias Normatividades");
+	}
+	return is_valid;
+}
 
 </script>
 
@@ -437,6 +477,13 @@ $(document).on('click','#guardar_medicion', function(event){
 	// Cambio de hash para recargar la pagina
 	$('.nav-tabs a').on('shown', function (e) {
 	    window.location.hash = e.target.hash.replace("#", "#" + prefix);
+	});
+
+	$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+		var target = $(e.target).attr("href"); // activated tab
+		if (target == '#medicion'){
+			$('#id_tipo_formula').change();
+		}
 	});
 </script>
 

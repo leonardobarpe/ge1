@@ -1,50 +1,19 @@
 from django import forms
 from .models import Indicador, Medicion
 
-# class IndicadorFormulario(forms.ModelForm):
-# 	class Meta:
-# 		model = Indicador
-# 		fields = [
-# 			'tipo',
-# 			'nombre',
-# 			'nomenclador',
-# 			'ciclo',
-# 			'fechaCreacion',
-# 			'version',
-# 			'prefijo',
-# 			'objetivo',
-# 			'periodicidad',
-# 			'responsable',
-# 			'fechaActualiza',
-# 			'consecutivo',
-# 			'productoMide',
-# 			'ambito',
-# 			'normaApli',
-# 		]
-# 	# Constructor que asigna form-control a todos los elemtos del formulario
-# 	def __init__(self, *args, **kwargs):
-# 		super(IndicadorFormulario, self).__init__(*args, **kwargs)
-# 		for visible in self.visible_fields():
-# 			visible.field.widget.attrs['class'] = 'form-control'
-# 		self.fields['fechaCreacion'].widget.attrs['readonly']= True
-# 		self.fields['version'].widget.attrs['readonly']= True
-# 		self.fields['prefijo'].widget.attrs['readonly']= True
-# 		self.fields['objetivo'].widget.attrs['rows']= 2
-# 		self.fields['productoMide'].widget.attrs['rows']= 2
 
 class IndicadorFormulario(forms.ModelForm):
 	class Meta:
 		model = Indicador
 		exclude = (
 			'fecha_creacion',
-			'fecha_actualizacion',
-			# 'usuario_registro',
+			'fecha_modificacion',
 			'rango_inicial',
 			'rango_final'
+			# 'usuario_registro',
 			)
 		fields = (
 			'tipo',
-			'prefijo',
 			'consecutivo',
 			'nombre_identificador',
 			'objetivo',
@@ -55,13 +24,14 @@ class IndicadorFormulario(forms.ModelForm):
 			'ambito',
 			'dimension',
 			'responsable',
+			'fecha_actualizacion', # fecha que actualiza el indicador
 			'normatividad',
 			'limite_reporte',
 			'version',
 			'recurrencia',
 			)
 		widgets = {
-            'normatividad': forms.SelectMultiple(attrs={'class': 'form-control','multiple':''}),
+            'normatividad': forms.SelectMultiple(attrs={'class': 'form-control','multiple':'','data-placeholder':'Seleccione algunas opciones'}),
         }
 
 	# Constructor que asigna form-control a todos los elemtos del formulario
@@ -69,14 +39,18 @@ class IndicadorFormulario(forms.ModelForm):
 		super(IndicadorFormulario, self).__init__(*args, **kwargs)
 		for visible in self.visible_fields():
 			visible.field.widget.attrs['class'] = 'form-control'
-		self.fields['version'].widget.attrs['readonly']= True
-		self.fields['prefijo'].widget.attrs['readonly']= True
-		self.fields['tipo_medicion'].widget.attrs['readonly']= True
-		self.fields['recurrencia'].widget.attrs['readonly']= True
-		# self.fields['tipo_medicion'].widget.attrs['disabled'] = 'disabled'
-		# self.fields['recurrencia'].widget.attrs['disabled'] = 'disabled'
+
 		self.fields['objetivo'].widget.attrs['rows']= 2
 		self.fields['producto_mide'].widget.attrs['rows']= 2
+		self.fields['fecha_actualizacion'].required = False
+		
+		# Desactivar fields
+		self.fields['version'].required = False
+		self.fields['tipo_medicion'].required = False
+		self.fields['recurrencia'].required = False
+		self.fields['version'].widget.attrs['disabled'] = 'disabled'
+		self.fields['tipo_medicion'].widget.attrs['disabled'] = 'disabled'
+		self.fields['recurrencia'].widget.attrs['disabled'] = 'disabled'
 
 
 
@@ -121,15 +95,5 @@ class MedicionForm(forms.ModelForm):
 		self.fields['interpretacion_resultado'].widget.attrs['rows']= 2
 		self.fields['formula'].widget.attrs['rows']= 2
 
-
-# ------------------------------------------
-
-# class IndicadorForm(forms.ModelForm):
-# 	class Meta:
-# 		model = Indicador
-# 		fields = ('consecutivo', 'nombre',)
-
-
-			
 
 		
