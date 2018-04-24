@@ -1,0 +1,495 @@
+{% extends "plantilla.html" %}
+{% load static %}
+{% block title %}{% if indicador %}Modificar {{indicador.str_codigo }}{% else %}Nuevo indicador{% endif %}{% endblock title %}
+
+{% block extra_header %}
+	{# <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script> #}
+	<script src="{% static 'librerias/library/canvasjs/canvasjs.min.js' %}"></script>
+
+	{# <script src="{% static 'library/mathJax/MathJax.js' %}"></script> #}
+
+	<script src="{% static 'librerias/library/bootstrap-slider-master/bootstrap-slider.min.js' %}"></script>
+	<link href="{% static 'librerias/library/bootstrap-slider-master/css/bootstrap-slider.min.css' %}" rel="stylesheet" type="text/css" media="screen">
+	<script src="{% static 'librerias/chosen_v1.8.5/chosen.jquery.min.js' %}"></script>
+	<link href="{% static 'librerias/chosen_v1.8.5/chosen.min.css' %}" rel="stylesheet" type="text/css">
+
+	{# <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/MathJax.js?config=TeX-MML-AM_CHTML"></script> #}
+	<script type="text/javascript" async
+	  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=AM_CHTML">
+	</script>
+{% endblock extra_header %}
+
+{% block contenido %}
+
+<div class="container-fluid">
+	<nav aria-label="breadcrumb">
+	  <ol class="breadcrumb">
+		<li class="breadcrumb-item"><a href="{% url 'indicador' %}?listar_i">Indicadores</a></li>
+		<li class="breadcrumb-item active" aria-current="page">{% if indicador %}Indiacador: {{indicador.str_codigo }}{% else %}Nuevo indicador{% endif %}</li>
+	  </ol>
+	</nav>
+</div>
+
+<div class="container">
+<table class="table table-bordered table-striped" style="margin-top: 10px">
+	<thead class="bg-primary">
+		<tr>
+			<th class="text-white">{% if indicador %}INDICADOR: {{indicador.str_codigo }}{% else %}NUEVO INDICADOR{% endif %}</th>
+		</tr>
+	</thead>
+	<tbody>
+	{{formulario.errors}}
+	{{form_medicion.errors}} 
+	<tr>
+	<td>
+		<div class="card text-center">
+
+			<div class="card-header bg-light">
+				<ul class="nav nav-tabs card-header-tabs" id="myTab" role="tablist">
+					<li class="nav-item">
+						<a class="nav-link active" id="identificacion-tab" data-toggle="tab" href="#identificacion" role="tab" aria-controls="identificacion" aria-selected="true">IDENTIFICACIÓN</a>
+				  	</li>
+					<li class="nav-item">
+					    <a class="nav-link {% if not indicador %}disabled{% endif %}" id="armonizacion-tab" data-toggle="tab" href="
+					    #armonizacion" role="tab" aria-controls="armonizacion" aria-selected="false">ARMONIZACIÓN</a>
+					</li>
+					<li class="nav-item">
+					    <a class="nav-link {% if not indicador %}disabled{% endif %}" id="medicion-tab" data-toggle="tab" href="#medicion" role="tab" aria-controls="medicion" aria-selected="false">MEDICIÓN</a>
+					</li>
+				</ul>
+			</div>
+
+
+			<div class="card-body">
+				<div class="tab-content text-left" id="myTabContent">
+					<div class="tab-pane fade show active" id="identificacion" role="tabpanel" aria-labelledby="identificacion-tab">
+						{% include 'indicador/identificacion.html' %}
+					</div>
+
+					<div class="tab-pane fade" id="armonizacion" role="tabpanel" aria-labelledby="armonizacion-tab">
+						<div class="row">
+							<div class="card-group">
+								<div class="card">
+									<div class="card-body">
+										<p class="card-title">
+											<div class="custom-control custom-checkbox">
+												<input type="checkbox" class="custom-control-input" id="planDesarrolloCheck" onclick="mostrarPlaDes()" >
+												<label class="custom-control-label" for="planDesarrolloCheck">PLAN DESARROLLO</label>
+											</div>														
+										</p>
+										<div class="card-text" id="parrafoPlanDes" style="display: none">
+											<div class="form-group">
+										    <label for="linea">LINEA</label>
+												<select class="form-control" id="linea" name="linea">
+													<option>--</option>
+													<option>--</option>
+													<option>--</option>
+									    		</select>
+										  	</div>
+											<div class="form-group">
+										    <label for="programa">PROGRAMA</label>
+												<select class="form-control" id="programa" name="programa">
+													<option>--</option>
+													<option>--</option>
+													<option>--</option>
+									    		</select>
+										  	</div>
+											<div class="form-group">
+										    <label for="subprograma">SUBPROGRAMA</label>
+												<select class="form-control" id="subprograma" name="subprograma">
+													<option>--</option>
+													<option>--</option>
+													<option>--</option>
+									    		</select>
+										  	</div>
+											<div class="form-group">
+										    <label for="meta">META</label>
+												<select class="form-control" id="meta" name="meta">
+													<option>--</option>
+													<option>--</option>
+													<option>--</option>
+									    		</select>
+										  	</div>												  	
+									  	</div>													
+									</div>
+								</div>
+								<div class="card">
+									<div class="card-body">
+										<p class="card-title">
+											<div class="custom-control custom-checkbox">
+												<input type="checkbox" class="custom-control-input" id="sisIntGesCheck" onclick=" mostrarSisIntGes()">
+												<label class="custom-control-label" for="sisIntGesCheck">SISTEMA INTEGRADO DE GESTION</label>
+											</div>
+										</p>
+										<div class="card-text" id="parrafoSisIntGes" style="display: none">
+											<div class="form-group">
+										    <label for="tipoProceso">TIPO DE PROCESO</label>
+												<select class="form-control" id="tipoProceso" name="tipoProceso">
+													<option>--</option>
+													<option>--</option>
+													<option>--</option>
+									    		</select>
+										  	</div>
+											<div class="form-group">
+										    <label for="proceso">PROCESO</label>
+												<select class="form-control" id="proceso" name="proceso">
+													<option>--</option>
+													<option>--</option>
+													<option>--</option>
+									    		</select>
+										  	</div>	
+											<div class="form-group">
+										    <label for="subproceso">SUBPROCESO</label>
+												<select class="form-control" id="subproceso" name="subproceso">
+													<option>--</option>
+													<option>--</option>
+													<option>--</option>
+									    		</select>
+										  	</div>													  										  
+										</div>													
+									</div>
+								</div>
+								<div class="card">
+									<div class="card-body">
+										<p class="card-title">
+											<div class="custom-control custom-checkbox">
+												<input type="checkbox" class="custom-control-input" id="modeloInPlaGeCheck" onclick="mostrarModeloInPlaGeCheck()">
+												<label class="custom-control-label" for="modeloInPlaGeCheck">MODELO INTEGRADO DE PLANEACION Y GESTION</label>
+											</div>
+										</p>
+										<div class="card-text" id="parrafoModIntPlanGes" style="display: none">
+											<div class="form-group">
+										    <label for="dimensionArm">DIMENSION</label>
+												<select class="form-control" id="dimensionArm" name="dimensionArm">
+													<option>--</option>
+													<option>--</option>
+													<option>--</option>
+									    		</select>
+										  	</div>	
+											<div class="form-group">
+										    <label for="politica">POLITICA</label>
+												<select class="form-control" id="politica" name="politica">
+													<option>--</option>
+													<option>--</option>
+													<option>--</option>
+									    		</select>
+										  	</div>
+										</div>
+									</div>
+								</div>
+							</div>	
+						</div>	
+					</div>
+	{# action="{% url 'agregar_medicion' %}?indicador={{indicador.pk}}" #}
+					<div class="tab-pane fade" id="medicion" role="tabpanel" aria-labelledby="medicion-tab">
+						{% include 'indicador/medicion.html' %}
+					</div>
+
+
+				</div>
+			</div><!-- DIV PANE -->
+
+		</div>
+	</td>
+	</tr>
+
+	<tr>
+		<td>
+			<div class="form-group">
+				<button type="submit" id="guardar_indicador" name="guardar_indicador" class="btn btn-success float-right">GUARDAR</button>
+			</div>
+		</td>
+	</tr>
+</tbody>
+</table>
+</div>
+{% endblock contenido %}
+
+{% block extra_script %}
+
+<script type="text/javascript">
+	// PESTAÑA ARMONIZACION
+	// Ocultar o mostrar campos de PLAN DE DESARROLLO
+	function mostrarPlaDes(){ 
+		if (document.getElementById("planDesarrolloCheck").checked) {
+			document.getElementById("parrafoPlanDes").style.display = "block";
+		}
+		else{
+			document.getElementById("parrafoPlanDes").style.display = "none";
+		}
+	}
+	// PESTAÑA ARMONIZACION
+	// Ocultar o mostrar campos de SISTEMA INTEGRADO DE GESTION
+	function mostrarSisIntGes(){
+		if (document.getElementById("sisIntGesCheck").checked) {
+			document.getElementById("parrafoSisIntGes").style.display = "block";
+		}
+		else{
+			document.getElementById("parrafoSisIntGes").style.display = "none";
+		}
+	}
+	// PESTAÑA ARMONIZACION
+	// Ocultar o mostrar campos de MODELO INTEGRADO DE PLANEACION Y GESTION
+	function mostrarModeloInPlaGeCheck(){
+		if (document.getElementById("modeloInPlaGeCheck").checked) {
+			document.getElementById("parrafoModIntPlanGes").style.display = "block";
+		}
+		else{
+			document.getElementById("parrafoModIntPlanGes").style.display = "none";
+		}
+	}
+</script>
+<script type="text/javascript">
+
+$(document).on('change', '#id_tipo_formula', function(){
+	var seleccion = parseInt($('#id_tipo_formula option:selected').val());
+	if (seleccion == 1) { //PORCENTAJE
+    	$('.f_denominador').css("display", "");
+		$('.f_tasa_variacion').css("display", "none");
+		// INIT
+		$("#id_nomenclaruta_1").val("NEAG");
+		$("#id_nomenclaruta_2").val("NEM");
+
+    }else if (seleccion == 2) {//TASA DE VARIACION
+    	$('.f_denominador').css("display", "none");
+		$('.f_tasa_variacion').css("display", "");
+		// INIT
+		$("#id_nomenclaruta_1").val("NEAG");
+		$("#id_nomenclaruta_2").val("");
+    } else if (seleccion == 3) {//PROMEDIO
+    	$('.f_denominador').css("display", "");
+		$('.f_tasa_variacion').css("display", "none");
+		// INIT
+		$("#id_nomenclaruta_1").val("NEC");
+		$("#id_nomenclaruta_2").val("NGC");
+    } else if (seleccion == 4) {//NUMERO ENTERO
+    	$('.f_denominador').css("display", "none");
+		$('.f_tasa_variacion').css("display", "none");
+		// INIT
+		$("#id_nomenclaruta_1").val("NEC");
+		$("#id_nomenclaruta_2").val("");
+    }
+});
+
+// ASIGNA VALOR A PREJIJO DEPENDIENDO DEL TIPO DE INDICDOR SELECCIONADO
+$(document).on('change', '#id_tipo', function(){
+	var tipo_selecionado = parseInt($('#id_tipo option:selected').val());
+	{% for a in abrebiatura_indicadores %}
+		if (tipo_selecionado == parseInt('{{a.0}}')) {
+			$('#id_prefijo').val("{{a.1}}");
+		}
+	{% endfor %}
+});
+
+function actualizarRangos(){
+	$("#rangos_medicion").slider({});
+	$('#span_rangos').text($('#rangos_medicion').data('slider').getValue());
+
+	var valor_inicial;
+	$('#rangos_medicion').slider().on('slideStart', function(ev){
+	    valor_inicial = $('#rangos_medicion').data('slider').getValue();
+	});
+
+	$('#rangos_medicion').slider().on('slideStop', function(ev){
+	    var nuevo_valor = $('#rangos_medicion').data('slider').getValue();
+	    if(valor_inicial != nuevo_valor) {
+	        $('#span_rangos').text(nuevo_valor);
+	    }
+	});
+}
+
+$(document).ready(function(){
+	$("#id_normatividad").chosen({width: "100%"}); 
+	$('[data-toggle="tooltip"]').tooltip(); 
+	$('#id_tipo').change();
+	$('#id_tipo_formula').change();
+
+	$('#id_nomenclaruta_respuesta').val('TDE');
+
+	{% if indicador %}
+		initIndicador();
+
+		// TAB MEDICION 
+		actualizarRangos();
+
+		{% if medicion %}
+			initMedicion();
+		{% endif %}
+		// END MEDICION
+
+	{% endif %}
+
+});
+
+function initIndicador(){
+	$('#id_tipo').val('{{indicador.tipo}}');
+	// $('#id_prefijo').val('{{indicador.prefijo}}');
+	$('#id_consecutivo').val('{{indicador.consecutivo}}');
+	$('#id_nombre_identificador').val('{{indicador.nombre_identificador}}');
+	$('#id_objetivo').val('{{indicador.objetivo}}');
+	$('#id_producto_mide').val('{{indicador.producto_mide}}');
+	$('#id_tipo_medicion').val('{{indicador.tipo_medicion}}');
+	$('#id_ciclo').val('{{indicador.ciclo}}');
+	$('#id_periodicidad').val('{{indicador.periodicidad}}');
+	$('#id_ambito').val('{{indicador.ambito}}');
+	$('#id_dimension').val('{{indicador.dimension}}');
+	// $('#id_version').val('{{indicador.version}}');
+	$('#id_responsable').val('{{indicador.responsable}}');
+	// $('#id_normatividad').val('{{indicador.normatividad}}');
+	{% for n in indicador.normatividad %}
+	    $("#id_normatividad option[value='{{n.0}}']").prop('selected', true);
+	{% endfor %}
+	$('#id_limite_reporte').val('{{indicador.limite_reporte}}');
+	var recurrencia = '{{indicador.recurrencia}}';
+	if (recurrencia == 'True')
+		$('#id_recurrencia').val(2);
+	else if (recurrencia == 'False')
+		$('#id_recurrencia').val(3);
+	else
+		$('#id_recurrencia').val(1);
+	$('#id_normatividad').trigger("chosen:updated");
+}
+
+function initMedicion(){
+	$('#id_tipo_formula').val('{{medicion.tipo_formula}}')
+	$('#id_unidad_medicion').val('{{medicion.unidad_medicion}}');
+	$('#id_tendencia').val('{{medicion.tendencia}}');
+	$('#id_archivo_asociado').val('{{medicion.archivo_asociado|default_if_none:""}}');
+
+	$('#id_nombre_variable_1').val('{{medicion.nombre_variable_1}}');
+	$('#id_nomenclaruta_1').val('{{medicion.nomenclaruta_1}}');
+	$('#id_unidad_1').val('{{medicion.unidad_1}}');
+	$('#id_fuente_1').val('{{medicion.fuente_1|default_if_none:""}}');
+
+	$('#id_nombre_variable_2').val('{{medicion.nombre_variable_2}}');
+	$('#id_nomenclaruta_2').val('{{medicion.nomenclaruta_2}}');
+	$('#id_unidad_2').val('{{medicion.unidad_2}}');
+	$('#id_fuente_2').val('{{medicion.fuente_2|default_if_none:""}}');
+
+	$('#id_nombre_respuesta').val('{{medicion.nombre_respuesta|default_if_none:""}}');
+	$('#id_nomenclaruta_respuesta').val('{{medicion.nomenclaruta_respuesta}}');
+	$('#id_unidad_respuesta').val('{{medicion.unidad_respuesta}}');
+	$('#id_fuente_respuesta').val('{{medicion.fuente_respuesta|default_if_none:""}}');
+
+	$('#id_interpretacion_resultado').val('{{medicion.interpretacion_resultado|default_if_none:""}}');
+	$('#id_responsable_reporte').val('{{medicion.responsable_reporte}}');
+	$('#id_responsable_consolidacion').val('{{medicion.responsable_consolidacion}}');
+	$('#id_responsable_analisis_seguimiento').val('{{medicion.responsable_analisis_seguimiento}}');
+	$('#id_responsable_decisiones').val('{{medicion.responsable_decisiones}}');
+}
+
+function enviarFormula(formula){
+	var el = document.getElementById("contenedor_formula");
+    el.innerHTML=formula;
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub, el]);
+}
+
+function generarFormula(){
+	var seleccion = parseInt($('#id_tipo_formula option:selected').val());
+	var nomenclaruta_1 = $("#id_nomenclaruta_1").val();
+	var nomenclaruta_2 = $("#id_nomenclaruta_2").val();
+	var respuesta = $('#id_nomenclaruta_respuesta').val();
+
+	var formula = "";
+	if (seleccion == 1) { //PORCENTAJE
+		formula = respuesta+" = ("+nomenclaruta_1+")/("+nomenclaruta_2+") * 100";
+	}else if (seleccion == 2) {//TASA DE VARIACION
+		formula = respuesta+" = (("+nomenclaruta_1+"(Tn) -  "+nomenclaruta_1+"(T0))/("+nomenclaruta_1+"(T0))) * 100";
+	} else if (seleccion == 3) {//PROMEDIO
+		formula = respuesta+" = ("+nomenclaruta_1+")/("+nomenclaruta_2+")";
+	} else if (seleccion == 4) {//NUMERO ENTERO
+		formula = respuesta+" = "+nomenclaruta_1;
+	}
+	return formula;
+}
+
+$(document).on('click', '#btn_actualizar', function(){
+	var formula = generarFormula();
+	enviarFormula("`"+formula+"`");
+});
+
+$(document).on('click','#guardar_indicador', function(event){
+	event.preventDefault();
+	$("#formulario_indicador").submit();
+});
+
+$(document).on('click','#guardar_medicion', function(event){
+	$("#formula").val(generarFormula());
+	
+	var rangos = $('#rangos_medicion').data('slider').getValue()+"";
+	var res = rangos.split(",");
+	$("#rango_inicial").val(parseInt(res[0]));
+	$("#rango_final").val(parseInt(res[1]));
+
+	event.preventDefault();
+	$("#formulario_medicion").submit();
+});
+
+</script>
+
+<script type="text/javascript">
+	var hash = document.location.hash;
+	var prefix = "tab_";
+	if (hash) {
+	    $('.nav-tabs a[href="'+hash.replace(prefix,"")+'"]').tab('show');
+	} 
+
+	// Cambio de hash para recargar la pagina
+	$('.nav-tabs a').on('shown', function (e) {
+	    window.location.hash = e.target.hash.replace("#", "#" + prefix);
+	});
+</script>
+
+
+<!--<script type="text/javascript">
+	window.onload = function () {
+		// GRAFICA DE MEDICION
+		var tam_ancho = (window.innerWidth*30)/100;
+		var grafica_medicion = new CanvasJS.Chart("graficaMedicion", {
+			animationEnabled: true,
+			theme: "light1", //"light2", "dark1", "dark2"
+			axisY:{
+				interval: 10,
+				suffix: ""
+			},
+			toolTip:{
+				shared: true
+			},
+			data:[
+				{
+					type: "stackedBar100",
+					showInLegend: true, 
+					name: "CRITICO",
+					dataPoints: [
+						{ y: 20, label: "Resultado" },
+					]
+				},
+				{
+					type: "stackedBar100",
+					showInLegend: true, 
+					name: "EN RIESGO",
+					dataPoints: [
+						{ y: 60, label: "Resultado" },
+
+					]
+				}, 
+				{
+					type: "stackedBar100",
+					showInLegend: true, 
+					name: "ADECUADO",
+					dataPoints: [
+						{ y: 20, label: "Resultado" },
+
+					]
+				}
+			],
+			height: 120,
+			width: tam_ancho,
+		});
+		grafica_medicion.render();
+		// function canvas_resize(){
+        
+		// }
+	}
+</script>-->
+{% endblock extra_script %}

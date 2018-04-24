@@ -1,0 +1,57 @@
+{% extends "plantilla.html" %}
+{% load static %}
+{% block title %}Ver Indicadores{% endblock title %}
+
+{% block contenido %}
+
+<div class="container-fluid">
+	<div class="card" style="margin-top: 10px">
+		<div class="card-header bg-light">
+			<span><i class="fab fa-sistrix"></i> INDICADORES</span>
+			<span class="float-right"><a href="{% url 'indicador' %}?agregar" class="btn btn-success btn-sm"><i class="fas fa-plus"></i> Nuevo</a></span>
+		</div>
+		<div class="card-body">
+			<div class="col-md-12">
+				<table id="tabla_indicadores" class="table table-bordered table-condensed table-hover table-sm">
+				    <thead>
+				        <tr>
+				           <th>Código</th>
+				           <th>Nombre</th>
+				           <th>Tipo de proceso</th>
+				           <th>Ambito</th>
+				           <th>Dimensión</th>
+				           <th>Fecha registro</th>
+				           <th>Opciones</th>
+				        </tr>
+				    </thead>
+				    <tbody>
+				        {% for i in indicadores %}
+					    	<tr>
+								<td>{{ i.str_codigo }}</td>
+								<td>{{ i.nombre_identificador }}</td>
+								<td>{{ i.get_tipo_display }}</td>
+								<td>{{ i.get_ambito_display }}</td>
+								<td>{{ i.get_dimension_display }}</td>
+								<td>{{ i.fecha_registro|date:"Y-m-d" }}</td>
+								<td align="center">
+									<a href="{% url 'indicador' %}?agregar&indicador={{i.id}}" data-toggle="tooltip" title="Editar"><i class="fas fa-edit"></i></a>
+									<a href="{% url 'indicador' %}?eliminar&indicador={{i.id}}" data-toggle="tooltip" title="Eliminar"><i class="far fa-trash-alt" style="color:#DC381F;"></i></a>
+								</td>
+							</tr>
+						{% endfor %}
+				    </tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+	$(document).ready(function() {
+	    $('#tabla_indicadores').DataTable();
+	    $('[data-toggle="tooltip"]').tooltip();
+	});
+</script>
+
+{% endblock contenido %}
+

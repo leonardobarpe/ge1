@@ -1,0 +1,28 @@
+<div id="menu" class="row">
+	<div class="container-fluid">
+		<nav class="navbar navbar-expand-sm navbar-dark" style="background-color: #0b458f;">
+			<div class="collapse navbar-collapse" id="navbarSupportedContent">
+				<ul class="navbar-nav mr-auto">
+					<li class="nav-item dropdown">
+						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">VOLVER</a> 
+						<div class="dropdown-menu" aria-labelledby="navbarDropdown">
+					  		<a class="dropdown-item" href="http://190.14.255.23:8080/sinco/WelcomePresentation.po"><i class="fas fa-exchange-alt"></i> | REGRESAR</a>
+						</div>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="{% url 'inicio' %}"><i class="fas fa-home"></i></a>
+					</li>
+					<li class="nav-item dropdown">
+						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">TABLERO DE MANDO</a>
+						<div class="dropdown-menu" aria-labelledby="navbarDropdown">
+							<a class="dropdown-item" href="{% url 'inicio' %}"><i class="fas fa-tachometer-alt"></i> | Indicadores</a>
+							<a class="dropdown-item disabled" href="#" >Tablero Plan de Desarrollo (en construccion) <i class="fas fa-wrench"></i></a>
+							<a class="dropdown-item disabled" href="#">Tablero Sistema de Gestion  (en construccion) <i class="fas fa-wrench"></i></a>
+							<a class="dropdown-item disabled" href="#">Tablero MIPG  (en construccion) <i class="fas fa-wrench"></i></a>
+						</div>
+					</li>
+				</ul>
+			</div>
+		</nav>
+	</div>
+</div>

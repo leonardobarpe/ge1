@@ -1,0 +1,96 @@
+<form method="POST" role="form" id="formulario_indicador" method="multipart/form-data">
+{% csrf_token %}
+	<div class="row">
+		<div class="col-sm">
+			<div class="form-group">
+		    <label for="id_tipoIndicador">TIPO INDICADOR</label>
+	    		{{ formulario.tipo }}
+		  	</div>		
+			<!--<div class="form-group">
+				<label for="id_nomenclador">NOMENCLADOR</label>
+				{{ formulario.nomenclador }}
+			</div>-->
+			<div class="form-group" style="margin-top: 38px">
+				<label for="id_ciclo">CICLO</label>
+				{{ formulario.ciclo }}
+			</div>
+			<!--<div class="form-group">
+				<label for="id_fehcaCreacion">CREACION</label>
+				{# {{ formulario.fechaCreacion }} #}
+			</div>-->
+			<div class="form-group">
+				<label for="id_version">VERSIÓN</label>
+				{{ formulario.version }}
+			</div>
+		</div>
+		<div class="col-sm">
+			<div class="form-group">
+				<label for="id_prefijo">PREFIJO</label>
+				{{ formulario.prefijo }}
+			</div>
+			<div class="form-group">
+				<label for="id_objetivo">OBJETIVO</label>
+				{{ formulario.objetivo }}
+			</div>
+			<div class="form-group">
+				<label for="id_periodicidad">PERIODICIDAD</label>
+				{{ formulario.periodicidad }}
+			</div>
+			<div class="form-group">
+				<label for="id_responsable">RESPONSABLE</label>
+				{{ formulario.responsable }}
+			</div>
+			<div class="form-group">
+				<label for="actualizacion">ACTUALIZACION</label>
+				<input type="date" class="form-control" id="actualizacion" name="actualizacion">
+				{{ formulario.fechaActualiza }}
+			</div>
+		</div>	
+		<div class="col-sm">
+			<div class="form-group">
+				<label for="consecutivo">CONSECUTIVO</label>
+				{{ formulario.consecutivo }}
+			</div>
+
+			<div class="form-group">
+				<label for="producto_mide">PRODUCTO QUE MIDE</label>
+				{{ formulario.producto_mide }}
+			</div>
+			<div class="form-group">
+				<label for="ambito">AMBITO</label>
+				{{ formulario.ambito }}  
+			</div>
+			<div class="form-group">
+				<label for="noratividad">NORMATIVIDAD APLICABLE</label>
+				{{ formulario.normatividad }}
+				<!--<select id="normatividad">
+				{% for n in formulario.normatividad %}
+						<option value="">{{n}}</option>
+				{% endfor %}
+				</select>-->
+			</div>
+		</div>
+		<div class="col-sm">
+			<div class="form-group">
+				<label for="id_nombre">NOMBRE</label>
+				{{ formulario.nombre_identificador }}
+			</div>
+			<div class="form-group">
+				<label for="tipoMedicion">TIPO DE MEDICION</label>
+				{{ formulario.tipo_medicion }}
+			</div>											
+			<div class="form-group" style="margin-top: 37px">
+				<label for="dimension">DIMENSION</label>
+				{{ formulario.dimension }}
+			</div>
+			<div class="form-group">
+				<label for="limite_reporte">LIMITE DEL REPORTE</label>
+				{{ formulario.limite_reporte }}
+			</div>
+			<div class="form-group">
+				<label for="recurrencia">RECURRENCIA</label>
+				{{ formulario.recurrencia }}
+			</div>
+		</div>
+	</div>
+</form>

@@ -1,0 +1,152 @@
+<form method="POST" action="/tablero-Mando/indicador/?agregar_m&indicador={{indicador.pk}}" role="form" id="formulario_medicion" method="multipart/form-data">
+{% csrf_token %}
+	<div class="col-md-12">
+		<input type="hidden" id="rango_inicial" name="rango_inicial">
+		<input type="hidden" id="rango_final" name="rango_final">
+		<div class="row">
+			<div class="form-group col-md-3">
+		    	<label for="tipo_formula">TIPO DE FORMULA</label>
+				{{ form_medicion.tipo_formula }}
+		  	</div>
+
+		  	<div class="form-group col-md-2">
+		    	<label for="unidad_medicion">UNIDAD</label>
+				{{ form_medicion.unidad_medicion }}
+		  	</div>
+			
+			<div class="form-group col-md-2">
+		    	<label for="tendencia">TENDENCIA</label>
+				{{ form_medicion.tendencia }}
+		  	</div>
+
+			<div class="form-group col-md-5">
+				<label for="archivo_asociado">DOCUMENTO ASOCIADO</label>
+				{{ form_medicion.archivo_asociado }}
+			</div>
+		</div>
+
+		<div class="card card-block bg-light col-md-12 my-3">
+			<legend>VARIABLES</legend>
+			<div class="row">
+				<div class="form-group col-md-3">
+					<label for="nombre_variable_1">NOMBRE</label>
+					{{ form_medicion.nombre_variable_1 }}
+				</div>
+
+				<div class="form-group col-md-2">
+					<label for="nomenclaruta_1">NOMENCLATURA</label>
+					{{ form_medicion.nomenclaruta_1 }}
+				</div>
+
+				<div class="form-group col-md-2">
+					<label for="unidad_1">UNIDAD</label>
+					{{ form_medicion.unidad_1 }}
+				</div>
+
+				<div class="form-group col-md-2">
+					<label for="fuente_1">FUENTE</label>
+					{{ form_medicion.fuente_1 }}
+				</div>
+			</div>
+
+			<div class="row f_denominador" style="display:none;">
+				<div class="form-group col-md-3">
+					<label for="nombre_variable_2">NOMBRE DENOMINADOR</label>
+					{{ form_medicion.nombre_variable_2 }}
+				</div>
+
+				<div class="form-group col-md-2">
+					<label for="nomenclaruta_2">NOMENCLATURA</label>
+					{{ form_medicion.nomenclaruta_2 }}
+				</div>
+
+				<div class="form-group col-md-2">
+					<label for="unidad_2">UNIDAD</label>
+					{{ form_medicion.unidad_2 }}
+				</div>
+
+				<div class="form-group col-md-2">
+					<label for="fuente_2">FUENTE</label>
+					{{ form_medicion.fuente_2 }}
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="form-group col-md-3">
+					<label for="nombre_respuesta">NOMBRE RESPUESTA</label>
+					{{ form_medicion.nombre_respuesta }}
+				</div>
+
+				<div class="form-group col-md-2">
+					<label for="nomenclaruta_respuesta">NOMENCLATURA</label>
+					{{ form_medicion.nomenclaruta_respuesta }}
+				</div>
+
+				<div class="form-group col-md-2">
+					<label for="unidad_respuesta">UNIDAD</label>
+					{{ form_medicion.unidad_respuesta }}
+				</div>
+
+				<div class="form-group col-md-2">
+					<label for="fuente_respuesta">FUENTE</label>
+					{{ form_medicion.fuente_respuesta }}
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="form-group col-md-6">
+					<label for="formula">FORMULA</label>
+					<div id="contenedor_formula" class="math-tex">
+						`{{medicion.formula}}`
+					</div>
+					<input type="hidden" id="formula" name="formula">
+				</div>
+				<div class="form-group col-md-2">
+					<button class="btn btn-success btn-sm" type="button" id="btn_actualizar"><i class="fas fa-sync-alt"></i> Actualizar formula</button>
+				</div>
+			</div>
+
+			<div class="row f_tasa_variacion">
+				<div class="form-group col-md-7">
+					<label for="interpretacion_resultado">INTERPRETACION</label>
+					{{ form_medicion.interpretacion_resultado }}
+				</div>
+				<div class="form-group col-md-5">
+					<label for="rangos_medicion">RANGOS DE MEDICION</label>
+					<div class="form-group">
+						<span><b>0</b> <input id="rangos_medicion" type="text" class="span2" value="" data-slider-min="0" data-slider-max="100" data-slider-step="10" data-slider-value="{% if medicion %}[{{medicion.rango_inicial}},{{medicion.rango_final}}]{% else %}[20,80]{% endif %}"/> <b>100</b></span>
+						{# <br> #}
+						{# <div id="graficaMedicion" style="width: 100%;"></div> #}
+					</div>
+					<span id="span_rangos" style="align:center;">30:60</span>
+				</div>
+			</div>
+			<legend class="f_tasa_variacion">RESPONSABLES</legend>
+			<div class="row f_tasa_variacion">
+				<div class="form-group col-md-3">
+					<label for="responsable_reporte">REPORTE</label>
+					{{ form_medicion.responsable_reporte }}
+				</div>
+				<div class="form-group col-md-3">
+					<label for="responsable_consolidacion">CONSOLIDACIÓN</label>
+					{{ form_medicion.responsable_consolidacion }}
+				</div>
+				<div class="form-group col-md-3">
+					<label for="responsable_analisis_seguimiento">ANALISIS Y SEGUIMIENTO</label>
+					{{ form_medicion.responsable_analisis_seguimiento }}
+				</div>
+				<div class="form-group col-md-3">
+					<label for="responsable_decisiones">DECISIONES</label>
+					{{ form_medicion.responsable_decisiones }}
+				</div>
+			</div>
+
+			<span class="dropdown-divider"></span>
+
+			<div class="form-group">
+				<button type="submit" id="guardar_medicion" name="guardar_medicion" class="btn btn-success float-right">GUARDAR MEDICION</button>
+			</div>
+
+		</div>
+	</div>
+</form>

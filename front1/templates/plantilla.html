@@ -1,0 +1,46 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<title>GE - {% block title %}{% endblock title %}</title>
+	<link rel="shortcut icon" href="{% static 'imagenes/logos/logoCliente.ico' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'librerias/bootstrap400/dist/css/bootstrap.css' %}" media="screen">
+	<link rel="stylesheet" type="text/css" href="{% static 'librerias/fontawesome508/web-fonts-with-css/css/fontawesome.min.css' %}" media="screen">
+	<script src="{% static 'librerias/library/jquery-3.2.1.slim.min.js' %}"></script>
+	<script src="{% static 'librerias/library/popper.min.js' %}"></script>    
+	<script src="{% static 'librerias/bootstrap400/dist/js/bootstrap.min.js' %}"></script>
+	<script src="{% static 'librerias/library/all.js' %}"></script>
+
+	<script src="{% static 'librerias/library/DataTables-1.10.16/js/jquery.dataTables.min.js' %}"></script>
+	<script src="{% static 'librerias/library/DataTables-1.10.16/js/dataTables.bootstrap4.min.js' %}"></script>
+	<link rel="stylesheet" type="text/css" href="{% static 'librerias/library/DataTables-1.10.16/css/dataTables.bootstrap4.min.css' %}" media="screen">
+	
+	{% block extra_header %}{% endblock extra_header %}
+	</head>
+	<body>
+		<div id="pantalla">
+			<div id="encabezado" class="row bg-light" style="margin: 7px 0 7px 0;">
+				<div id="logoCliente" class="col">
+					<a href="{% url 'inicio' %}"><img class="rounded float-left" src="{% static 'imagenes/logos/logoCliente.png' %}" height="49" width="149"></a>
+				</div>
+				<div id="logoSW" class="col">
+					<img class="rounded float-left" src="{% static 'imagenes/logos/logoSW.png' %}" height="50" width="149">
+				</div>
+				<div id="generales">
+					<a href="#"><i class="far fa-user"></i><span> | {{ request.user }}</span></a>
+					<button class="btn btn-sm btn-danger"> <a href="#" class="text-white"><i class="fas fa-power-off"></i></a></button>
+				</div>
+			</div>
+
+			{% include "menu_principal.html" %}
+
+			<div id="contenido" class="row bg-light" >
+				{% block contenido %}{% endblock contenido %}
+			</div>
+		</div> 
+	</body>
+	{% block extra_script %}{% endblock extra_script %}
+</html>
