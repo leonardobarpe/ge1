@@ -203,27 +203,6 @@
 </table>
 </div>
 
-
-<div class="modal" tabindex="-1" role="dialog" id="modal-mensajes">
-	<div class="modal-dialog" role="document">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h5 class="modal-title">Modal title</h5>
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-				<span aria-hidden="true">&times;</span>
-				</button>
-			</div>
-			<div class="modal-body">
-				<p>Modal body text goes here.</p>
-			</div>
-			<div class="modal-footer">
-				{# <button type="button" class="btn btn-primary">Save changes</button> #}
-				<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-			</div>
-		</div>
-	</div>
-</div>
-
 {% endblock contenido %}
 
 {% block extra_script %}
@@ -352,7 +331,7 @@ function initIndicador(){
 	$('#id_ambito').val('{{indicador.ambito}}');
 	$('#id_dimension').val('{{indicador.dimension}}');
 	$('#id_version').val('{{indicador.version}}');
-	$('#id_responsable').val('{{indicador.responsable}}');
+	$('#id_responsable').val('{{indicador.responsable.codigo}}');
 	// $('#id_normatividad').val('{{indicador.normatividad}}');
 	{% for n in indicador.normatividad %}
 	    $("#id_normatividad option[value='{{n.0}}']").prop('selected', true);
@@ -390,10 +369,10 @@ function initMedicion(){
 	$('#id_fuente_respuesta').val('{{medicion.fuente_respuesta|default_if_none:""}}');
 
 	$('#id_interpretacion_resultado').val('{{medicion.interpretacion_resultado|default_if_none:""}}');
-	$('#id_responsable_reporte').val('{{medicion.responsable_reporte}}');
-	$('#id_responsable_consolidacion').val('{{medicion.responsable_consolidacion}}');
-	$('#id_responsable_analisis_seguimiento').val('{{medicion.responsable_analisis_seguimiento}}');
-	$('#id_responsable_decisiones').val('{{medicion.responsable_decisiones}}');
+	$('#id_responsable_reporte').val('{{medicion.responsable_reporte.codigo}}');
+	$('#id_responsable_consolidacion').val('{{medicion.responsable_consolidacion.codigo}}');
+	$('#id_responsable_analisis_seguimiento').val('{{medicion.responsable_analisis_seguimiento.codigo}}');
+	$('#id_responsable_decisiones').val('{{medicion.responsable_decisiones.codigo}}');
 }
 
 function enviarFormula(formula){

@@ -35,7 +35,12 @@
 								<td>{{ i.fecha_registro|date:"Y-m-d" }}</td>
 								<td align="center">
 									<a href="{% url 'indicador' %}?agregar&indicador={{i.id}}" data-toggle="tooltip" title="Editar"><i class="fas fa-edit"></i></a>
-									<a href="{% url 'indicador' %}?eliminar&indicador={{i.id}}" data-toggle="tooltip" title="Eliminar"><i class="far fa-trash-alt" style="color:#DC381F;"></i></a>
+									<a data-toggle="tooltip" title="Eliminar" eliminar-indicador="{{i.id}}" ><i class="far fa-trash-alt" style="color:#DC381F;"></i></a>
+									{% if i.verificado %}
+										<span data-toggle="tooltip" title="Verificado"><i class="fas fa-check"></i></span>
+									{% else %}
+										<a data-toggle="tooltip" title="Sin verificar" onclick="return confirm('Desea verificar el indicador?')" href="{% url 'indicador' %}?verificar&indicador={{i.id}}"><i class="fas fa-times"></i></a>
+									{% endif %}
 								</td>
 							</tr>
 						{% endfor %}
@@ -46,10 +51,82 @@
 	</div>
 </div>
 
+<div class="modal" tabindex="-1" role="dialog" id="modal-mensajes">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Eliminar Indicador</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<p>Esta seguro de eliminar el indicador.</p>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-warning" id="aceptar-eliminar">Aceptar</button>
+				<button type="button" class="btn btn-secondary" data-dismiss="modal" id="cancelar">Cancelar</button>
+			</div>
+		</div>
+	</div>
+</div>
+
 <script>
 	$(document).ready(function() {
-	    $('#tabla_indicadores').DataTable();
+		$("#tabla_indicadores").dataTable({
+	        "bFilter": true,
+	        "bPaginate": true,
+	        "language": {
+			    "sProcessing":     "Procesando...",
+			    "sLengthMenu":     "Mostrar _MENU_ registros",
+			    "sZeroRecords":    "No se encontraron resultados",
+			    "sEmptyTable":     "Ningún dato disponible en esta tabla",
+			    "sInfo":           "Mostrando del _START_ al _END_ de un total de _TOTAL_ registros",
+			    "sInfoEmpty":      "Mostrando del 0 al 0 de un total de 0 registros",
+			    "sInfoFiltered":   "(filtrado de un total de _MAX_ registros)",
+			    "sInfoPostFix":    "",
+			    "sSearch":         "Buscar:",
+			    "sUrl":            "",
+			    "sInfoThousands":  ",",
+			    "sLoadingRecords": "Cargando...",
+			    "oPaginate": {
+			        "sFirst":    "Primero",
+			        "sLast":     "Último",
+			        "sNext":     "Siguiente",
+			        "sPrevious": "Anterior"
+			    },
+			    "oAria": {
+			        "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
+			        "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+			    }
+			},
+	        "pageLength": 25,
+	        "aaSorting": [],
+	        "fnDrawCallback": function(oSettings) {
+	            $('.cargando-contenido').show();
+	            $('.cargando').hide();
+	        }
+	    });
 	    $('[data-toggle="tooltip"]').tooltip();
+	});
+
+	var id_indicador = 0;
+	$(document).on('click', 'a[eliminar-indicador]', function(){
+		$('#modal-mensajes').modal("show");
+		id_indicador = $(this).attr("eliminar-indicador");
+	})
+
+	$(document).on('click', '#aceptar-eliminar', function(){
+		var table = $('#tabla_indicadores').DataTable();
+		if (id_indicador!=0){
+			document.location.href = "{% url 'indicador' %}?eliminar&indicador="+id_indicador;
+			table.row( $("a[eliminar-indicador="+id_indicador+"]").parents('tr') ).remove().draw();
+			id_indicador = 0;
+		}
+	});
+	
+	$(document).on('click', '#cancelar', function(){
+		id_indicador = 0;
 	});
 </script>
 

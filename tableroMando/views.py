@@ -6,6 +6,7 @@ from datetime import datetime, date, timedelta
 from django.urls import reverse
 from django.views.generic import View
 from tableroMando.forms import *
+# from ge1.models import SisCargos
 
 
 def inicioTableroMando(request):
@@ -32,6 +33,7 @@ class ConfiguracionIndicador(View):
 	TEMPLATE_LISTAR = 'listar_indicadores.html'
 
 	ACCION_ELIMINAR = 'eliminar'
+	ACCION_VERIFICAR = 'verificar'
 
 
 	def agregar_indicador(self, request):
@@ -101,6 +103,12 @@ class ConfiguracionIndicador(View):
 		indicador.save()
 		return HttpResponseRedirect('/tablero-Mando/indicador/?listar_i')
 
+	def verificar_indicador(self, request):
+		indicador = Indicador.objects.get(pk=request.GET['indicador'])
+		indicador.verificado = True
+		indicador.save()
+		return HttpResponseRedirect('/tablero-Mando/indicador/?listar_i')
+
 
 	def get(self, request):
 		if self.ACCION_AGREGAR in request.GET:
@@ -111,6 +119,9 @@ class ConfiguracionIndicador(View):
 
 		if self.ACCION_ELIMINAR in request.GET:
 			return self.eliminar_indicador(request)
+
+		if self.ACCION_VERIFICAR in request.GET:
+			return self.verificar_indicador(request)
 
 		return HttpResponse("peticion invalida", status=403)
 

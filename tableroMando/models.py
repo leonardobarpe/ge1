@@ -2,6 +2,7 @@ from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User, Group
 from multiselectfield import MultiSelectField
+from ge1.models import SisCargos
 
 GERENTE = 1
 SUBGERENTE_ADMINISTRATIVO = 2
@@ -206,7 +207,7 @@ class Indicador(models.Model):
 	periodicidad		= models.SmallIntegerField(choices=PERIODICIDAD_OPCIONES, default=SEMESTRAL)
 	ambito				= models.SmallIntegerField(choices=AMBITOS, default=RESULTADO)
 	dimension			= models.SmallIntegerField(choices=DIMENCIONES, default=EFICACIA)
-	responsable			= models.SmallIntegerField(choices=RESPONSABLE_OPCIONES, default=SUBGERENTE_ADMINISTRATIVO)
+	responsable			= models.ForeignKey(SisCargos, on_delete=models.DO_NOTHING)
 	normatividad 		= MultiSelectField(max_length=10,choices=NORMATIVIDAD_OPCIONES)
 	fecha_registro		= models.DateTimeField(editable=False) #DateTimeField(default=timezone.now) -- DateField()
 	fecha_modificacion	= models.DateTimeField() # Esta fecha se eactualiza cada vez que se actualiza
@@ -214,6 +215,7 @@ class Indicador(models.Model):
 	limite_reporte   	= models.SmallIntegerField(choices=LIMITES_REPORTES, default=SEGUNDO)
 	version    			= models.FloatField(default="1")
 	recurrencia			= models.NullBooleanField(default=True)
+	verificado 			= models.BooleanField(default=False)
 	# nomenclador			= models.CharField(choices=NOMENCLADOR_OPCIONES, max_length = 3, default=TDE)
 	# usuario_registro 	= models.ForeignKey(User, on_delete=models.DO_NOTHING)
 
@@ -302,10 +304,10 @@ class Medicion(models.Model):
 	interpretacion_resultado = models.TextField(blank=True, null=True)
 	rango_inicial 		= models.IntegerField(blank=True, null=True)
 	rango_final 		= models.IntegerField(blank=True, null=True)
-	responsable_reporte = models.SmallIntegerField(choices=RESPONSABLE_OPCIONES, blank=True, null=True)
-	responsable_consolidacion = models.SmallIntegerField(choices=RESPONSABLE_OPCIONES, blank=True, null=True)
-	responsable_analisis_seguimiento = models.SmallIntegerField(choices=RESPONSABLE_OPCIONES, blank=True, null=True)
-	responsable_decisiones = models.SmallIntegerField(choices=RESPONSABLE_OPCIONES, blank=True, null=True)
+	responsable_reporte = models.ForeignKey(SisCargos, on_delete=models.DO_NOTHING, blank=True, null=True, related_name='+')
+	responsable_consolidacion = models.ForeignKey(SisCargos, on_delete=models.DO_NOTHING, blank=True, null=True, related_name='+')
+	responsable_analisis_seguimiento = models.ForeignKey(SisCargos, on_delete=models.DO_NOTHING, blank=True, null=True, related_name='+')
+	responsable_decisiones = models.ForeignKey(SisCargos, on_delete=models.DO_NOTHING, blank=True, null=True, related_name='+')
 
 	def __str__(self):
 		return u'%s -- %s' % (self.indicador, self.tipo_formula)
