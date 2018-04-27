@@ -3301,7 +3301,7 @@ class SisCargos(models.Model):
         db_table = 'sis_cargos'
 
     def __str__(self):
-        return u'%s-%s' % (self.codigo, self.descripcion)
+        return u'%s' % (self.descripcion)
 
 
 class SisCarguesArchivos(models.Model):
