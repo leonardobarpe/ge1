@@ -2,7 +2,7 @@ from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User, Group
 from multiselectfield import MultiSelectField
-from ge1.models import SisCargos
+from ge1.models import SisCargos, SisUnidadesMedida
 
 GERENTE = 1
 SUBGERENTE_ADMINISTRATIVO = 2
@@ -280,23 +280,23 @@ class Medicion(models.Model):
 
 	indicador 			= models.OneToOneField(Indicador, on_delete=models.CASCADE, primary_key=True)
 	tipo_formula 		= models.SmallIntegerField(choices=TIPOS_FORMULA, default=TASA_VARIACION)
-	unidad_medicion		= models.SmallIntegerField(choices=UNIDADES, default=UN_PORCENTAJE)
+	unidad_medicion		= models.ForeignKey(SisUnidadesMedida, on_delete=models.DO_NOTHING, blank=True, null=True, related_name='+')
 	tendencia 			= models.SmallIntegerField(choices=TENCENCIAS_MEDICION, default=INCREMENTO)
 	archivo_asociado 	= models.CharField(max_length = 100, blank=True, null=True)
 
 	nombre_variable_1	= models.CharField(max_length = 200)
 	nomenclaruta_1 		= models.CharField(max_length = 6)
-	unidad_1			= models.SmallIntegerField(choices=UNIDADES, blank=True, null=True)
+	unidad_1			= models.ForeignKey(SisUnidadesMedida, on_delete=models.DO_NOTHING, blank=True, null=True, related_name='+')
 	fuente_1			= models.CharField(max_length = 100, blank=True, null=True)
 
 	nombre_variable_2	= models.CharField(max_length = 200, blank=True, null=True)
 	nomenclaruta_2 		= models.CharField(max_length = 6, blank=True, null=True)
-	unidad_2			= models.SmallIntegerField(choices=UNIDADES, blank=True, null=True)
+	unidad_2			= models.ForeignKey(SisUnidadesMedida, on_delete=models.DO_NOTHING, blank=True, null=True, related_name='+')
 	fuente_2			= models.CharField(max_length = 100, blank=True, null=True)
 
 	nombre_respuesta	= models.CharField(max_length = 200, blank=True, null=True)
 	nomenclaruta_respuesta = models.CharField(max_length = 6, blank=True, null=True)
-	unidad_respuesta	= models.SmallIntegerField(choices=UNIDADES, blank=True, null=True)
+	unidad_respuesta	= models.ForeignKey(SisUnidadesMedida, on_delete=models.DO_NOTHING, blank=True, null=True, related_name='+')
 	fuente_respuesta	= models.CharField(max_length = 100, blank=True, null=True)
 
 	formula 			= models.TextField()
@@ -311,4 +311,18 @@ class Medicion(models.Model):
 
 	def __str__(self):
 		return u'%s -- %s' % (self.indicador, self.tipo_formula)
+
+
+from ge1.models import PdeMetas, Procesos, Subprocesos
+# class Armonizacion(models.Model):
+# 	# Plan de desarrollo
+# 	linea = 
+# 	programa = 
+# 	subprograma = 
+# 	meta = models.ForeignKey(PdeMetas, on_delete=models.DO_NOTHING, blank=True, null=True)
+
+# 	# Sistema integrado de gestion
+# 	tipo_proceso = 
+# 	proceso = models.ForeignKey(Procesos, on_delete=models.DO_NOTHING, blank=True, null=True)
+# 	subproceso = models.ForeignKey(Subprocesos, on_delete=models.DO_NOTHING, blank=True, null=True)
 

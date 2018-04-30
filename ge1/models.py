@@ -2283,6 +2283,9 @@ class PdeMetas(models.Model):
         managed = False
         db_table = 'pde_metas'
 
+    def __str__(self):
+        return u'%s' % (self.nombre_meta)
+
 
 class PdeMetasResponsables(models.Model):
     id_meta = models.IntegerField(primary_key=True)
@@ -2828,6 +2831,9 @@ class Procesos(models.Model):
     class Meta:
         managed = False
         db_table = 'procesos'
+
+    def __str__(self):
+        return u'%s' % (self.descripcion)
 
 
 class ProcesosServicios(models.Model):
@@ -3668,6 +3674,9 @@ class SisUnidadesMedida(models.Model):
     class Meta:
         managed = False
         db_table = 'sis_unidades_medida'
+
+    def __str__(self):
+        return u'%s' % (self.nombre_unidad)
 
 
 class SisUsuarios(models.Model):

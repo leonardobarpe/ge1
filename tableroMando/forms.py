@@ -92,7 +92,7 @@ class MedicionForm(forms.ModelForm):
 		super(MedicionForm, self).__init__(*args, **kwargs)
 		for visible in self.visible_fields():
 			visible.field.widget.attrs['class'] = 'form-control'
-		self.fields['interpretacion_resultado'].widget.attrs['rows']= 2
+		self.fields['interpretacion_resultado'].widget.attrs['rows']= 3
 		self.fields['formula'].widget.attrs['rows']= 2
 
 

@@ -1,0 +1,145 @@
+<div class="row">
+	<div class="card-group">
+		<div class="card">
+			<div class="card-body">
+				<p class="card-title">
+					<div class="custom-control custom-checkbox">
+						<input type="checkbox" class="custom-control-input" id="planDesarrolloCheck" onclick="mostrarPlaDes()" >
+						<label class="custom-control-label" for="planDesarrolloCheck">PLAN DESARROLLO</label>
+					</div>														
+				</p>
+				<div class="card-text" id="parrafoPlanDes" style="display: none">
+					<div class="form-group">
+				    <label for="linea">LINEA</label>
+						<select class="form-control" id="linea" name="linea">
+							<option>--</option>
+							<option>--</option>
+							<option>--</option>
+			    		</select>
+				  	</div>
+					<div class="form-group">
+				    <label for="programa">PROGRAMA</label>
+						<select class="form-control" id="programa" name="programa">
+							<option>--</option>
+							<option>--</option>
+							<option>--</option>
+			    		</select>
+				  	</div>
+					<div class="form-group">
+				    <label for="subprograma">SUBPROGRAMA</label>
+						<select class="form-control" id="subprograma" name="subprograma">
+							<option>--</option>
+							<option>--</option>
+							<option>--</option>
+			    		</select>
+				  	</div>
+					<div class="form-group">
+				    <label for="meta">META</label>
+						<select class="form-control" id="meta" name="meta">
+							<option>--</option>
+							<option>--</option>
+							<option>--</option>
+			    		</select>
+				  	</div>												  	
+			  	</div>													
+			</div>
+		</div>
+		<div class="card">
+			<div class="card-body">
+				<p class="card-title">
+					<div class="custom-control custom-checkbox">
+						<input type="checkbox" class="custom-control-input" id="sisIntGesCheck" onclick=" mostrarSisIntGes()">
+						<label class="custom-control-label" for="sisIntGesCheck">SISTEMA INTEGRADO DE GESTION</label>
+					</div>
+				</p>
+				<div class="card-text" id="parrafoSisIntGes" style="display: none">
+					<div class="form-group">
+				    <label for="tipoProceso">TIPO DE PROCESO</label>
+						<select class="form-control" id="tipoProceso" name="tipoProceso">
+							<option>--</option>
+							<option>--</option>
+							<option>--</option>
+			    		</select>
+				  	</div>
+					<div class="form-group">
+				    <label for="proceso">PROCESO</label>
+						<select class="form-control" id="proceso" name="proceso">
+							<option>--</option>
+							<option>--</option>
+							<option>--</option>
+			    		</select>
+				  	</div>	
+					<div class="form-group">
+				    <label for="subproceso">SUBPROCESO</label>
+						<select class="form-control" id="subproceso" name="subproceso">
+							<option>--</option>
+							<option>--</option>
+							<option>--</option>
+			    		</select>
+				  	</div>													  										  
+				</div>													
+			</div>
+		</div>
+		<div class="card">
+			<div class="card-body">
+				<p class="card-title">
+					<div class="custom-control custom-checkbox">
+						<input type="checkbox" class="custom-control-input" id="modeloInPlaGeCheck" onclick="mostrarModeloInPlaGeCheck()">
+						<label class="custom-control-label" for="modeloInPlaGeCheck">MODELO INTEGRADO DE PLANEACION Y GESTION</label>
+					</div>
+				</p>
+				<div class="card-text" id="parrafoModIntPlanGes" style="display: none">
+					<div class="form-group">
+				    <label for="dimensionArm">DIMENSION</label>
+						<select class="form-control" id="dimensionArm" name="dimensionArm">
+							<option>--</option>
+							<option>--</option>
+							<option>--</option>
+			    		</select>
+				  	</div>	
+					<div class="form-group">
+				    <label for="politica">POLITICA</label>
+						<select class="form-control" id="politica" name="politica">
+							<option>--</option>
+							<option>--</option>
+							<option>--</option>
+			    		</select>
+				  	</div>
+				</div>
+			</div>
+		</div>
+	</div>	
+</div>
+
+<script type="text/javascript">
+	// PESTAÑA ARMONIZACION
+	// Ocultar o mostrar campos de PLAN DE DESARROLLO
+	function mostrarPlaDes(){ 
+		if (document.getElementById("planDesarrolloCheck").checked) {
+			document.getElementById("parrafoPlanDes").style.display = "block";
+		}
+		else{
+			document.getElementById("parrafoPlanDes").style.display = "none";
+		}
+	}
+	// PESTAÑA ARMONIZACION
+	// Ocultar o mostrar campos de SISTEMA INTEGRADO DE GESTION
+	function mostrarSisIntGes(){
+		if (document.getElementById("sisIntGesCheck").checked) {
+			document.getElementById("parrafoSisIntGes").style.display = "block";
+		}
+		else{
+			document.getElementById("parrafoSisIntGes").style.display = "none";
+		}
+	}
+	// PESTAÑA ARMONIZACION
+	// Ocultar o mostrar campos de MODELO INTEGRADO DE PLANEACION Y GESTION
+	function mostrarModeloInPlaGeCheck(){
+		if (document.getElementById("modeloInPlaGeCheck").checked) {
+			document.getElementById("parrafoModIntPlanGes").style.display = "block";
+		}
+		else{
+			document.getElementById("parrafoModIntPlanGes").style.display = "none";
+		}
+	}
+</script>
