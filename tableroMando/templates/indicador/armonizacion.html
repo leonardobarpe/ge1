@@ -1,45 +1,31 @@
+<form method="POST" action="/tablero-Mando/indicador/?agregar_a&indicador={{indicador.pk}}" role="form" id="formulario_armonizacion" method="multipart/form-data">
+{% csrf_token %}
 <div class="row">
 	<div class="card-group">
 		<div class="card">
 			<div class="card-body">
 				<p class="card-title">
 					<div class="custom-control custom-checkbox">
-						<input type="checkbox" class="custom-control-input" id="planDesarrolloCheck" onclick="mostrarPlaDes()" >
+						<input type="checkbox" class="custom-control-input" id="planDesarrolloCheck" onclick="mostrarPlaDes()" {% if armonizacion %} checked {% endif %} >
 						<label class="custom-control-label" for="planDesarrolloCheck">PLAN DESARROLLO</label>
 					</div>														
 				</p>
-				<div class="card-text" id="parrafoPlanDes" style="display: none">
+				<div class="card-text" id="parrafoPlanDes" {% if not armonizacion %}style="display: none"{% endif %}>
 					<div class="form-group">
 				    <label for="linea">LINEA</label>
-						<select class="form-control" id="linea" name="linea">
-							<option>--</option>
-							<option>--</option>
-							<option>--</option>
-			    		</select>
+						{{ form_armonizacion.linea }}
 				  	</div>
 					<div class="form-group">
 				    <label for="programa">PROGRAMA</label>
-						<select class="form-control" id="programa" name="programa">
-							<option>--</option>
-							<option>--</option>
-							<option>--</option>
-			    		</select>
+						{{ form_armonizacion.programa }}
 				  	</div>
 					<div class="form-group">
 				    <label for="subprograma">SUBPROGRAMA</label>
-						<select class="form-control" id="subprograma" name="subprograma">
-							<option>--</option>
-							<option>--</option>
-							<option>--</option>
-			    		</select>
+						{{ form_armonizacion.subprograma }}
 				  	</div>
 					<div class="form-group">
 				    <label for="meta">META</label>
-						<select class="form-control" id="meta" name="meta">
-							<option>--</option>
-							<option>--</option>
-							<option>--</option>
-			    		</select>
+						{{ form_armonizacion.meta }}
 				  	</div>												  	
 			  	</div>													
 			</div>
@@ -48,26 +34,18 @@
 			<div class="card-body">
 				<p class="card-title">
 					<div class="custom-control custom-checkbox">
-						<input type="checkbox" class="custom-control-input" id="sisIntGesCheck" onclick=" mostrarSisIntGes()">
+						<input type="checkbox" class="custom-control-input" id="sisIntGesCheck" onclick=" mostrarSisIntGes()" {% if armonizacion %} checked {% endif %}>
 						<label class="custom-control-label" for="sisIntGesCheck">SISTEMA INTEGRADO DE GESTION</label>
 					</div>
 				</p>
-				<div class="card-text" id="parrafoSisIntGes" style="display: none">
+				<div class="card-text" id="parrafoSisIntGes" {% if not armonizacion %}style="display: none"{% endif %}>
 					<div class="form-group">
 				    <label for="tipoProceso">TIPO DE PROCESO</label>
-						<select class="form-control" id="tipoProceso" name="tipoProceso">
-							<option>--</option>
-							<option>--</option>
-							<option>--</option>
-			    		</select>
+						{{ form_armonizacion.tipo_proceso }}
 				  	</div>
 					<div class="form-group">
 				    <label for="proceso">PROCESO</label>
-						<select class="form-control" id="proceso" name="proceso">
-							<option>--</option>
-							<option>--</option>
-							<option>--</option>
-			    		</select>
+						{{ form_armonizacion.proceso }}
 				  	</div>	
 					<div class="form-group">
 				    <label for="subproceso">SUBPROCESO</label>
@@ -84,7 +62,7 @@
 			<div class="card-body">
 				<p class="card-title">
 					<div class="custom-control custom-checkbox">
-						<input type="checkbox" class="custom-control-input" id="modeloInPlaGeCheck" onclick="mostrarModeloInPlaGeCheck()">
+						<input type="checkbox" class="custom-control-input" id="modeloInPlaGeCheck" onclick="mostrarModeloInPlaGeCheck()" disabled="disabled">
 						<label class="custom-control-label" for="modeloInPlaGeCheck">MODELO INTEGRADO DE PLANEACION Y GESTION</label>
 					</div>
 				</p>
@@ -108,8 +86,13 @@
 				</div>
 			</div>
 		</div>
-	</div>	
+	</div>
 </div>
+<br>
+<div class="form-group">
+	<button type="submit" id="guardar_armonizacion" name="guardar_armonizacion" class="btn btn-success float-right">GUARDAR ARMONIZACIÓN</button>
+</div>
+</form>
 
 <script type="text/javascript">
 	// PESTAÑA ARMONIZACION
@@ -142,4 +125,6 @@
 			document.getElementById("parrafoModIntPlanGes").style.display = "none";
 		}
 	}
+
+	$(".select-chossen").chosen({width: "100%"}); 
 </script>

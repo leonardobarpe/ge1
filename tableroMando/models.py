@@ -27,14 +27,12 @@ class Indicador(models.Model):
 	SISTEMA_DE_SALUD = 2
 	SISTEMA_DE_GESTION = 3
 	FINANCIERO = 4
-	OTRO_TI = 5
 
 	ABREBIATURA_INDICADORES = (
 		(PLAN_DE_DESARROLLO, 'PDI'),
 		(SISTEMA_DE_SALUD, 'SSS'),
 		(SISTEMA_DE_GESTION, 'SGC'),
 		(FINANCIERO, 'FIN'),
-		(OTRO_TI, 'OTR'),
 	)
 
 	TIPO_INDICADOR_OPCIONES = (
@@ -42,7 +40,6 @@ class Indicador(models.Model):
 		(SISTEMA_DE_SALUD, 'Sistema de salud'),
 		(SISTEMA_DE_GESTION, 'Sistema de gestion'),
 		(FINANCIERO, 'Financiero'),
-		(OTRO_TI, 'Otro'),
 	)
 	
 	# PIB = 'PIB'
@@ -198,6 +195,7 @@ class Indicador(models.Model):
 
 	estado				= models.BooleanField(default=True)  #  estado para inactivar en caso de eliminar	
 	tipo	  			= models.SmallIntegerField(choices=TIPO_INDICADOR_OPCIONES, default=PLAN_DE_DESARROLLO)
+	tipo_indicador 		= MultiSelectField(max_length=10,choices=TIPO_INDICADOR_OPCIONES, default="")
 	consecutivo			= models.IntegerField()
 	nombre_identificador= models.CharField(max_length = 300,blank=True, null=True)
 	objetivo  			= models.TextField(blank=True, null=True)
@@ -221,12 +219,12 @@ class Indicador(models.Model):
 
 	# ARMONIZACION
 	
-	def get_prefijo(self):
-		return self.ABREBIATURA_INDICADORES[self.tipo-1][1]
+	# def get_prefijo(self):
+	# 	return self.ABREBIATURA_INDICADORES[self.tipo-1][1]
 
 
 	def str_codigo(self):
-		return u'%s-%s' % (self.get_prefijo(), self.consecutivo)
+		return u'IND - %s' % (self.consecutivo)
 
 
 	def save(self, *args, **kwargs):
@@ -238,7 +236,7 @@ class Indicador(models.Model):
 
 
 	def __str__(self):
-		return u'%s-%s %s' % (self.get_prefijo(), self.consecutivo, self.nombre_identificador)
+		return u'IND - %s %s' % (self.consecutivo, self.nombre_identificador)
 
 
 
@@ -313,16 +311,33 @@ class Medicion(models.Model):
 		return u'%s -- %s' % (self.indicador, self.tipo_formula)
 
 
-from ge1.models import PdeMetas, Procesos, Subprocesos
-# class Armonizacion(models.Model):
-# 	# Plan de desarrollo
-# 	linea = 
-# 	programa = 
-# 	subprograma = 
-# 	meta = models.ForeignKey(PdeMetas, on_delete=models.DO_NOTHING, blank=True, null=True)
+from ge1.models import PdeMetas, Procesos, Subprocesos, PdeUnidadNivel, SisMultivalores
+class Armonizacion(models.Model):
+	ESTRATEGICO = 1
+	MISIONAL = 2
+	APOYO = 3
+	EVALUACION = 4
 
-# 	# Sistema integrado de gestion
-# 	tipo_proceso = 
-# 	proceso = models.ForeignKey(Procesos, on_delete=models.DO_NOTHING, blank=True, null=True)
-# 	subproceso = models.ForeignKey(Subprocesos, on_delete=models.DO_NOTHING, blank=True, null=True)
+	TIPOS_PROCESOS = (
+		(ESTRATEGICO, 'Estrategico'),
+		(MISIONAL, 'Misional'),
+		(APOYO, 'Apoyo'),
+		(EVALUACION, 'Evaluacion'),
+	)
+
+	indicador = models.OneToOneField(Indicador, on_delete=models.DO_NOTHING, primary_key=True)
+	# Plan de desarrollo
+	linea = models.ForeignKey(PdeUnidadNivel, on_delete=models.DO_NOTHING, blank=True, null=True, related_name='+')
+	programa = models.ForeignKey(PdeUnidadNivel, on_delete=models.DO_NOTHING, blank=True, null=True, related_name='+')
+	subprograma = models.ForeignKey(PdeUnidadNivel, on_delete=models.DO_NOTHING, blank=True, null=True, related_name='+')
+
+	meta = models.ForeignKey(PdeMetas, on_delete=models.DO_NOTHING, blank=True, null=True)
+
+	# Sistema integrado de gestion
+	tipo_proceso = models.SmallIntegerField(choices=TIPOS_PROCESOS, default=ESTRATEGICO, blank=True)
+	proceso = models.ForeignKey(Procesos, on_delete=models.DO_NOTHING, blank=True, null=True)
+	# subproceso = models.ForeignKey(Subprocesos, on_delete=models.DO_NOTHING, blank=True, null=True)
+
+	def __str__(self):
+		return u'id -- %s' % (self.indicador.id)
 

@@ -80,14 +80,6 @@
 		</div>
 	</td>
 	</tr>
-
-	<tr>
-		<td>
-			<div class="form-group">
-				<button type="submit" id="guardar_indicador" name="guardar_indicador" class="btn btn-success float-right">GUARDAR</button>
-			</div>
-		</td>
-	</tr>
 </tbody>
 </table>
 </div>
@@ -129,6 +121,7 @@ $(document).on('change', '#id_tipo_formula', function(){
     }
 });
 
+{% comment %}
 // ASIGNA VALOR A PREJIJO DEPENDIENDO DEL TIPO DE INDICDOR SELECCIONADO
 $(document).on('change', '#id_tipo', function(){
 	var tipo_selecionado = parseInt($('#id_tipo option:selected').val());
@@ -138,6 +131,7 @@ $(document).on('change', '#id_tipo', function(){
 		}
 	{% endfor %}
 });
+{% endcomment %}
 
 function actualizarRangos(){
 	$("#rangos_medicion").slider({});
@@ -157,7 +151,8 @@ function actualizarRangos(){
 }
 
 $(document).ready(function(){
-	$("#id_normatividad").chosen({width: "100%"}); 
+	$("#id_tipo_indicador").chosen({width: "100%"}); 
+	$("#id_normatividad").chosen({width: "100%"});
 	$("#id_responsable").chosen({width: "100%"}); 
 	$("#id_responsable_reporte").chosen({width: "100%"}); 
 	$("#id_responsable_consolidacion").chosen({width: "100%"}); 
@@ -179,12 +174,18 @@ $(document).ready(function(){
 		{% endif %}
 		// END MEDICION
 
+		{% if armonizacion %}
+			initArmonizacion();
+		{% endif %}
+
 	{% endif %}
 
 });
 
 function initIndicador(){
-	$('#id_tipo').val('{{indicador.tipo}}');
+	{% for n in indicador.tipo_indicador %}
+		$("#id_tipo_indicador option[value='{{n.0}}']").prop('selected', true);
+	{% endfor %}
 	$('#id_consecutivo').val('{{indicador.consecutivo}}');
 	$('#id_nombre_identificador').val('{{indicador.nombre_identificador}}');
 	$('#id_objetivo').val('{{indicador.objetivo|escapejs}}');
@@ -209,6 +210,7 @@ function initIndicador(){
 	else
 		$('#id_recurrencia').val(1);
 
+	$('#id_tipo_indicador').trigger("chosen:updated");
 	$('#id_normatividad').trigger("chosen:updated");
 	$('#id_responsable').trigger("chosen:updated");
 }
@@ -244,6 +246,18 @@ function initMedicion(){
 	$('#id_responsable_consolidacion').trigger("chosen:updated");
 	$('#id_responsable_analisis_seguimiento').trigger("chosen:updated");
 	$('#id_responsable_decisiones').trigger("chosen:updated");
+}
+
+function initArmonizacion(){
+	$('#id_linea').val('{{armonizacion.linea.id_unidad_nivel}}');
+	$('#id_programa').val('{{armonizacion.programa.id_unidad_nivel}}');
+	$('#id_subprograma').val('{{armonizacion.subprograma.id_unidad_nivel}}');
+	$('#id_meta').val('{{armonizacion.meta.id_meta}}');
+
+	$('#id_tipo_proceso').val('{{armonizacion.tipo_proceso}}');
+	$('#id_proceso').val('{{armonizacion.proceso.codigo}}');
+
+	$('.select-chossen').trigger("chosen:updated");
 }
 
 function enviarFormula(formula){
@@ -302,13 +316,15 @@ $(document).on('click','#guardar_medicion', function(event){
 
 function validarIndicador(){
 	var is_valid = true;
-	if ($('#id_consecutivo').val() == "" || $('#id_nombre_identificador').val() == "" || $('#id_normatividad').val() == ""){
+	if ($('#id_tipo_indicador').val() == "" || $('#id_consecutivo').val() == "" || $('#id_nombre_identificador').val() == "" || $('#id_normatividad').val() == "" || $('#id_responsable').val() == ""){
 		is_valid = false;
 	}
 	if($('#id_consecutivo').val() == ""){
 		alert("Digite un número codigo");
 	}else if ($('#id_nombre_identificador').val() == ""){
 		alert("Digite un nombre de indicador");
+	}else if($('#id_responsable').val() == ""){
+		alert("Seleccione un responsable");
 	}else if($('#id_normatividad').val() == ""){
 		alert("Seleccione una o varias Normatividades");
 	}

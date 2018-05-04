@@ -2372,6 +2372,9 @@ class PdeUnidadNivel(models.Model):
         managed = False
         db_table = 'pde_unidad_nivel'
 
+    def __str__(self):
+        return u'%s' % (self.nombre_unidad)
+
 
 class PoaActividadResponsable(models.Model):
     id_actividad = models.DecimalField(primary_key=True, max_digits=4, decimal_places=0)
@@ -3834,7 +3837,7 @@ class SolicitudesPeriodo(models.Model):
 
 class Subprocesos(models.Model):
     proceso = models.CharField(primary_key=True, max_length=20)
-    codigo = models.CharField(max_length=20)
+    codigo = models.CharField(primary_key=True, max_length=20)
     descripcion = models.CharField(max_length=120)
     estado = models.CharField(max_length=1, blank=True, null=True)
     factor = models.DecimalField(max_digits=3, decimal_places=0, blank=True, null=True)
@@ -3849,6 +3852,9 @@ class Subprocesos(models.Model):
         managed = False
         db_table = 'subprocesos'
         unique_together = (('proceso', 'codigo'),)
+
+    def __str__(self):
+        return u'%s' % (self.codigo)
 
 
 class TableromandoIndicador(models.Model):

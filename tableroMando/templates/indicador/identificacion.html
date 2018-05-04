@@ -2,22 +2,22 @@
 {% csrf_token %}
 	<div class="col-md-12">
 		<div class="row">
-			<div class="form-group col-md-3">
-			    <label for="id_tipoIndicador">TIPO INDICADOR</label>
-	    		{{ formulario.tipo }}
-		  	</div>
-
 			<div class="form-group col-md-3" align="center">
 				<label for="id_consecutivo">CÓDIGO</label>
 				<div class="row">
 					<div class="form-group col-md-5" align="right" style="font-size: 20px;">
-						<b><span id="id_prefijo">{% if indicador %}{{indicador.get_prefijo}}{% else %}PDI{% endif %}</span></b> -
+						<b>IND</b> -
 					</div>
 					<div class="form-group col-md-7">
 					{{ formulario.consecutivo }}
 					</div>
 				</div>
 			</div>
+			
+			<div class="form-group col-md-3">
+			    <label for="id_tipoIndicador">TIPO INDICADOR</label>
+	    		{{ formulario.tipo_indicador }}
+		  	</div>
 
 			<div class="form-group col-md-3">
 				<label for="id_nombre">NOMBRE</label>
@@ -97,6 +97,10 @@
 				<label for="id_recurrencia">RECURRENCIA</label>
 				{{ formulario.recurrencia }}
 			</div>
+		</div>
+
+		<div class="form-group">
+			<button type="submit" id="guardar_indicador" name="guardar_indicador" class="btn btn-success float-right">GUARDAR</button>
 		</div>
 	</div>
 </form>

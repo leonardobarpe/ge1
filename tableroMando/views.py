@@ -28,6 +28,7 @@ class ConfiguracionIndicador(View):
 	TEMPLATE_AGREGAR = 'nuevo_indicador.html'
 
 	ACCION_AGREGAR_MEDICION = 'agregar_m'
+	ACCION_AGREGAR_ARMONIZACION = 'agregar_a'
 
 	ACCION_LISTAR = 'listar_i'
 	TEMPLATE_LISTAR = 'listar_indicadores.html'
@@ -45,11 +46,18 @@ class ConfiguracionIndicador(View):
 			indicador = Indicador.objects.get(pk=request.GET['indicador'])
 
 		form_medicion = MedicionForm(request.POST or None)
+		form_armonizacion = ArmonizacionForm(request.POST or None)
 
 		try:
 			medicion = Medicion.objects.get(indicador=indicador)
 		except Medicion.DoesNotExist:
 			medicion = None
+			pass
+
+		try:
+			armonizacion = Armonizacion.objects.get(indicador=indicador)
+		except Armonizacion.DoesNotExist:
+			armonizacion = None
 			pass
 
 		if formulario.is_valid():
@@ -59,7 +67,7 @@ class ConfiguracionIndicador(View):
 				nuevo_i.save()
 				return HttpResponseRedirect('/tablero-Mando/indicador/?agregar&indicador=%s' % nuevo_i.pk)
 			else:
-				indicador.tipo = formulario.cleaned_data.get('tipo')
+				indicador.tipo_indicador = formulario.cleaned_data.get('tipo_indicador')
 				indicador.consecutivo = formulario.cleaned_data.get('consecutivo')
 				indicador.nombre_identificador = formulario.cleaned_data.get('nombre_identificador')
 				indicador.objetivo = formulario.cleaned_data.get('objetivo')
@@ -92,6 +100,17 @@ class ConfiguracionIndicador(View):
 		return render(request, self.TEMPLATE_AGREGAR, locals())
 
 
+	def agregar_armonizacion(self, request):
+		indicador = Indicador.objects.get(pk=request.GET['indicador'])
+		form = ArmonizacionForm(request.POST or None)
+		if form.is_valid():
+			nuevo_a = form.save(commit=False)
+			nuevo_a.indicador = indicador
+			nuevo_a.save()
+			return HttpResponseRedirect('/tablero-Mando/indicador/?agregar&indicador=%s' % indicador.pk)
+		return render(request, self.TEMPLATE_AGREGAR, locals())
+
+
 	def listar_indicadores(self, request):
 		indicadores = Indicador.objects.filter(estado=True)
 		return render(request, self.TEMPLATE_LISTAR, locals())
@@ -108,6 +127,7 @@ class ConfiguracionIndicador(View):
 		indicador.verificado = True
 		indicador.save()
 		return HttpResponseRedirect('/tablero-Mando/indicador/?listar_i')
+
 
 
 	def get(self, request):
@@ -132,6 +152,9 @@ class ConfiguracionIndicador(View):
 
 		if self.ACCION_AGREGAR_MEDICION in request.GET:
 			return self.agregar_medicion(request)
+
+		if self.ACCION_AGREGAR_ARMONIZACION in request.GET:
+			return self.agregar_armonizacion(request)
 
 		return HttpResponse("peticion invalida", status=403)
 

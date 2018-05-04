@@ -1,5 +1,5 @@
 from django import forms
-from .models import Indicador, Medicion
+from .models import Indicador, Medicion, Armonizacion
 
 
 class IndicadorFormulario(forms.ModelForm):
@@ -9,11 +9,12 @@ class IndicadorFormulario(forms.ModelForm):
 			'fecha_creacion',
 			'fecha_modificacion',
 			'rango_inicial',
-			'rango_final'
+			'rango_final',
+			'tipo',
 			# 'usuario_registro',
 			)
 		fields = (
-			'tipo',
+			'tipo_indicador',
 			'consecutivo',
 			'nombre_identificador',
 			'objetivo',
@@ -32,6 +33,7 @@ class IndicadorFormulario(forms.ModelForm):
 			)
 		widgets = {
             'normatividad': forms.SelectMultiple(attrs={'class': 'form-control','multiple':'','data-placeholder':'Seleccione algunas opciones'}),
+            'tipo_indicador': forms.SelectMultiple(attrs={'class': 'form-control','multiple':'','data-placeholder':'Seleccione algunas opciones'}),
         }
 
 	# Constructor que asigna form-control a todos los elemtos del formulario
@@ -94,6 +96,25 @@ class MedicionForm(forms.ModelForm):
 			visible.field.widget.attrs['class'] = 'form-control'
 		self.fields['interpretacion_resultado'].widget.attrs['rows']= 3
 		self.fields['formula'].widget.attrs['rows']= 2
+
+
+class ArmonizacionForm(forms.ModelForm):
+	class Meta:
+		model = Armonizacion
+		exclude = ('indicador',)
+		fields = (
+			'linea',
+			'meta',
+			'tipo_proceso',
+			'proceso',
+			'programa',
+			'subprograma',
+			)
+
+	def  __init__(self, *args, **kwargs):
+		super(ArmonizacionForm, self).__init__(*args, **kwargs)
+		for visible in self.visible_fields():
+			visible.field.widget.attrs['class'] = 'form-control select-chossen'
 
 
 		
