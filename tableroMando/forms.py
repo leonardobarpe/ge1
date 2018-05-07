@@ -10,7 +10,7 @@ class IndicadorFormulario(forms.ModelForm):
 			'fecha_modificacion',
 			'rango_inicial',
 			'rango_final',
-			'tipo',
+			# 'tipo',
 			# 'usuario_registro',
 			)
 		fields = (

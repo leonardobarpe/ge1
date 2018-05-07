@@ -194,7 +194,6 @@ class Indicador(models.Model):
 	)
 
 	estado				= models.BooleanField(default=True)  #  estado para inactivar en caso de eliminar	
-	tipo	  			= models.SmallIntegerField(choices=TIPO_INDICADOR_OPCIONES, default=PLAN_DE_DESARROLLO)
 	tipo_indicador 		= MultiSelectField(max_length=10,choices=TIPO_INDICADOR_OPCIONES, default="")
 	consecutivo			= models.IntegerField()
 	nombre_identificador= models.CharField(max_length = 300,blank=True, null=True)
@@ -214,6 +213,7 @@ class Indicador(models.Model):
 	version    			= models.FloatField(default="1")
 	recurrencia			= models.NullBooleanField(default=True)
 	verificado 			= models.BooleanField(default=False)
+	# tipo	  			= models.SmallIntegerField(choices=TIPO_INDICADOR_OPCIONES, default=PLAN_DE_DESARROLLO)
 	# nomenclador			= models.CharField(choices=NOMENCLADOR_OPCIONES, max_length = 3, default=TDE)
 	# usuario_registro 	= models.ForeignKey(User, on_delete=models.DO_NOTHING)
 
