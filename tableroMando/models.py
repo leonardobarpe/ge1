@@ -153,12 +153,14 @@ class Indicador(models.Model):
 	DECRETO_2193 = 3
 	RESOLUCION_1552 = 4
 	CIRCULAR_030 = 5
+	NORMATIVIDAD_INTERNA = 6
 	NORMATIVIDAD_OPCIONES = (
 		(RESOLUCION_256, 'Resolucion 256'),
 		(RESOLUCION_742, 'Resolucion 743'),
 		(DECRETO_2193, 'Decreto 2193'),
 		(RESOLUCION_1552, 'Resolución 1552'),
 		(CIRCULAR_030, 'Circular 030'),
+		(NORMATIVIDAD_INTERNA, 'Normatividad Interna'),
 	)
 
 	PRIMERO = 1
