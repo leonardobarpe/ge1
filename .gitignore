@@ -1,4 +1,2 @@
-
-
-migrarions
 migrations/*
+settings.py
