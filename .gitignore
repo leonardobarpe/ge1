@@ -1,2 +1,4 @@
 tableroMando/migrations/*
 settings.py
+tableroMando/__pycache__/*
+ge1/__pycache__/*
