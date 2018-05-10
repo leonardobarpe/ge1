@@ -6,7 +6,8 @@ from datetime import datetime, date, timedelta
 from django.urls import reverse
 from django.views.generic import View
 from tableroMando.forms import *
-# from ge1.models import SisCargos
+from ge1.models import PdePlanDesarrollo
+from django.db.models import Max, Min
 
 
 def inicioTableroMando(request):
@@ -159,3 +160,26 @@ class ConfiguracionIndicador(View):
 		return HttpResponse("peticion invalida", status=403)
 
 
+
+class ProgramacionIndicador(View):
+	VER_PROGRAMACION = 'ver_base'
+	TEMPLATE_VER_PROGRAMACION = 'programacion/ver_programacion.html'
+
+
+	def ver_informacion_base(self, request):
+		indicador = Indicador.objects.get(pk=request.GET['i'])
+		planes_desarrollo = PdePlanDesarrollo.objects.aggregate(max_date=Max('fecha_inicial'), min_date=Min('fecha_final'))
+
+		print(("MAX: %s Min: %s ") % (planes_desarrollo['max_date'], planes_desarrollo['min_date']))
+
+		return render_to_response(self.TEMPLATE_VER_PROGRAMACION, locals())
+
+
+	def get(self, request):
+		if self.VER_PROGRAMACION in request.GET:
+			return self.ver_informacion_base(request)
+
+		return HttpResponse("peticion invalida", status=403)
+
+	def post(self, request):
+		return HttpResponse("peticion invalida", status=403)

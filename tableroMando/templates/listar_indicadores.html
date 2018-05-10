@@ -29,17 +29,18 @@
 					    	<tr>
 								<td>{{ i.str_codigo }}</td>
 								<td>{{ i.nombre_identificador }}</td>
-								<td>{{ i.get_tipo_display }}</td>
+								<td>{{ i.tipo_indicador }}</td>
 								<td>{{ i.get_ambito_display }}</td>
 								<td>{{ i.get_dimension_display }}</td>
 								<td>{{ i.fecha_registro|date:"Y-m-d" }}</td>
 								<td align="center">
 									<a href="{% url 'indicador' %}?agregar&indicador={{i.id}}" data-toggle="tooltip" title="Editar"><i class="fas fa-edit"></i></a>
+									<a href="{% url 'programacion' %}?ver_base&i={{i.id}}" style="color:black;"><i class="fas fa-tasks" data-toggle="tooltip" title="Ver programación"></i></a>
 									<a data-toggle="tooltip" title="Eliminar" eliminar-indicador="{{i.id}}" ><i class="far fa-trash-alt" style="color:#DC381F;"></i></a>
 									{% if i.verificado %}
 										<span data-toggle="tooltip" title="Verificado"><i class="fas fa-check"></i></span>
 									{% else %}
-										<a data-toggle="tooltip" title="Sin verificar" onclick="return confirm('Desea verificar el indicador?')" href="{% url 'indicador' %}?verificar&indicador={{i.id}}"><i class="fas fa-times"></i></a>
+										<a data-toggle="tooltip" title="Sin verificar" onclick="return confirm('Desea verificar el indicador?')" href="{% url 'indicador' %}?verificar&indicador={{i.id}}" style="color:#ccbb31;"><i class="fas fa-times"></i></a>
 									{% endif %}
 								</td>
 							</tr>

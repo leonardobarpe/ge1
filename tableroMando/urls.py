@@ -32,7 +32,7 @@ urlpatterns = [
     # INICIO TABLERO DE MANDO
     path('inicio-TableroMando/', inicioTableroMando, name='inicio'),
     # PROGRAMACION
-    path('programacion/', programacion),
+    # path('programacion/', programacion),
 
     # SEGUIMIENTO
     path('seguimiento/', seguimiento),
@@ -48,6 +48,8 @@ urlpatterns = [
     # path('agregar_medicion/', views.agregar_medicion, name='agregar_medicion'),
     
     path('indicador/', ConfiguracionIndicador.as_view(), name='indicador'),
+
+    path('programacion/', ProgramacionIndicador.as_view(), name='programacion'),
 
 
 ]   

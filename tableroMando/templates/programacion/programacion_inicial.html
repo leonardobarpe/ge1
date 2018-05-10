@@ -1,0 +1,76 @@
+<div class="col-md-12">
+	<div class="row">
+		<div class="col-md-4">
+			<label><b>META PRODUCTO</b></label><br>
+			{{ indicador.armonizacion.meta }}
+		</div>
+		<div class="col-md-2">
+			<label><b>Unidad</b></label><br>
+			{{ indicador.medicion.unidad_medicion|default_if_none:"No asignada" }}
+		</div>
+		<div class="col-md-2">
+			<label><b>Linea Base</b></label><br>
+			<input type="number" name="linea_base" id="linea_base" class="form-control">
+		</div>
+		<div class="col-md-2">
+			<label><b>Meta Periodo</b></label><br>
+			<input type="number" name="meta_periodo" id="meta_periodo" class="form-control">
+		</div>
+		<div class="col-md-2">
+			<label><b>Meta Final</b></label><br>
+			<input type="number" name="meta_final" id="meta_final" class="form-control" disabled="">
+		</div>
+	</div>
+	<br>
+	<br>
+	<table id="table_resumen" class="table table-bordered table-condensed table-hover table-sm">
+		<thead>
+			<tr>
+				<th>Fuente</th>
+				<th>2017</th>
+				<th>2018</th>
+				<th>Opciones</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td></td>
+				<td></td>
+				<td></td>
+			</tr>
+		</tbody>
+		<tfoot>
+			<tr>
+				<td>
+					<input type="text" name="fuente" id="fuente" class="form-control" placeholder="nombre de fuente">
+				</td>
+				<td>
+					<input type="number" name="valor_anio_2017" id="valor_anio_2017" class="form-control" placeholder="Valor">
+				</td>
+				<td>
+					<input type="number" name="valor_anio_2018" id="valor_anio_2018" class="form-control" placeholder="Valor">
+				</td>
+				<td>
+					<button class="btn btn-success form-control" id="boton_agregar_fuente">Agregar</button>
+				</td>
+			</tr>
+		</tfoot>
+	</table>
+	<br>
+	<div class="form-group">
+		<a type="button" class="btn btn-success float-right" id="boton_guardar_programacion"><i class="fa fa-save"></i> Guardar</a>
+	</div>
+</div>
+
+<script>
+	$(document).on("change", '#linea_base', function(){
+		$("#meta_final").val(sumaMetas());
+	});
+	$(document).on("change", '#meta_periodo', function(){
+		$("#meta_final").val(sumaMetas());
+	});
+
+	function sumaMetas(){
+		return parseInt($("#linea_base").val() || 0)+parseInt($("#meta_periodo").val() || 0);
+	}
+</script>

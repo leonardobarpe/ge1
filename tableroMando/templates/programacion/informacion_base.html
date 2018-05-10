@@ -1,0 +1,105 @@
+<div class="col-md-12">
+	<div class="row">
+		<div class="col-md-6">
+			<b>CODIGO: </b>{{indicador.str_codigo}}
+		</div>
+		<div class="col-md-6">
+			<b>TIPO INDICADOR: </b>{{indicador.tipo_indicador}}
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-6">
+			<b>NOMBRE: </b>{{indicador.nombre_identificador}}
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-6">
+			<b>OBJETIVO: </b>{{indicador.objetivo}}
+		</div>
+		<div class="col-md-6">
+			<b>PRODUCTO QUE MIDE: </b>{{indicador.producto_mide}}
+		</div>
+	</div>
+	<br>
+	<div class="row">
+		<div class="col-md-3">
+			<b>Ciclo: </b>{{indicador.get_ciclo_display}}
+		</div>
+		<div class="col-md-3">
+			<b>Periodicidad: </b>{{indicador.get_periodicidad_display}}
+		</div>
+		<div class="col-md-3">
+			<b>Ambito: </b>{{indicador.get_ambito_display}}
+		</div>
+		<div class="col-md-3">
+			<b>Dimension: </b>{{indicador.get_dimension_display}}
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-6">
+			<b>Responsable: </b>{{indicador.responsable}}
+		</div>
+		<div class="col-md-6">
+			<b>Normatividad: </b>{{indicador.normatividad}}
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-6">
+			<b>Limite reporte: </b>{{indicador.get_limite_reporte_display}}
+		</div>
+		<div class="col-md-3">
+			<b>Version: </b>{{indicador.version}}
+		</div>
+		<div class="col-md-3">
+			<b>Version: </b>{{indicador.fecha_registro|date:"d/m/Y"}}
+		</div>
+	</div>
+	<br>
+	
+	<div class="row">
+		<div class="col-md-4">
+			<b>PLAN DE DESARROLLO</b>
+			<br>
+			<b>Linea: </b> {{indicador.armonizacion.linea}}<br>
+			<b>Programa: </b> {{indicador.armonizacion.programa}}<br>
+			<b>Subprograma: </b> {{indicador.armonizacion.subprograma}}<br>
+			<b>Meta: </b> {{indicador.armonizacion.meta}}<br>
+		</div>
+		<div class="col-md-4">
+			<b>SISTEMA INTEGRADO DE GESTIÓN</b>
+			<br>
+			<b>Tipo de proceso: </b> {{indicador.armonizacion.get_tipo_proceso_display}}<br>
+			<b>Proceso: </b> {{indicador.armonizacion.proceso}}<br>
+			<b>Subproceso: </b> <br>
+		</div>
+		<div class="col-md-4">
+			<b>MODELO INTEGRADO DE PLANEACIÓN Y GESTIÓN</b>
+
+			<b></b>
+			<b></b>
+			<b></b>
+		</div>
+	</div>
+	
+	<br>
+
+	<div class="row">
+		<div class="col-md-3">
+			<label><b>Responsable Reporte</b></label><br>
+			{{indicador.medicion.responsable_reporte}}
+		</div>
+		<div class="col-md-3">
+			<label><b>Responsable Consolidacion</b></label><br>
+			{{indicador.medicion.responsable_consolidacion}}
+		</div>
+		<div class="col-md-3">
+			<label><b>Responsable Analisis Seguimiento</b></label><br>
+			{{indicador.medicion.responsable_analisis_seguimiento}}
+		</div>
+		<div class="col-md-3">
+			<label><b>Responsable Decisiones</b></label><br>
+			{{indicador.medicion.responsable_decisiones}}
+		</div>
+	</div>
+
+</div>

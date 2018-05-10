@@ -1,0 +1,87 @@
+{% extends "plantilla.html" %}
+{% load static %}
+{% block title %}Programación - Informacion base{% endblock title %}
+
+{% block extra_header %}
+	<script src="{% static 'librerias/library/bootstrap-slider-master/bootstrap-slider.min.js' %}"></script>
+	<link href="{% static 'librerias/library/bootstrap-slider-master/css/bootstrap-slider.min.css' %}" rel="stylesheet" type="text/css" media="screen">
+	<script src="{% static 'librerias/chosen_v1.8.5/chosen.jquery.min.js' %}"></script>
+	<link href="{% static 'librerias/chosen_v1.8.5/chosen.min.css' %}" rel="stylesheet" type="text/css">
+	<script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=AM_CHTML"></script>
+
+{% endblock extra_header %}
+
+{% block contenido %}
+
+<div class="container-fluid">
+	<nav aria-label="breadcrumb">
+	  <ol class="breadcrumb">
+		<li class="breadcrumb-item"><a href="{% url 'indicador' %}?listar_i">Indicadores</a></li>
+		<li class="breadcrumb-item"><a href="{% url 'indicador' %}?agregar&indicador={{indicador.id}}">Indicador: {{indicador.str_codigo }}</a></li>
+		<li class="breadcrumb-item active" aria-current="page">Programación</li>
+	  </ol>
+	</nav>
+</div>
+
+<div class="container">
+<table class="table table-bordered table-striped" style="margin-top: 10px">
+	<thead class="bg-primary">
+		<tr>
+			<th class="text-white">PROGRAMACIÓN</th>
+		</tr>
+	</thead>
+	<tbody>
+	<tr>
+	<td>
+		<div class="card text-center">
+
+			<div class="card-header bg-light" id="nav_tabs">
+				<ul class="nav nav-tabs card-header-tabs" id="myTab" role="tablist">
+					<li class="nav-item">
+						<a class="nav-link active" id="info_base-tab" data-toggle="tab" href="#info_base" role="tab" aria-controls="info_base" aria-selected="true">INFORMACION BASE</a>
+				  	</li>
+					<li class="nav-item">
+					    <a class="nav-link" id="programacion_inicial-tab" data-toggle="tab" href="#programacion_inicial" role="tab" aria-controls="programacion_inicial" aria-selected="false">PROGRAMACIÓN INICIAL</a>
+					</li>
+					<li class="nav-item">
+					    <a class="nav-link" id="plan_inactivo-tab" data-toggle="tab" href="#plan_inactivo" role="tab" aria-controls="plan_inactivo" aria-selected="false">PLAN INACTIVO</a>
+					</li>
+				</ul>
+			</div>
+
+
+			<div class="card-body">
+				<div class="tab-content text-left">
+					<div class="tab-pane fade show active" id="info_base" role="tabpanel" aria-labelledby="info_base-tab">
+						{% include 'programacion/informacion_base.html' %}
+					</div>
+
+					<div class="tab-pane fade" id="programacion_inicial" role="tabpanel" aria-labelledby="programacion_inicial-tab">
+						{% include 'programacion/programacion_inicial.html' %}
+					</div>
+
+					<div class="tab-pane fade" id="plan_inactivo" role="tabpanel" aria-labelledby="plan_inactivo-tab">
+						
+					</div>
+
+
+				</div>
+			</div><!-- DIV PANE -->
+
+		</div>
+	</td>
+	</tr>
+</tbody>
+</table>
+</div>
+
+{% endblock contenido %}
+
+
+{% block extra_script %}
+
+<script type="text/javascript">
+
+</script>
+
+{% endblock extra_script %}

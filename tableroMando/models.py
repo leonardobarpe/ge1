@@ -237,6 +237,10 @@ class Indicador(models.Model):
 		return super(Indicador, self).save(*args, **kwargs)	
 
 
+	# def get_medicion(self):
+	# 	return Medicion.objects.get()
+
+
 	def __str__(self):
 		return u'IND - %s %s' % (self.consecutivo, self.nombre_identificador)
 
