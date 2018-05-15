@@ -78,34 +78,34 @@ class Indicador(models.Model):
 
 	)
 
-	DIARIO = 1
-	SEMANAL = 2
-	QUINCENAL = 3
+	# DIARIO = 1
+	# SEMANAL = 2
+	# QUINCENAL = 3
 	MENSUAL = 4
 	BIMENSUAL = 5 
 	TRIMESTRAL = 6
 	CUATRIMESTRAL = 7
 	SEMESTRAL = 8
 	ANUAL = 9
-	BIENAL = 10
-	TRIENAL = 11
-	CUATRIENAL = 12
-	OTRO = 13
+	# BIENAL = 10
+	# TRIENAL = 11
+	# CUATRIENAL = 12
+	# OTRO = 13
 
 	PERIODICIDAD_OPCIONES = (
-		(DIARIO, 'Diario'),
-		(SEMANAL, 'Semanal'),
-		(QUINCENAL, 'Quincenal'),
+		# (DIARIO, 'Diario'),
+		# (SEMANAL, 'Semanal'),
+		# (QUINCENAL, 'Quincenal'),
 		(MENSUAL, 'Mensual'),
 		(BIMENSUAL, 'Bimensual'),
 		(TRIMESTRAL, 'Trimestral'),
 		(CUATRIMESTRAL, 'Cuatrimestral'),
 		(SEMESTRAL, 'Semestral'),
 		(ANUAL, 'Anual'),
-		(BIENAL, 'Bienal'),
-		(TRIENAL, 'Trienal'),
-		(CUATRIENAL, 'Cuatrienal'),
-		(OTRO, 'Otro'),
+		# (BIENAL, 'Bienal'),
+		# (TRIENAL, 'Trienal'),
+		# (CUATRIENAL, 'Cuatrienal'),
+		# (OTRO, 'Otro'),
 	)
 
 	IMPACTO = 1

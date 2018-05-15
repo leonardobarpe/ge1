@@ -172,6 +172,7 @@ class ProgramacionIndicador(View):
 
 		print(("MAX: %s Min: %s ") % (planes_desarrollo['max_date'], planes_desarrollo['min_date']))
 
+		periodos = Indicador.PERIODICIDAD_OPCIONES
 		return render_to_response(self.TEMPLATE_VER_PROGRAMACION, locals())
 
 

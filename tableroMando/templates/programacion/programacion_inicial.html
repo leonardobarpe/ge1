@@ -33,11 +33,7 @@
 			</tr>
 		</thead>
 		<tbody>
-			<tr>
-				<td></td>
-				<td></td>
-				<td></td>
-			</tr>
+
 		</tbody>
 		<tfoot>
 			<tr>
@@ -45,10 +41,10 @@
 					<input type="text" name="fuente" id="fuente" class="form-control" placeholder="nombre de fuente">
 				</td>
 				<td>
-					<input type="number" name="valor_anio_2017" id="valor_anio_2017" class="form-control" placeholder="Valor">
+					<input type="number" class="valor_fuente form-control" id="vf_2017" anio="2017" class="form-control" placeholder="Valor">
 				</td>
 				<td>
-					<input type="number" name="valor_anio_2018" id="valor_anio_2018" class="form-control" placeholder="Valor">
+					<input type="number" class="valor_fuente form-control" id="vf_2018" anio="2018" class="form-control" placeholder="Valor">
 				</td>
 				<td>
 					<button class="btn btn-success form-control" id="boton_agregar_fuente">Agregar</button>
@@ -60,6 +56,47 @@
 	<div class="form-group">
 		<a type="button" class="btn btn-success float-right" id="boton_guardar_programacion"><i class="fa fa-save"></i> Guardar</a>
 	</div>
+
+
+	<div class="row">
+		<div class="col-md-4">
+			<label><b>Periodo</b></label>
+			<select name="periodo" id="periodo" class="form-control">
+				{% for x in periodos %}
+					<option value="{{x.0}}" {% if x.0 == 8 %}selected{% endif %}>{{x.1}}</option>
+				{% endfor %}
+			</select>
+		</div>
+		<div class="col-md-8">
+			<label><b>Información</b></label><br>
+			<span>Si selecciona otra opción de periodo, eliminara los valores ingresados en las celdas.</span>
+		</div>
+	</div>
+	
+	<br>
+	<div class="row" style="width: 1100px;  overflow: scroll;">
+		<div id="" class="col-md-12">
+			<table id="tabla_gestion_integrado" class="table table-hover table-bordered table-condensed">
+				<thead>
+					<tr>
+						<th>Año</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr id="2017">
+						<td>2017</td>
+					</tr>
+					<tr id="2018">
+						<td>2018</td>
+					</tr>
+				</tbody>
+				<tfoot>
+					
+				</tfoot>
+			</table>
+		</div>
+	</div>
+
 </div>
 
 <script>
@@ -72,5 +109,87 @@
 
 	function sumaMetas(){
 		return parseInt($("#linea_base").val() || 0)+parseInt($("#meta_periodo").val() || 0);
+	}
+
+	$(document).on("change", "#periodo", function(){
+		$('.new_cell').detach();
+
+		var select_periodo = $("#periodo option:selected").val();
+		var periodos = 0;
+		if(select_periodo == 4){//Mensual
+			periodos = 12;
+		}else if(select_periodo == 5){//Bimensual
+			periodos = 24;
+		}else if(select_periodo == 6){//Trimestral
+			periodos = 36;
+		}else if(select_periodo == 7){//Cuatrimestral
+			periodos = 48;
+		}else if(select_periodo == 8){//Semestral
+			periodos = 2;
+		}else if(select_periodo == 9){//Anual
+			periodos = 1;
+		}
+		
+		var count = 1;
+        for (var i = 0; i < periodos; i++) {
+        	$('#tabla_gestion_integrado thead').find('tr').each(function(){
+        		var add = '<td class="new_cell">Perido <b>'+count+'</b></td>'+'<td class="new_cell">Perido <b>'+count+'</b></td>';
+        		$(this).append(add);
+			});
+
+        	$('#tabla_gestion_integrado tbody').find('tr').each(function(){
+        		var id_fila=$(this).attr("id");
+        		var id_input_1 = id_fila+'_'+count;
+        		var id_input_2 = id_fila+'_'+count;
+        		var c1 = '<input type="number" class="valor_inicial" id="'+id_input_1+'" placeholder="Valor inicial" style="    width: 100px;" >';
+        		var c2 = '<input type="number" class="valor_esperado"  id="'+id_input_2+'" placeholder="Valor esperado" style="    width: 100px;" >';
+        		var add = '<td class="new_cell">'+c1+'</td>'+'<td class="new_cell">'+c2+'</td>';
+        		$(this).append(add);
+			});
+			count++;
+        }
+		
+	});
+
+	$(document).ready(function(){
+		$("#periodo").change();
+	});
+
+	$(document).on("click", "#boton_agregar_fuente", function(){
+		var fuente = $("#fuente").val().trim();
+		var tiene_valor = false;
+		var valores_anios = [];
+		$('.valor_fuente').each(function(){
+			var val_fuente = parseInt($(this).val() || 0);
+			valores_anios.push(val_fuente);
+			if (val_fuente > 0)
+				tiene_valor = true;
+		});
+
+		if(fuente != "" && tiene_valor == true){
+			var fila = "";
+			fila += "<tr>";
+			fila += "<td>"+fuente+"</td>";
+			for (var i = 0; i < valores_anios.length; i++) {
+				fila += "<td>"+valores_anios[i]+"</td>";
+			}
+			fila += "<td>Eliminar</td>";
+			fila += "</tr>";
+			$("#table_resumen tbody").append(fila);
+			seteaDatosTablaResumen();
+		}else{
+			if(fuente==""){
+				alert("Digite un nombre de fuente");
+			}else if(tiene_valor == false){
+				alert("Digite un valor a la fuente");
+			}
+		}
+	});
+
+	function seteaDatosTablaResumen(){
+		$("#fuente").val("");
+		$('.valor_fuente').each(function(){
+			$(this).val("");
+		});
 	}
 </script>
