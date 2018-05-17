@@ -109,6 +109,7 @@ class ArmonizacionForm(forms.ModelForm):
 			'proceso',
 			'programa',
 			'subprograma',
+			'tipo_armonizacion',
 			)
 
 	def  __init__(self, *args, **kwargs):

@@ -40,10 +40,10 @@
 	<tbody>
 	{{formulario.errors}}
 	{{form_medicion.errors}}
+	{{form_armonizacion.errors }}
 	<tr>
 	<td>
 		<div class="card text-center">
-
 			<div class="card-header bg-light" id="nav_tabs">
 				<ul class="nav nav-tabs card-header-tabs" id="myTab" role="tablist">
 					<li class="nav-item">
@@ -256,6 +256,26 @@ function initArmonizacion(){
 
 	$('#id_tipo_proceso').val('{{armonizacion.tipo_proceso}}');
 	$('#id_proceso').val('{{armonizacion.proceso.codigo}}');
+	$('#id_subproceso').val('{{armonizacion.subproceso.codigo}}');
+
+	$("#id_linea option").each(function(){
+		var filtro = $(this).text().charAt(0);
+		if(filtro != "L"){
+			$(this).remove();
+		}
+	});
+	$("#id_programa option").each(function(){
+		var filtro = $(this).text().charAt(0);
+		if(filtro != "P"){
+			$(this).remove();
+		}
+	});
+	$("#id_subprograma option").each(function(){
+		var filtro = $(this).text().charAt(0);
+		if(filtro != "S"){
+			$(this).remove();
+		}
+	});
 
 	$('.select-chossen').trigger("chosen:updated");
 }
@@ -311,6 +331,13 @@ $(document).on('click','#guardar_medicion', function(event){
 	}else{
 		$("#formulario_medicion").submit();
 	}
+});
+
+$(document).on('click','#guardar_armonizacion', function(event){
+	event.preventDefault();
+	var val_tipo = $("#id_tipo_armonizacion").val().replace(/,\s*$/, "").split(",");
+	$("#id_tipo_armonizacion").val(val_tipo);
+	$("#formulario_armonizacion").submit();
 });
 
 

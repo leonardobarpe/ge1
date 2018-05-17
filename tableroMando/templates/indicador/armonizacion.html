@@ -1,5 +1,6 @@
 <form method="POST" action="/tablero-Mando/indicador/?agregar_a&indicador={{indicador.pk}}" role="form" id="formulario_armonizacion" method="multipart/form-data">
 {% csrf_token %}
+<input type="hidden" name="tipo_armonizacion" id="id_tipo_armonizacion">
 <div class="row">
 	<div class="card-group">
 		<div class="card">
@@ -26,8 +27,8 @@
 					<div class="form-group">
 				    <label for="meta">META</label>
 						{{ form_armonizacion.meta }}
-				  	</div>												  	
-			  	</div>													
+				  	</div>
+			  	</div>												
 			</div>
 		</div>
 		<div class="card">
@@ -49,11 +50,7 @@
 				  	</div>	
 					<div class="form-group">
 				    <label for="subproceso">SUBPROCESO</label>
-						<select class="form-control" id="subproceso" name="subproceso">
-							<option>--</option>
-							<option>--</option>
-							<option>--</option>
-			    		</select>
+						{{ form_armonizacion.subproceso }}
 				  	</div>													  										  
 				</div>													
 			</div>
@@ -100,9 +97,12 @@
 	function mostrarPlaDes(){ 
 		if (document.getElementById("planDesarrolloCheck").checked) {
 			document.getElementById("parrafoPlanDes").style.display = "block";
-		}
-		else{
+			var tipo = $("#id_tipo_armonizacion").val() || "";
+			$("#id_tipo_armonizacion").val(tipo+"1,");
+		}else{
 			document.getElementById("parrafoPlanDes").style.display = "none";
+			var tipo = $("#id_tipo_armonizacion").val().replace('1,','') || "";
+			$("#id_tipo_armonizacion").val(tipo);
 		}
 	}
 	// PESTAÑA ARMONIZACION
@@ -110,9 +110,13 @@
 	function mostrarSisIntGes(){
 		if (document.getElementById("sisIntGesCheck").checked) {
 			document.getElementById("parrafoSisIntGes").style.display = "block";
+			var tipo = $("#id_tipo_armonizacion").val() || "";
+			$("#id_tipo_armonizacion").val(tipo+"2,");
 		}
 		else{
 			document.getElementById("parrafoSisIntGes").style.display = "none";
+			var tipo = $("#id_tipo_armonizacion").val().replace('2,','') || "";
+			$("#id_tipo_armonizacion").val(tipo);
 		}
 	}
 	// PESTAÑA ARMONIZACION

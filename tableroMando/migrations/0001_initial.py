@@ -19,7 +19,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('estado', models.BooleanField(default=True)),
-                ('tipo', models.SmallIntegerField(choices=[(1, 'Plan de desarrollo'), (2, 'Sistema de salud'), (3, 'Sistema de gestion'), (4, 'Financiero'), (5, 'Otro')], default=1)),
+                # ('tipo', models.SmallIntegerField(choices=[(1, 'Plan de desarrollo'), (2, 'Sistema de salud'), (3, 'Sistema de gestion'), (4, 'Financiero'), (5, 'Otro')], default=1)),
                 ('consecutivo', models.IntegerField()),
                 ('nombre_identificador', models.CharField(blank=True, max_length=300, null=True)),
                 ('objetivo', models.TextField(blank=True, null=True)),

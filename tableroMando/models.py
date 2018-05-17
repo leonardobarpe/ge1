@@ -20,6 +20,36 @@ RESPONSABLE_OPCIONES = (
 	(COORDINADOR_3, 'Coordinador 3'),
 )
 
+# DIARIO = 1
+# SEMANAL = 2
+# QUINCENAL = 3
+MENSUAL = 4
+BIMENSUAL = 5 
+TRIMESTRAL = 6
+CUATRIMESTRAL = 7
+SEMESTRAL = 8
+ANUAL = 9
+# BIENAL = 10
+# TRIENAL = 11
+# CUATRIENAL = 12
+# OTRO = 13
+
+PERIODICIDAD_OPCIONES = (
+	# (DIARIO, 'Diario'),
+	# (SEMANAL, 'Semanal'),
+	# (QUINCENAL, 'Quincenal'),
+	(MENSUAL, 'Mensual'),
+	(BIMENSUAL, 'Bimensual'),
+	(TRIMESTRAL, 'Trimestral'),
+	(CUATRIMESTRAL, 'Cuatrimestral'),
+	(SEMESTRAL, 'Semestral'),
+	(ANUAL, 'Anual'),
+	# (BIENAL, 'Bienal'),
+	# (TRIENAL, 'Trienal'),
+	# (CUATRIENAL, 'Cuatrienal'),
+	# (OTRO, 'Otro'),
+)
+
 class Indicador(models.Model):
 
 # IDENTIFICADOR
@@ -76,36 +106,6 @@ class Indicador(models.Model):
 		(QUINQUENAL, 'Quinquenal'),
 		(DECENAL, 'Decenal'),
 
-	)
-
-	# DIARIO = 1
-	# SEMANAL = 2
-	# QUINCENAL = 3
-	MENSUAL = 4
-	BIMENSUAL = 5 
-	TRIMESTRAL = 6
-	CUATRIMESTRAL = 7
-	SEMESTRAL = 8
-	ANUAL = 9
-	# BIENAL = 10
-	# TRIENAL = 11
-	# CUATRIENAL = 12
-	# OTRO = 13
-
-	PERIODICIDAD_OPCIONES = (
-		# (DIARIO, 'Diario'),
-		# (SEMANAL, 'Semanal'),
-		# (QUINCENAL, 'Quincenal'),
-		(MENSUAL, 'Mensual'),
-		(BIMENSUAL, 'Bimensual'),
-		(TRIMESTRAL, 'Trimestral'),
-		(CUATRIMESTRAL, 'Cuatrimestral'),
-		(SEMESTRAL, 'Semestral'),
-		(ANUAL, 'Anual'),
-		# (BIENAL, 'Bienal'),
-		# (TRIENAL, 'Trienal'),
-		# (CUATRIENAL, 'Cuatrienal'),
-		# (OTRO, 'Otro'),
 	)
 
 	IMPACTO = 1
@@ -317,6 +317,9 @@ class Medicion(models.Model):
 		return u'%s -- %s' % (self.indicador, self.tipo_formula)
 
 
+# [BD-PRO] agrego a tabla subprocesos, CONSTRAINT subprocesos_codigo_key UNIQUE (codigo) 
+# Se deja solo codigo como primary_key (Para que no halla error en django)
+# si llega a haber una llave igual de codigo en la tabla subprocesos habrá error, no se puede controlar desde esta aplicacion
 from ge1.models import PdeMetas, Procesos, Subprocesos, PdeUnidadNivel, SisMultivalores
 class Armonizacion(models.Model):
 	ESTRATEGICO = 1
@@ -331,7 +334,19 @@ class Armonizacion(models.Model):
 		(EVALUACION, 'Evaluacion'),
 	)
 
+	PLAN_DESARROLLO = 1
+	SISTEMA_INTEGRADO_GESTION = 2
+	MODELO_INTEGRADO_PLANEACION_GESTION = 3
+
+	TIPOS_ARMONIZACION = (
+		(PLAN_DESARROLLO, 'Plan de desarrollo'),
+		(SISTEMA_INTEGRADO_GESTION, 'Sistema integrado de gestion'),
+		(MODELO_INTEGRADO_PLANEACION_GESTION, 'Modelo integrado de planeacion y gestion'),
+	)
+
 	indicador = models.OneToOneField(Indicador, on_delete=models.DO_NOTHING, primary_key=True)
+	tipo_armonizacion = MultiSelectField(max_length=10,choices=TIPOS_ARMONIZACION, default="")
+
 	# Plan de desarrollo
 	linea = models.ForeignKey(PdeUnidadNivel, on_delete=models.DO_NOTHING, blank=True, null=True, related_name='+')
 	programa = models.ForeignKey(PdeUnidadNivel, on_delete=models.DO_NOTHING, blank=True, null=True, related_name='+')
@@ -342,8 +357,55 @@ class Armonizacion(models.Model):
 	# Sistema integrado de gestion
 	tipo_proceso = models.SmallIntegerField(choices=TIPOS_PROCESOS, default=ESTRATEGICO, blank=True)
 	proceso = models.ForeignKey(Procesos, on_delete=models.DO_NOTHING, blank=True, null=True)
-	# subproceso = models.ForeignKey(Subprocesos, on_delete=models.DO_NOTHING, blank=True, null=True)
+	subproceso = models.ForeignKey(Subprocesos, on_delete=models.DO_NOTHING, null=True)
 
 	def __str__(self):
 		return u'id -- %s' % (self.indicador.id)
 
+
+
+# from ge1.models import SisFuentesFinanciacion
+# class ItemFuenteFinanciacion(models.Model):
+# 	fuente = models.ForeignKey(SisFuentesFinanciacion, on_delete=models.DO_NOTHING, blank=True, null=True, related_name='+')
+# 	anio = models.IntegerField()
+# 	valor = models.FloatField()
+
+# 	def __str__(self):
+# 		return u'%s' % (self.fuente)
+
+
+# class FuenteFinanciacion(models.Model):
+# 	linea_base = models.IntegerField()
+# 	meta_periodo = models.IntegerField()
+# 	item_fuente_financiacion = models.ManyToManyField(ItemFuenteFinanciacion)
+
+# 	def __str__(self):
+# 		return u'%s' % (self.linea_base)
+
+
+# class ItemSistemaIntegradoGestion(models.Model):
+# 	anio = models.IntegerField()
+# 	periodo_numero = models.SmallIntegerField()
+# 	valor_inicial = models.FloatField()
+# 	valor_esperado = models.FloatField()
+
+# 	def __str__(self):
+# 		return u'%s' % (self.fuente)
+
+
+# class SistemaIntegradoGestion(models.Model):
+# 	periodo = models.SmallIntegerField(choices=PERIODICIDAD_OPCIONES, default=SEMESTRAL)
+# 	ItemSIG = models.ManyToManyField(ItemSistemaIntegradoGestion)
+
+# 	def __str__(self):
+# 		return u'%s' % (self.periodo)
+
+
+# class Programacion(models.Model):
+# 	indicador = models.ForeignKey(Indicador, on_delete=models.DO_NOTHING)
+# 	estado = models.BooleanField(default=True)
+# 	fuente_financiacion = models.ForeignKey(FuenteFinanciacion, on_delete=models.CASCADE, null=True)
+# 	sistema_integrado_gestion = models.ForeignKey(SistemaIntegradoGestion, on_delete=models.CASCADE, null=True)
+
+# 	def __str__(self):
+# 		return u'%s' % (self.id)

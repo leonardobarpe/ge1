@@ -36,6 +36,7 @@ class ConfiguracionIndicador(View):
 
 	ACCION_ELIMINAR = 'eliminar'
 	ACCION_VERIFICAR = 'verificar'
+	ACCION_AGREGAR_PROGRAMACION = 'agregar_progra'
 
 
 	def agregar_indicador(self, request):
@@ -103,9 +104,11 @@ class ConfiguracionIndicador(View):
 
 	def agregar_armonizacion(self, request):
 		indicador = Indicador.objects.get(pk=request.GET['indicador'])
-		form = ArmonizacionForm(request.POST or None)
-		if form.is_valid():
-			nuevo_a = form.save(commit=False)
+		form_armonizacion = ArmonizacionForm(request.POST or None)
+		print("ENTRO A AGREGAR ARMONIZACION");
+		if form_armonizacion.is_valid():
+			print("ES VALIDO EL FORMILARIO");
+			nuevo_a = form_armonizacion.save(commit=False)
 			nuevo_a.indicador = indicador
 			nuevo_a.save()
 			return HttpResponseRedirect('/tablero-Mando/indicador/?agregar&indicador=%s' % indicador.pk)
@@ -129,6 +132,13 @@ class ConfiguracionIndicador(View):
 		indicador.save()
 		return HttpResponseRedirect('/tablero-Mando/indicador/?listar_i')
 
+
+	def agregar_programacion_ajax(self, request):
+		if request.is_ajax():
+			respuesta['mensaje'] = (u'Se han almacenado.')
+			return HttpResponse(json.dumps(respuesta))
+		else:
+			return HttpResponse("peticion invalida, not ajax", status=403)
 
 
 	def get(self, request):
@@ -156,6 +166,9 @@ class ConfiguracionIndicador(View):
 
 		if self.ACCION_AGREGAR_ARMONIZACION in request.GET:
 			return self.agregar_armonizacion(request)
+
+		if self.ACCION_AGREGAR_PROGRAMACION in request.GET:
+			return self.agregar_programacion_ajax(request)
 
 		return HttpResponse("peticion invalida", status=403)
 

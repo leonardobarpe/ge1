@@ -16,9 +16,9 @@ class Migration(migrations.Migration):
             name='tipo_indicador',
             field=multiselectfield.db.fields.MultiSelectField(choices=[(1, 'Plan de desarrollo'), (2, 'Sistema de salud'), (3, 'Sistema de gestion'), (4, 'Financiero')], default='', max_length=10),
         ),
-        migrations.AlterField(
-            model_name='indicador',
-            name='tipo',
-            field=models.SmallIntegerField(choices=[(1, 'Plan de desarrollo'), (2, 'Sistema de salud'), (3, 'Sistema de gestion'), (4, 'Financiero')], default=1),
-        ),
+        # migrations.AlterField(
+        #     model_name='indicador',
+        #     name='tipo',
+        #     field=models.SmallIntegerField(choices=[(1, 'Plan de desarrollo'), (2, 'Sistema de salud'), (3, 'Sistema de gestion'), (4, 'Financiero')], default=1),
+        # ),
     ]
