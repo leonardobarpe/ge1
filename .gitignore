@@ -1,4 +1,6 @@
-tableroMando/migrations/*
-settings.py
-tableroMando/__pycache__/*
-ge1/__pycache__/*
+/tableroMando/migrations/
+/ge1/settings.py
+/tableroMando/__pycache__/
+/ge1/__pycache__/
+/front1/
+.pyc*

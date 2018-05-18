@@ -92,6 +92,7 @@
 </form>
 
 <script type="text/javascript">
+	var is_init = false;
 	// PESTAÑA ARMONIZACION
 	// Ocultar o mostrar campos de PLAN DE DESARROLLO
 	function mostrarPlaDes(){ 
@@ -99,6 +100,9 @@
 			document.getElementById("parrafoPlanDes").style.display = "block";
 			var tipo = $("#id_tipo_armonizacion").val() || "";
 			$("#id_tipo_armonizacion").val(tipo+"1,");
+			if(!is_init){
+				filtrarLPS();
+			}
 		}else{
 			document.getElementById("parrafoPlanDes").style.display = "none";
 			var tipo = $("#id_tipo_armonizacion").val().replace('1,','') || "";

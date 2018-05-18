@@ -105,9 +105,7 @@ class ConfiguracionIndicador(View):
 	def agregar_armonizacion(self, request):
 		indicador = Indicador.objects.get(pk=request.GET['indicador'])
 		form_armonizacion = ArmonizacionForm(request.POST or None)
-		print("ENTRO A AGREGAR ARMONIZACION");
 		if form_armonizacion.is_valid():
-			print("ES VALIDO EL FORMILARIO");
 			nuevo_a = form_armonizacion.save(commit=False)
 			nuevo_a.indicador = indicador
 			nuevo_a.save()
@@ -185,7 +183,7 @@ class ProgramacionIndicador(View):
 
 		print(("MAX: %s Min: %s ") % (planes_desarrollo['max_date'], planes_desarrollo['min_date']))
 
-		periodos = Indicador.PERIODICIDAD_OPCIONES
+		# periodos = Indicador.PERIODICIDAD_OPCIONES
 		return render_to_response(self.TEMPLATE_VER_PROGRAMACION, locals())
 
 

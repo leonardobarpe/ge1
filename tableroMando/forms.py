@@ -109,6 +109,7 @@ class ArmonizacionForm(forms.ModelForm):
 			'proceso',
 			'programa',
 			'subprograma',
+			'subproceso',
 			'tipo_armonizacion',
 			)
 

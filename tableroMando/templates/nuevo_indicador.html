@@ -258,6 +258,10 @@ function initArmonizacion(){
 	$('#id_proceso').val('{{armonizacion.proceso.codigo}}');
 	$('#id_subproceso').val('{{armonizacion.subproceso.codigo}}');
 
+	$('.select-chossen').trigger("chosen:updated");
+}
+
+function filtrarLPS(){
 	$("#id_linea option").each(function(){
 		var filtro = $(this).text().charAt(0);
 		if(filtro != "L"){
@@ -276,7 +280,6 @@ function initArmonizacion(){
 			$(this).remove();
 		}
 	});
-
 	$('.select-chossen').trigger("chosen:updated");
 }
 
