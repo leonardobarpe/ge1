@@ -3,4 +3,4 @@
 /tableroMando/__pycache__/
 /ge1/__pycache__/
 /front1/
-.pyc*
+*.pyc
