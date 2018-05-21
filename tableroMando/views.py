@@ -1,14 +1,15 @@
 from django.shortcuts import render
 from django.shortcuts import render_to_response, HttpResponseRedirect, HttpResponse, render
 from django.template import RequestContext
+from tableroMando.forms import *
+from tableroMando.models import *
 from django.contrib.auth.models import User
 from datetime import datetime, date, timedelta
 from django.urls import reverse
 from django.views.generic import View
-from tableroMando.forms import *
 from ge1.models import PdePlanDesarrollo
 from django.db.models import Max, Min
-
+import json
 
 def inicioTableroMando(request):
 	return render_to_response('inicioTableroMando.html', locals())
@@ -171,11 +172,12 @@ class ConfiguracionIndicador(View):
 		return HttpResponse("peticion invalida", status=403)
 
 
-
+from ge1.models import SisFuentesFinanciacion
 class ProgramacionIndicador(View):
 	VER_PROGRAMACION = 'ver_base'
 	TEMPLATE_VER_PROGRAMACION = 'programacion/ver_programacion.html'
 
+	AGREGAR_FUENTE_FINANCIACION ='agregar_ff'
 
 	def ver_informacion_base(self, request):
 		indicador = Indicador.objects.get(pk=request.GET['i'])
@@ -183,8 +185,52 @@ class ProgramacionIndicador(View):
 
 		print(("MAX: %s Min: %s ") % (planes_desarrollo['max_date'], planes_desarrollo['min_date']))
 
-		# periodos = Indicador.PERIODICIDAD_OPCIONES
+		periodos = PERIODICIDAD_OPCIONES
+		sisfuentesfinanciacion = SisFuentesFinanciacion.objects.all()
+		try:
+			fuente_financiacion = FuenteFinanciacion.objects.get(indicador=indicador, estado=True)
+		except FuenteFinanciacion.DoesNotExist:
+			pass
+
 		return render_to_response(self.TEMPLATE_VER_PROGRAMACION, locals())
+
+
+	def agregar_fuente_financiacion_ajax(self, request):
+		respuesta = {}
+		if request.is_ajax():
+			indicador = Indicador.objects.get(pk=request.POST['indicador'])
+			fuentes = request.POST.getlist('fuentes[]')
+
+			try:
+				fuente_financiacion = FuenteFinanciacion.objects.get(indicador=indicador, estado=True)
+			except FuenteFinanciacion.DoesNotExist:
+				fuente_financiacion = FuenteFinanciacion()
+				pass
+
+			fuente_financiacion.indicador = indicador
+			fuente_financiacion.linea_base = request.POST['linea_base']
+			fuente_financiacion.meta_periodo = request.POST['meta_periodo']
+			fuente_financiacion.save()
+
+			if (fuente_financiacion.item_fuente_financiacion.count() > 0):
+				fuente_financiacion.item_fuente_financiacion.all().delete()
+			for f in fuentes:
+				item = ItemFuenteFinanciacion()
+				dicc = json.loads(f)
+				val_id_fuente = int(dicc['id_fuente'])
+				val_anio = int(dicc['anio'])
+				if(val_id_fuente > 0 and val_anio > 0):
+					item.fuente = SisFuentesFinanciacion.objects.get(pk=val_id_fuente)
+					item.anio = val_anio
+					item.valor = float(dicc['valor_fuete'])
+					item.save()
+					fuente_financiacion.item_fuente_financiacion.add(item)
+					fuente_financiacion.save()
+
+			respuesta['mensaje'] = "Se almaceno la fuente de financiacion correctamente"
+			return HttpResponse(json.dumps(respuesta))
+		else:
+			return HttpResponse("peticion invalida, not ajax", status=403)
 
 
 	def get(self, request):
@@ -193,5 +239,9 @@ class ProgramacionIndicador(View):
 
 		return HttpResponse("peticion invalida", status=403)
 
+
 	def post(self, request):
+		if self.AGREGAR_FUENTE_FINANCIACION in request.GET:
+			return self.agregar_fuente_financiacion_ajax(request)
+
 		return HttpResponse("peticion invalida", status=403)

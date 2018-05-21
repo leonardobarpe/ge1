@@ -4,22 +4,6 @@ from django.contrib.auth.models import User, Group
 from multiselectfield import MultiSelectField
 from ge1.models import SisCargos, SisUnidadesMedida
 
-GERENTE = 1
-SUBGERENTE_ADMINISTRATIVO = 2
-SUBGERENTE_CIENTIFICO = 3
-COORDINADOR_1 = 4
-COORDINADOR_2 = 5
-COORDINADOR_3 = 6
-
-RESPONSABLE_OPCIONES = (
-	(GERENTE, 'Gerente'),
-	(SUBGERENTE_ADMINISTRATIVO, 'Subgerente administrativo'),
-	(SUBGERENTE_CIENTIFICO, 'Subgerente cientifico'),
-	(COORDINADOR_1, 'Coordinador 1'),
-	(COORDINADOR_2, 'Coordinador 2'),
-	(COORDINADOR_3, 'Coordinador 3'),
-)
-
 # DIARIO = 1
 # SEMANAL = 2
 # QUINCENAL = 3
@@ -270,11 +254,6 @@ class Medicion(models.Model):
 		(DISMINUCION, 'Disminucion'),
 	)
 
-	UN_PORCENTAJE = 1
-	UNIDADES = (
-		(UN_PORCENTAJE, 'Porcentaje'),
-	)
-
 	FORMULAS_PREDETERMINADAS = (
 		(TASA_VARIACION, '$$TDE = {NEAG(Tn) - NEAG(T0) \over NEAG(T0) }X 100$$'),
 		(PORCENTAJE, '$$TDE = {NEAG \over NEM }X 100$$'),
@@ -357,48 +336,52 @@ class Armonizacion(models.Model):
 	# Sistema integrado de gestion
 	tipo_proceso = models.SmallIntegerField(choices=TIPOS_PROCESOS, default=ESTRATEGICO, blank=True)
 	proceso = models.ForeignKey(Procesos, on_delete=models.DO_NOTHING, blank=True, null=True)
-	subproceso = models.ForeignKey(Subprocesos, on_delete=models.DO_NOTHING, null=True)
+	subproceso = models.ForeignKey(Subprocesos, on_delete=models.DO_NOTHING, blank=True, null=True)
 
 	def __str__(self):
 		return u'id -- %s' % (self.indicador.id)
 
 
 
-# from ge1.models import SisFuentesFinanciacion
-# class ItemFuenteFinanciacion(models.Model):
-# 	fuente = models.ForeignKey(SisFuentesFinanciacion, on_delete=models.DO_NOTHING, blank=True, null=True, related_name='+')
-# 	anio = models.IntegerField()
-# 	valor = models.FloatField()
+from ge1.models import SisFuentesFinanciacion
+class ItemFuenteFinanciacion(models.Model):
+	fuente = models.ForeignKey(SisFuentesFinanciacion, on_delete=models.DO_NOTHING, blank=True, null=True, related_name='+')
+	anio = models.IntegerField()
+	valor = models.FloatField()
 
-# 	def __str__(self):
-# 		return u'%s' % (self.fuente)
-
-
-# class FuenteFinanciacion(models.Model):
-# 	linea_base = models.IntegerField()
-# 	meta_periodo = models.IntegerField()
-# 	item_fuente_financiacion = models.ManyToManyField(ItemFuenteFinanciacion)
-
-# 	def __str__(self):
-# 		return u'%s' % (self.linea_base)
+	def __str__(self):
+		return u'%s' % (self.fuente)
 
 
-# class ItemSistemaIntegradoGestion(models.Model):
-# 	anio = models.IntegerField()
-# 	periodo_numero = models.SmallIntegerField()
-# 	valor_inicial = models.FloatField()
-# 	valor_esperado = models.FloatField()
+class FuenteFinanciacion(models.Model):
+	indicador = models.ForeignKey(Indicador, on_delete=models.DO_NOTHING)
+	estado = models.BooleanField(default=True)
+	item_fuente_financiacion = models.ManyToManyField(ItemFuenteFinanciacion)
+	linea_base = models.IntegerField()
+	meta_periodo = models.IntegerField()
 
-# 	def __str__(self):
-# 		return u'%s' % (self.fuente)
+	def __str__(self):
+		return u'%s' % (self.linea_base)
 
 
-# class SistemaIntegradoGestion(models.Model):
-# 	periodo = models.SmallIntegerField(choices=PERIODICIDAD_OPCIONES, default=SEMESTRAL)
-# 	ItemSIG = models.ManyToManyField(ItemSistemaIntegradoGestion)
+class ItemSistemaIntegradoGestion(models.Model):
+	anio = models.IntegerField()
+	periodo_numero = models.SmallIntegerField()
+	valor_inicial = models.FloatField()
+	valor_esperado = models.FloatField()
 
-# 	def __str__(self):
-# 		return u'%s' % (self.periodo)
+	def __str__(self):
+		return u'%s' % (self.fuente)
+
+
+class SistemaIntegradoGestion(models.Model):
+	indicador = models.ForeignKey(Indicador, on_delete=models.DO_NOTHING)
+	estado = models.BooleanField(default=True)
+	periodo = models.SmallIntegerField(choices=PERIODICIDAD_OPCIONES, default=SEMESTRAL)
+	ItemSIG = models.ManyToManyField(ItemSistemaIntegradoGestion)
+
+	def __str__(self):
+		return u'%s' % (self.periodo)
 
 
 # class Programacion(models.Model):

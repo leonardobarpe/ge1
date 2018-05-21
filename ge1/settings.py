@@ -43,6 +43,7 @@ INSTALLED_APPS = [
 
     # ........................#
     'multiselectfield',
+    'django.contrib.humanize',
     'ge1',
 ]
 

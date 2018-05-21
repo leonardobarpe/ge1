@@ -217,23 +217,23 @@ function initIndicador(){
 
 function initMedicion(){
 	$('#id_tipo_formula').val('{{medicion.tipo_formula}}')
-	$('#id_unidad_medicion').val('{{medicion.unidad_medicion}}');
+	$('#id_unidad_medicion').val('{{medicion.unidad_medicion.codigo_unidad}}');
 	$('#id_tendencia').val('{{medicion.tendencia}}');
 	$('#id_archivo_asociado').val('{{medicion.archivo_asociado|default_if_none:""}}');
 
 	$('#id_nombre_variable_1').val('{{medicion.nombre_variable_1}}');
 	$('#id_nomenclaruta_1').val('{{medicion.nomenclaruta_1}}');
-	$('#id_unidad_1').val('{{medicion.unidad_1}}');
+	$('#id_unidad_1').val('{{medicion.unidad_1.codigo_unidad}}');
 	$('#id_fuente_1').val('{{medicion.fuente_1|default_if_none:""}}');
 
 	$('#id_nombre_variable_2').val('{{medicion.nombre_variable_2}}');
 	$('#id_nomenclaruta_2').val('{{medicion.nomenclaruta_2}}');
-	$('#id_unidad_2').val('{{medicion.unidad_2}}');
+	$('#id_unidad_2').val('{{medicion.unidad_2.codigo_unidad}}');
 	$('#id_fuente_2').val('{{medicion.fuente_2|default_if_none:""}}');
 
 	$('#id_nombre_respuesta').val('{{medicion.nombre_respuesta|default_if_none:""}}');
 	$('#id_nomenclaruta_respuesta').val('{{medicion.nomenclaruta_respuesta}}');
-	$('#id_unidad_respuesta').val('{{medicion.unidad_respuesta}}');
+	$('#id_unidad_respuesta').val('{{medicion.unidad_respuesta.codigo_unidad}}');
 	$('#id_fuente_respuesta').val('{{medicion.fuente_respuesta|default_if_none:""}}');
 
 	$('#id_interpretacion_resultado').text("{{medicion.interpretacion_resultado|default_if_none:""|escapejs}}");

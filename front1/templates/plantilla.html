@@ -9,7 +9,7 @@
 	<link rel="shortcut icon" href="{% static 'imagenes/logos/logoCliente.ico' %}">
 	<link rel="stylesheet" type="text/css" href="{% static 'librerias/bootstrap400/dist/css/bootstrap.css' %}" media="screen">
 	<link rel="stylesheet" type="text/css" href="{% static 'librerias/fontawesome508/web-fonts-with-css/css/fontawesome.min.css' %}" media="screen">
-	<script src="{% static 'librerias/library/jquery-3.2.1.slim.min.js' %}"></script>
+	<script src="{% static 'librerias/library/jquery-3.3.1.min.js' %}"></script>
 	<script src="{% static 'librerias/library/popper.min.js' %}"></script>    
 	<script src="{% static 'librerias/bootstrap400/dist/js/bootstrap.min.js' %}"></script>
 	<script src="{% static 'librerias/library/all.js' %}"></script>
@@ -43,4 +43,23 @@
 		</div> 
 	</body>
 	{% block extra_script %}{% endblock extra_script %}
+
+	{# USAR EN LAS PETICIONES CON AJAX #}
+	<script type="text/javascript">
+		function getCookie(name) {
+		    var cookieValue = null;
+		    if (document.cookie && document.cookie !== '') {
+		        var cookies = document.cookie.split(';');
+		        for (var i = 0; i < cookies.length; i++) {
+		            var cookie = jQuery.trim(cookies[i]);
+		            // Does this cookie string begin with the name we want?
+		            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+		                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+		                break;
+		            }
+		        }
+		    }
+		    return cookieValue;
+		}
+	</script>
 </html>

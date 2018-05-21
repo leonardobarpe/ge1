@@ -1,3 +1,4 @@
+{% load humanize %}
 <div class="col-md-12">
 	<div class="row">
 		<div class="col-md-4">
@@ -10,11 +11,11 @@
 		</div>
 		<div class="col-md-2">
 			<label><b>Linea Base</b></label><br>
-			<input type="number" name="linea_base" id="linea_base" class="form-control">
+			<input type="number" name="linea_base" id="linea_base" class="form-control" value="{{fuente_financiacion.linea_base}}">
 		</div>
 		<div class="col-md-2">
 			<label><b>Meta Periodo</b></label><br>
-			<input type="number" name="meta_periodo" id="meta_periodo" class="form-control">
+			<input type="number" name="meta_periodo" id="meta_periodo" class="form-control" value="{{fuente_financiacion.meta_periodo}}">
 		</div>
 		<div class="col-md-2">
 			<label><b>Meta Final</b></label><br>
@@ -22,42 +23,61 @@
 		</div>
 	</div>
 	<br>
-	<br>
-	<table id="table_resumen" class="table table-bordered table-condensed table-hover table-sm">
-		<thead>
-			<tr>
-				<th>Fuente</th>
-				<th>2017</th>
-				<th>2018</th>
-				<th>Opciones</th>
-			</tr>
-		</thead>
-		<tbody>
-
-		</tbody>
-		<tfoot>
-			<tr>
-				<td>
-					<input type="text" name="fuente" id="fuente" class="form-control" placeholder="nombre de fuente">
-				</td>
-				<td>
-					<input type="number" class="valor_fuente form-control" id="vf_2017" anio="2017" class="form-control" placeholder="Valor">
-				</td>
-				<td>
-					<input type="number" class="valor_fuente form-control" id="vf_2018" anio="2018" class="form-control" placeholder="Valor">
-				</td>
-				<td>
-					<button class="btn btn-success form-control" id="boton_agregar_fuente">Agregar</button>
-				</td>
-			</tr>
-		</tfoot>
-	</table>
-	<br>
-	<div class="form-group">
-		<a type="button" class="btn btn-success float-right" id="boton_guardar_programacion"><i class="fa fa-save"></i> Guardar</a>
+	<div class="row">
+		<table id="table_resumen" class="table thead-dark table-bordered table-hover table-sm">
+			<legend align="center">FUENTES DE FINANCIACIÓN (POAI) - PESOS CORRIENTES (COP) </legend>
+			<thead>
+				<tr>
+					<th>FUENTE</th>
+					<th>2017</th>
+					<th>2018</th>
+					<th>OPCIONES</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% if fuente_financiacion %}
+					{% regroup fuente_financiacion.item_fuente_financiacion.all by fuente.nombre_fuente as fuente_list %}
+					{% for fuente in fuente_list %}
+					<tr>
+						<td value="{{ fuente.list.0.fuente.pk }}">{{ fuente.grouper }}</td>
+						{% for ff in fuente.list %}
+							<td value="{{ ff.valor }}" anio="{{ ff.anio }}">{{ ff.valor|intcomma }} - {{ ff.anio }}</td>
+						{% endfor %}
+						<td>Eliminar</td>
+					</tr>
+					{% endfor %}
+				{% endif %} 
+			</tbody>
+			<tfoot>
+				<tr>
+					<td>
+						<!--<input type="text" name="fuente" id="fuente" class="form-control" placeholder="nombre de fuente">-->
+						<select name="sisfuentesfinanciacion" id="sisfuentesfinanciacion" class="form-control">
+							{% for fuente_f in sisfuentesfinanciacion %}
+								<option value="{{fuente_f.codigo_fuente}}">{{fuente_f.nombre_fuente}}</option>
+							{% endfor %}
+						</select>
+					</td>
+					<td>
+						<input type="number" class="valor_fuente form-control" anio="2017" class="form-control" placeholder="Valor">
+					</td>
+					<td>
+						<input type="number" class="valor_fuente form-control" anio="2018" class="form-control" placeholder="Valor">
+					</td>
+					<td>
+						<button class="btn btn-success form-control" id="boton_agregar_fuente">Agregar</button>
+					</td>
+				</tr>
+			</tfoot>
+		</table>
 	</div>
 
+	<div class="form-group">
+		<button id="boton_guardar_fuente_financiacion" class="btn btn-success float-right"><i class="fa fa-save"></i> Guardar Fuente Financiación</button>
+	</div>
 
+	<br>
+	<hr><!-- .......................................................ESPACIO ............................................. -->
 	<div class="row">
 		<div class="col-md-4">
 			<label><b>Periodo</b></label>
@@ -76,7 +96,8 @@
 	<br>
 	<div class="row" style="width: 1100px;  overflow: scroll;">
 		<div id="" class="col-md-12">
-			<table id="tabla_gestion_integrado" class="table table-hover table-bordered table-condensed">
+			<legend align="center">SISTEMA INTEGRADO DE GESTIÓN</legend>
+			<table id="tabla_gestion_integrado" class="table thead-dark table-bordered table-hover table-sm">
 				<thead>
 					<tr>
 						<th>Año</th>
@@ -95,6 +116,10 @@
 				</tfoot>
 			</table>
 		</div>
+	</div>
+	<br>
+	<div class="form-group">
+		<button id="boton_guardar_SIG" class="btn btn-success float-right"><i class="fa fa-save"></i> Guardar SIG</button>
 	</div>
 
 </div>
@@ -133,7 +158,7 @@
 		var count = 1;
         for (var i = 0; i < periodos; i++) {
         	$('#tabla_gestion_integrado thead').find('tr').each(function(){
-        		var add = '<td class="new_cell">Perido <b>'+count+'</b></td>'+'<td class="new_cell">Perido <b>'+count+'</b></td>';
+        		var add = '<th class="new_cell">Perido <b>'+count+'</b></th>'+'<th class="new_cell">Perido <b>'+count+'</b></th>';
         		$(this).append(add);
 			});
 
@@ -153,32 +178,36 @@
 
 	$(document).ready(function(){
 		$("#periodo").change();
+		$("#meta_final").val(sumaMetas());
 	});
 
 	$(document).on("click", "#boton_agregar_fuente", function(){
-		var fuente = $("#fuente").val().trim();
+		var id_fuente = parseInt($("#sisfuentesfinanciacion option:selected").val() || 0);
 		var tiene_valor = false;
 		var valores_anios = [];
 		$('.valor_fuente').each(function(){
 			var val_fuente = parseInt($(this).val() || 0);
-			valores_anios.push(val_fuente);
+			valores_anios.push({
+				"valor":val_fuente,
+				"anio":$(this).attr("anio")
+			});
 			if (val_fuente > 0)
 				tiene_valor = true;
 		});
 
-		if(fuente != "" && tiene_valor == true){
+		if(id_fuente > 0 && tiene_valor == true){
 			var fila = "";
 			fila += "<tr>";
-			fila += "<td>"+fuente+"</td>";
+			fila += "<td value="+id_fuente+">"+$("#sisfuentesfinanciacion option:selected").text()+"</td>";
 			for (var i = 0; i < valores_anios.length; i++) {
-				fila += "<td>"+valores_anios[i]+"</td>";
+				fila += "<td value="+valores_anios[i].valor+" anio="+valores_anios[i].anio+">"+numberWhitCommas(valores_anios[i].valor)+"</td>";
 			}
 			fila += "<td>Eliminar</td>";
 			fila += "</tr>";
 			$("#table_resumen tbody").append(fila);
 			seteaDatosTablaResumen();
 		}else{
-			if(fuente==""){
+			if(id_fuente<=0){
 				alert("Digite un nombre de fuente");
 			}else if(tiene_valor == false){
 				alert("Digite un valor a la fuente");
@@ -191,5 +220,75 @@
 		$('.valor_fuente').each(function(){
 			$(this).val("");
 		});
+	}
+
+	$(document).on('click', '#boton_guardar_fuente_financiacion', guardarFuenteFinanciacion);
+	$(document).on('click', '#boton_guardar_SIG', guardarSIG);
+
+	function guardarFuenteFinanciacion(){
+		var fuentes = [];
+		$("#table_resumen > tbody  > tr").each(function() {
+			var value=$(this).find('td:eq(0)').attr("value");
+			$(this).find('td:not(:first):not(:last)').each (function() {
+				var dic = {
+					"id_fuente":value,
+					"valor_fuete":$(this).attr("value"),
+					"anio":$(this).attr("anio")
+				}
+				fuentes.push(JSON.stringify(dic));
+			});
+		});
+
+		var linea_base = parseInt($("#linea_base").val() || 0);
+		var meta_periodo = parseInt($("#meta_periodo").val() || 0);
+
+		if(linea_base > 0 && meta_periodo){
+			$.ajax({
+		        type: "POST",
+		        url: "/tablero-Mando/programacion/?agregar_ff",
+		        data: {
+		        	"csrfmiddlewaretoken": getCookie('csrftoken'),
+					"indicador":"{{indicador.pk}}",
+		        	"linea_base": linea_base,
+					"meta_periodo": meta_periodo,
+		        	"fuentes[]": fuentes,
+		       	},
+		        error: function(respuesta){
+		            console.log("Hubo un problema, guardando la fuente_financiacion.");
+		        },
+		        success: function(respuesta){
+		        	respuesta = jQuery.parseJSON(respuesta);
+		            if (respuesta.mensaje_error){
+		            }else{
+		            	alert(respuesta.mensaje);
+		            }
+		        }
+		    })
+		}else{
+			if(linea_base <= 0){
+				alert("Digite un valor en linea base");
+			}else if(meta_periodo <= 0){
+				alert("Digite un valor en Meta periodo");
+			}
+		}
+	}
+
+
+	function guardarSIG(){
+		$("#tabla_gestion_integrado > tbody  > tr").each(function() {
+			$(this).find('td:not(:first)').each (function() {
+				var tipo_valor = $(this).find('input').attr("class");
+				var valor = parseFloat($(this).find('input').val() || 0);
+				if(tipo_valor == 'valor_inicial'){
+					alert("valor inicial: "+valor);
+				}else{
+					alert("valor esperado: "+valor);
+				}
+			})
+		});
+	}
+
+	const numberWhitCommas = (x) => {
+	  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 	}
 </script>

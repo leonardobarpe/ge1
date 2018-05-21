@@ -3478,6 +3478,9 @@ class SisFuentesFinanciacion(models.Model):
         managed = False
         db_table = 'sis_fuentes_financiacion'
 
+    def __str__(self):
+        return u'%s %s' % (self.codigo_fuente, self.nombre_fuente)
+
 
 class SisGrupos(models.Model):
     codigo = models.DecimalField(primary_key=True, max_digits=10, decimal_places=0)
