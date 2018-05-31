@@ -178,6 +178,7 @@ class ProgramacionIndicador(View):
 	TEMPLATE_VER_PROGRAMACION = 'programacion/ver_programacion.html'
 
 	AGREGAR_FUENTE_FINANCIACION ='agregar_ff'
+	AGREGAR_SISTEMA_INTEGRADO_GESTION = 'agregar_sig'
 
 	def ver_informacion_base(self, request):
 		indicador = Indicador.objects.get(pk=request.GET['i'])
@@ -190,6 +191,11 @@ class ProgramacionIndicador(View):
 		try:
 			fuente_financiacion = FuenteFinanciacion.objects.get(indicador=indicador, estado=True)
 		except FuenteFinanciacion.DoesNotExist:
+			pass
+
+		try:
+			sistema_integrado_gestion = SistemaIntegradoGestion.objects.get(indicador=indicador, estado=True)
+		except SistemaIntegradoGestion.DoesNotExist:
 			pass
 
 		return render_to_response(self.TEMPLATE_VER_PROGRAMACION, locals())
@@ -215,11 +221,11 @@ class ProgramacionIndicador(View):
 			if (fuente_financiacion.item_fuente_financiacion.count() > 0):
 				fuente_financiacion.item_fuente_financiacion.all().delete()
 			for f in fuentes:
-				item = ItemFuenteFinanciacion()
 				dicc = json.loads(f)
 				val_id_fuente = int(dicc['id_fuente'])
 				val_anio = int(dicc['anio'])
 				if(val_id_fuente > 0 and val_anio > 0):
+					item = ItemFuenteFinanciacion()
 					item.fuente = SisFuentesFinanciacion.objects.get(pk=val_id_fuente)
 					item.anio = val_anio
 					item.valor = float(dicc['valor_fuete'])
@@ -228,6 +234,47 @@ class ProgramacionIndicador(View):
 					fuente_financiacion.save()
 
 			respuesta['mensaje'] = "Se almaceno la fuente de financiacion correctamente"
+			return HttpResponse(json.dumps(respuesta))
+		else:
+			return HttpResponse("peticion invalida, not ajax", status=403)
+
+
+	def agregar_sistema_integrado_gestion(self, request):
+		respuesta = {}
+		if request.is_ajax():
+			indicador = Indicador.objects.get(pk=request.POST['indicador'])
+			sistemas = request.POST.getlist('sistemas[]')
+
+			try:
+				sistema_integrado_gestion = SistemaIntegradoGestion.objects.get(indicador=indicador, estado=True)
+			except SistemaIntegradoGestion.DoesNotExist:
+				sistema_integrado_gestion = SistemaIntegradoGestion()
+				pass
+
+			sistema_integrado_gestion.indicador = indicador
+			sistema_integrado_gestion.periodo = request.POST['periodo']
+			sistema_integrado_gestion.save()
+
+			if (sistema_integrado_gestion.itemSIG.count() > 0):
+				sistema_integrado_gestion.itemSIG.all().delete()
+			for s in sistemas:
+				dicc = json.loads(s)
+				val_anio = int(dicc['anio'])
+				val_periodo_numero = int(dicc['periodo_numero'])
+				val_valor_inicial = float(dicc['valor_inicial'])
+				val_valor_esperado = float(dicc['valor_esperado'])
+				# print("P: %s A: %s VI: %s VE: %s" % (val_periodo_numero, val_anio, val_valor, val_tipo_valor))
+				if(val_valor_inicial > 0 or val_valor_esperado > 0 and val_anio > 1900 and val_anio < 2500):
+					item = ItemSistemaIntegradoGestion()
+					item.anio = val_anio
+					item.periodo_numero = val_periodo_numero
+					item.valor_inicial = val_valor_inicial
+					item.valor_esperado = val_valor_esperado
+					item.save()
+					sistema_integrado_gestion.itemSIG.add(item)
+					sistema_integrado_gestion.save()
+
+			respuesta['mensaje'] = "Se almaceno sistema integrado de gestion correctamente"
 			return HttpResponse(json.dumps(respuesta))
 		else:
 			return HttpResponse("peticion invalida, not ajax", status=403)
@@ -243,5 +290,8 @@ class ProgramacionIndicador(View):
 	def post(self, request):
 		if self.AGREGAR_FUENTE_FINANCIACION in request.GET:
 			return self.agregar_fuente_financiacion_ajax(request)
+
+		if self.AGREGAR_SISTEMA_INTEGRADO_GESTION in request.GET:
+			return self.agregar_sistema_integrado_gestion(request)
 
 		return HttpResponse("peticion invalida", status=403)

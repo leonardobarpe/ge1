@@ -1,14 +1,13 @@
 <form method="POST" action="/tablero-Mando/indicador/?agregar_a&indicador={{indicador.pk}}" role="form" id="formulario_armonizacion" method="multipart/form-data">
 {% csrf_token %}
-<input type="hidden" name="tipo_armonizacion" id="id_tipo_armonizacion">
 <div class="row">
 	<div class="card-group">
 		<div class="card">
 			<div class="card-body">
 				<p class="card-title">
 					<div class="custom-control custom-checkbox">
-						<input type="checkbox" class="custom-control-input" id="planDesarrolloCheck" onclick="mostrarPlaDes()" {% if armonizacion %} checked {% endif %} >
-						<label class="custom-control-label" for="planDesarrolloCheck">PLAN DESARROLLO</label>
+						<input type="checkbox" class="custom-control-input" id="plan_desarrollo_check" onclick="mostrarPlaDes()" {% if armonizacion %} checked {% endif %} >
+						<label class="custom-control-label" for="plan_desarrollo_check">PLAN DESARROLLO</label>
 					</div>														
 				</p>
 				<div class="card-text" id="parrafoPlanDes" {% if not armonizacion %}style="display: none"{% endif %}>
@@ -35,8 +34,8 @@
 			<div class="card-body">
 				<p class="card-title">
 					<div class="custom-control custom-checkbox">
-						<input type="checkbox" class="custom-control-input" id="sisIntGesCheck" onclick=" mostrarSisIntGes()" {% if armonizacion %} checked {% endif %}>
-						<label class="custom-control-label" for="sisIntGesCheck">SISTEMA INTEGRADO DE GESTION</label>
+						<input type="checkbox" class="custom-control-input" id="sig_check" onclick=" mostrarSisIntGes()" {% if armonizacion %} checked {% endif %}>
+						<label class="custom-control-label" for="sig_check">SISTEMA INTEGRADO DE GESTION</label>
 					</div>
 				</p>
 				<div class="card-text" id="parrafoSisIntGes" {% if not armonizacion %}style="display: none"{% endif %}>
@@ -86,41 +85,39 @@
 	</div>
 </div>
 <br>
+<div style="display:none;">
+{{form_armonizacion.tipo_armonizacion}}
+</div>
 <div class="form-group">
 	<button type="submit" id="guardar_armonizacion" name="guardar_armonizacion" class="btn btn-success float-right"><i class="fa fa-save"></i> GUARDAR ARMONIZACIÓN</button>
 </div>
 </form>
 
 <script type="text/javascript">
+	$(document).ready(function(){
+		$(".select-chossen").chosen({width: "100%"}); 
+	})
 	var is_init = false;
 	// PESTAÑA ARMONIZACION
 	// Ocultar o mostrar campos de PLAN DE DESARROLLO
 	function mostrarPlaDes(){ 
-		if (document.getElementById("planDesarrolloCheck").checked) {
+		if (document.getElementById("plan_desarrollo_check").checked) {
 			document.getElementById("parrafoPlanDes").style.display = "block";
-			var tipo = $("#id_tipo_armonizacion").val() || "";
-			$("#id_tipo_armonizacion").val(tipo+"1,");
 			if(!is_init){
 				filtrarLPS();
 			}
 		}else{
 			document.getElementById("parrafoPlanDes").style.display = "none";
-			var tipo = $("#id_tipo_armonizacion").val().replace('1,','') || "";
-			$("#id_tipo_armonizacion").val(tipo);
 		}
 	}
 	// PESTAÑA ARMONIZACION
 	// Ocultar o mostrar campos de SISTEMA INTEGRADO DE GESTION
 	function mostrarSisIntGes(){
-		if (document.getElementById("sisIntGesCheck").checked) {
+		if (document.getElementById("sig_check").checked) {
 			document.getElementById("parrafoSisIntGes").style.display = "block";
-			var tipo = $("#id_tipo_armonizacion").val() || "";
-			$("#id_tipo_armonizacion").val(tipo+"2,");
 		}
 		else{
 			document.getElementById("parrafoSisIntGes").style.display = "none";
-			var tipo = $("#id_tipo_armonizacion").val().replace('2,','') || "";
-			$("#id_tipo_armonizacion").val(tipo);
 		}
 	}
 	// PESTAÑA ARMONIZACION
@@ -134,5 +131,174 @@
 		}
 	}
 
-	$(".select-chossen").chosen({width: "100%"}); 
+	function filtrarLPS(){
+		$("#id_linea option").each(function(){
+			var filtro = $(this).text().charAt(0);
+			if(filtro != "L" && filtro != "-"){
+				$(this).remove();
+			}
+		});
+		$('#id_linea').trigger("chosen:updated");
+		$("#id_programa option").each(function(){
+			var filtro = $(this).text().charAt(0);
+			if(filtro != "P" && filtro != "-"){
+				$(this).remove();
+			}
+		});
+		$('#id_programa').trigger("chosen:updated");
+		$("#id_subprograma option").each(function(){
+			var filtro = $(this).text().charAt(0);
+			if(filtro != "S" && filtro != "-"){
+				$(this).remove();
+			}
+		});
+		$('#id_subprograma').trigger("chosen:updated");
+	}
+
+	$('#id_linea').on('change', function(){
+		var filtro = parseInt($('#id_linea option:selected').text().charAt(2) || 0);
+		filtrarMetas(filtro);
+		filtrarPrograma(filtro);
+	});
+
+	$('#id_programa').on('change', function(){
+		var f1 = parseInt($('#id_programa option:selected').text().charAt(2) || 0);
+		var f2 = parseInt($('#id_programa option:selected').text().charAt(4) || 0);
+		filtrarMetas2(f1,f2);
+		filtrarSubPrograma(f1,f2);
+	});
+
+	$('#id_subprograma').on('change', function(){
+		var f1 = parseInt($('#id_subprograma option:selected').text().charAt(2) || 0);
+		var f2 = parseInt($('#id_subprograma option:selected').text().charAt(4) || 0);
+		var f3 = parseInt($('#id_subprograma option:selected').text().charAt(6) || 0);
+		filtrarMetas3(f1,f2,f3);
+	})
+
+	function filtrarMetas(f1){
+		if(f1 != 0){
+			activarSelects('#id_meta');
+			$("#id_meta option").each(function(){
+				var aux = $(this).text().split(" ")[0].trim();
+				if(aux.charAt(aux.length-1) == '.'){
+					aux = aux.replace(/.(?=[^.]*$)/, '');
+				}
+				var filtros = aux.split(".");
+				// console.log("aux: "+aux+"  fils: "+filtros+"  ("+filtros.length+")");
+				if(filtros.length > 2 || filtros[0] != f1){
+				// console.log("("+filtros[0]+")   "+f1+" != "+filtros[0]);
+					$(this).prop('disabled', 'disabled');
+				}
+			});
+			$('#id_meta').trigger("chosen:updated");
+		}
+	}
+
+	function filtrarPrograma(f1){
+		if(f1 != 0){
+			activarSelects('#id_programa');
+			$("#id_programa option").each(function(){
+				var aux = $(this).text().split(" ")[0].trim();
+				if(aux.charAt(aux.length-1) == '.'){
+					aux = aux.replace(/.(?=[^.]*$)/, '');
+				}
+				var filtros = aux.split(".");
+				// console.log("aux: "+aux+"  fils: "+filtros+"  ("+filtros.length+")");
+				if(filtros.length > 3 || filtros[1] != f1 && aux != '---------'){
+				// console.log("("+filtros[1]+")   "+f1+" != "+filtros[1]);
+					$(this).prop('disabled', 'disabled');
+				}
+			});
+			$('#id_programa').trigger("chosen:updated");
+		}
+	}
+
+
+	function filtrarMetas2(f1, f2){
+		if(f1 != 0){
+			activarSelects('#id_meta');
+			$("#id_meta option").each(function(){
+				var aux = $(this).text().split(" ")[0].trim();
+				if(aux.charAt(aux.length-1) == '.'){
+					aux = aux.replace(/.(?=[^.]*$)/, '');
+				}
+				var filtros = aux.split(".");
+				// console.log("aux: "+aux+"  fils: "+filtros+"  ("+filtros.length+")");
+				var is_not_f2 = false;
+				if(filtros.length >= 3){
+					if(filtros[1] != f2)
+						is_not_f2 = true;
+				}
+
+				if(filtros.length > 3 || filtros[0] != f1 || is_not_f2==true){
+				// console.log("("+filtros[0]+")   "+f1+" != "+filtros[0]);
+					$(this).prop('disabled', 'disabled');
+				}
+			});
+			$('#id_meta').trigger("chosen:updated");
+		}
+	}
+
+	function filtrarSubPrograma(f1, f2){
+		if(f1 != 0){
+			activarSelects('#id_subprograma');
+			$("#id_subprograma option").each(function(){
+				var aux = $(this).text().split(" ")[0].trim();
+				if(aux.charAt(aux.length-1) == '.'){
+					aux = aux.replace(/.(?=[^.]*$)/, '');
+				}
+				var filtros = aux.split(".");
+				// console.log("aux: "+aux+"  fils: "+filtros+"  ("+filtros.length+")");
+				var is_not_f2 = false;
+				if(filtros.length >= 3){
+					if(filtros[2] != f2)
+						is_not_f2 = true;
+				}
+				if((filtros.length > 4 || filtros[1] != f1 || is_not_f2==true) && aux != '---------'){
+				// console.log("("+filtros[0]+")   "+f1+" != "+filtros[0]);
+					$(this).prop('disabled', 'disabled');
+				}
+			});
+			$('#id_subprograma').trigger("chosen:updated");
+		}
+	}
+
+	function filtrarMetas3(f1, f2, f3){
+		if(f1 != 0){
+			activarSelects('#id_meta');
+			$("#id_meta option").each(function(){
+				var aux = $(this).text().split(" ")[0].trim();
+				if(aux.charAt(aux.length-1) == '.'){
+					aux = aux.replace(/.(?=[^.]*$)/, '');
+				}
+				var filtros = aux.split(".");
+				// console.log("aux: "+aux+"  fils: "+filtros+"  ("+filtros.length+")");
+				var is_not_f2 = false;
+				if(filtros.length == 3){
+					if(filtros[1] != f2)
+						is_not_f2 = true;
+				}
+				var is_not_f3 = false;
+				if(filtros.length > 3){
+					if(filtros[2] != f3)
+						is_not_f3 = true;
+				}
+
+				if(filtros.length > 3 || filtros[0] != f1 || is_not_f2==true && is_not_f3==true){
+				// console.log("("+filtros[0]+")   "+f1+" != "+filtros[0]);
+					$(this).prop('disabled', 'disabled');
+				}
+			});
+			$('#id_meta').trigger("chosen:updated");
+		}
+	}
+
+
+	function activarSelects(id_elemento){
+		$(id_elemento+" option").each(function(){
+			$(this).prop('disabled', false);
+		});
+		$(id_elemento).trigger("chosen:updated");
+	}
+
 </script>

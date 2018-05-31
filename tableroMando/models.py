@@ -371,14 +371,14 @@ class ItemSistemaIntegradoGestion(models.Model):
 	valor_esperado = models.FloatField()
 
 	def __str__(self):
-		return u'%s' % (self.fuente)
+		return u'%s %s' % (self.anio, self.periodo_numero)
 
 
 class SistemaIntegradoGestion(models.Model):
 	indicador = models.ForeignKey(Indicador, on_delete=models.DO_NOTHING)
 	estado = models.BooleanField(default=True)
 	periodo = models.SmallIntegerField(choices=PERIODICIDAD_OPCIONES, default=SEMESTRAL)
-	ItemSIG = models.ManyToManyField(ItemSistemaIntegradoGestion)
+	itemSIG = models.ManyToManyField(ItemSistemaIntegradoGestion)
 
 	def __str__(self):
 		return u'%s' % (self.periodo)

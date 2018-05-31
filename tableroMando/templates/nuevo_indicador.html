@@ -261,28 +261,6 @@ function initArmonizacion(){
 	$('.select-chossen').trigger("chosen:updated");
 }
 
-function filtrarLPS(){
-	$("#id_linea option").each(function(){
-		var filtro = $(this).text().charAt(0);
-		if(filtro != "L"){
-			$(this).remove();
-		}
-	});
-	$("#id_programa option").each(function(){
-		var filtro = $(this).text().charAt(0);
-		if(filtro != "P"){
-			$(this).remove();
-		}
-	});
-	$("#id_subprograma option").each(function(){
-		var filtro = $(this).text().charAt(0);
-		if(filtro != "S"){
-			$(this).remove();
-		}
-	});
-	$('.select-chossen').trigger("chosen:updated");
-}
-
 function enviarFormula(formula){
 	var el = document.getElementById("contenedor_formula");
     el.innerHTML=formula;
@@ -336,10 +314,21 @@ $(document).on('click','#guardar_medicion', function(event){
 	}
 });
 
+
 $(document).on('click','#guardar_armonizacion', function(event){
 	event.preventDefault();
-	var val_tipo = $("#id_tipo_armonizacion").val().replace(/,\s*$/, "").split(",");
-	$("#id_tipo_armonizacion").val(val_tipo);
+	var tipo_armonizacion = [];
+	if($('#plan_desarrollo_check').is(':checked')){
+		tipo_armonizacion.push("1");
+	}
+	if($('#sig_check').is(':checked')){
+		tipo_armonizacion.push("2");
+	}
+	$("#id_tipo_armonizacion").val(tipo_armonizacion);
+	// PENDIENTE HACER LA VALIDACION
+	// if(val_tipo == "1"){
+	// 	var linea = $('#id_linea option:selected').val();
+	// }
 	$("#formulario_armonizacion").submit();
 });
 
