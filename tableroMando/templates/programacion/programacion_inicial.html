@@ -125,6 +125,21 @@
 </div>
 
 <script>
+	var items_sig = [];
+	{% for sistema in sistema_integrado_gestion.itemSIG.all %}
+		items_sig.push({
+			'anio':'{{sistema.anio}}',
+			'periodo_numero':'{{sistema.periodo_numero}}',
+			'valor_inicial':'{{sistema.valor_inicial}}',
+			'valor_esperado':'{{sistema.valor_esperado}}'
+		})
+	{% endfor %}
+
+	$(document).ready(function(){
+		$("#meta_final").val(sumaMetas());
+		$("#periodo").change();
+	});
+
 	$(document).on("change", '#linea_base', function(){
 		$("#meta_final").val(sumaMetas());
 	});
@@ -164,21 +179,30 @@
 
         	$('#tabla_gestion_integrado tbody').find('tr').each(function(){
         		var id_fila=$(this).attr("id");
-        		var id_input_1 = id_fila+'_'+count;
-        		var id_input_2 = id_fila+'_'+count;
-        		var c1 = '<input type="number" class="valor_inicial" id="'+id_input_1+'" placeholder="Valor inicial" style="    width: 100px;" >';
-        		var c2 = '<input type="number" class="valor_esperado"  id="'+id_input_2+'" placeholder="Valor esperado" style="    width: 100px;" >';
+        		var id_input_1 = count+"_"+id_fila+"_i";
+        		var id_input_2 = count+"_"+id_fila+"_e";
+
+        		var datos = null;
+	        	for (var j = 0; j < items_sig.length; j++) {
+					// alert("Entro item: "+items_sig[j].periodo_numero);
+					if(count == items_sig[j].periodo_numero && id_fila == items_sig[j].anio){
+						datos = items_sig[j];
+					}
+				}
+				var v_inicial = 0;
+				var v_esperado = 0;
+				if(datos != null){
+					v_inicial = datos.valor_inicial;
+					v_esperado = datos.valor_esperado;
+				}
+        		var c1 = '<input type="number" class="valor_inicial" id="'+id_input_1+'" placeholder="Valor inicial" style="width: 100px;" value='+v_inicial+' >';
+        		var c2 = '<input type="number" class="valor_esperado"  id="'+id_input_2+'" placeholder="Valor esperado" style="width: 100px;" value='+v_esperado+' >';
         		var add = '<td class="new_cell">'+c1+'</td>'+'<td class="new_cell">'+c2+'</td>';
         		$(this).append(add);
 			});
 			count++;
         }
 		
-	});
-
-	$(document).ready(function(){
-		$("#periodo").change();
-		$("#meta_final").val(sumaMetas());
 	});
 
 	$(document).on("click", "#boton_agregar_fuente", function(){
@@ -275,17 +299,80 @@
 
 
 	function guardarSIG(){
+		var sistemas = [];
+		var aux_valor = 0, aux_periodo = 0, aux_anio = 0, aux_tipo = "";
 		$("#tabla_gestion_integrado > tbody  > tr").each(function() {
 			$(this).find('td:not(:first)').each (function() {
-				var tipo_valor = $(this).find('input').attr("class");
 				var valor = parseFloat($(this).find('input').val() || 0);
-				if(tipo_valor == 'valor_inicial'){
-					alert("valor inicial: "+valor);
+				var atributos = $(this).find('input').attr("id").split('_');
+				var periodo_numero = parseInt(atributos[0] || 0);
+				var anio = parseInt(atributos[1] || 0);
+				var tipo_valor = atributos[2]+"";
+
+				if(tipo_valor == 'i'){
+					aux_valor = valor;
+					aux_periodo = periodo_numero;
+					aux_anio = anio;
+					aux_tipo = tipo_valor;
 				}else{
-					alert("valor esperado: "+valor);
+					if(aux_valor > 0 || valor > 0 && periodo_numero == aux_periodo && anio > 1900 && anio <2500 && aux_anio ==anio){
+						var dic = {
+							"periodo_numero":periodo_numero,
+							"anio":anio,
+							"valor_inicial":aux_valor,
+							"valor_esperado":valor
+						}
+						sistemas.push(JSON.stringify(dic));
+						aux_valor = 0, aux_periodo = 0, aux_anio = 0, aux_tipo = "";
+					}else{
+						// Nada -- ACTIVAR MENSAJES SI SE QUIERE
+						{% comment %} 
+						if(aux_valor <= 0 || valor <= 0){
+							console.log("El vi: "+aux_valor+" y ve: "+valor+" del pe: "+aux_periodo+" anio: "+anio+" no se almacenan");
+						}else if(anio < 1900 && anio >2500){
+							console.log("El año no es valido"+anio);
+						}
+						{% endcomment %}
+					}
 				}
 			})
 		});
+		var periodo = $("#periodo option:selected").val();
+	    if(periodo > 0){
+    		$.ajax({
+		        type: "POST",
+		        url: "/tablero-Mando/programacion/?agregar_sig",
+		        data: {
+		        	"csrfmiddlewaretoken": getCookie('csrftoken'),
+					"indicador":"{{indicador.pk}}",
+		        	"periodo": periodo,
+		        	"sistemas[]": sistemas,
+		       	},
+		        error: function(respuesta){
+		            console.log("Hubo un problema, guardando la fuente_financiacion.");
+		        },
+		        success: function(respuesta){
+		        	respuesta = jQuery.parseJSON(respuesta);
+		            if (respuesta.mensaje_error){
+		            }else{
+		            	alert(respuesta.mensaje);
+		            }
+		        }
+		    })
+	    }
+	}
+
+
+	function initSIG(){
+		var lista = [];
+		{% if sistema_integrado_gestion %}
+			{% regroup sistema_integrado_gestion.itemSIG.all by anio as sig_list %}
+			{% for sig in sig_list %}
+				{% for ff in sig.list %}
+					alert('{{f}}');
+				{% endfor %}
+			{% endfor %}
+		{% endif %}
 	}
 
 	const numberWhitCommas = (x) => {

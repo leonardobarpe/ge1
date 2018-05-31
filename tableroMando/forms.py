@@ -112,6 +112,9 @@ class ArmonizacionForm(forms.ModelForm):
 			'subproceso',
 			'tipo_armonizacion',
 			)
+		widgets = {
+            'tipo_armonizacion': forms.SelectMultiple(attrs={'multiple':''}),
+        }
 
 	def  __init__(self, *args, **kwargs):
 		super(ArmonizacionForm, self).__init__(*args, **kwargs)

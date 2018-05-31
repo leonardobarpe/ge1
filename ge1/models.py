@@ -2284,7 +2284,7 @@ class PdeMetas(models.Model):
         db_table = 'pde_metas'
 
     def __str__(self):
-        return u'%s' % (self.nombre_meta)
+        return u'%s %s' % (self.codigo_meta, self.nombre_meta)
 
 
 class PdeMetasResponsables(models.Model):
