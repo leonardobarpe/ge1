@@ -6,13 +6,13 @@
 			<div class="card-body">
 				<p class="card-title">
 					<div class="custom-control custom-checkbox">
-						<input type="checkbox" class="custom-control-input" id="plan_desarrollo_check" onclick="mostrarPlaDes()" {% if armonizacion %} checked {% endif %} >
+						<input type="checkbox" class="custom-control-input" id="plan_desarrollo_check" onclick="mostrarPlaDes()" {% if '1' in armonizacion.tipo_armonizacion %} checked {% endif %} >
 						<label class="custom-control-label" for="plan_desarrollo_check">PLAN DESARROLLO</label>
 					</div>														
 				</p>
-				<div class="card-text" id="parrafoPlanDes" {% if not armonizacion %}style="display: none"{% endif %}>
+				<div class="card-text" id="parrafoPlanDes"  {% if not '1' in armonizacion.tipo_armonizacion %}style="display: none" {% endif %}>
 					<div class="form-group">
-				    <label for="linea">LINEA</label>
+				    <label for="linea">LINEA <span style="color:#C11B17;">*</span></label>
 						{{ form_armonizacion.linea }}
 				  	</div>
 					<div class="form-group">
@@ -24,7 +24,7 @@
 						{{ form_armonizacion.subprograma }}
 				  	</div>
 					<div class="form-group">
-				    <label for="meta">META</label>
+				    <label for="meta">META <span style="color:#C11B17;">*</span></label>
 						{{ form_armonizacion.meta }}
 				  	</div>
 			  	</div>												
@@ -34,13 +34,13 @@
 			<div class="card-body">
 				<p class="card-title">
 					<div class="custom-control custom-checkbox">
-						<input type="checkbox" class="custom-control-input" id="sig_check" onclick=" mostrarSisIntGes()" {% if armonizacion %} checked {% endif %}>
+						<input type="checkbox" class="custom-control-input" id="sig_check" onclick="mostrarSisIntGes()" {% if '2' in armonizacion.tipo_armonizacion %} checked {% endif %}>
 						<label class="custom-control-label" for="sig_check">SISTEMA INTEGRADO DE GESTION</label>
 					</div>
 				</p>
-				<div class="card-text" id="parrafoSisIntGes" {% if not armonizacion %}style="display: none"{% endif %}>
+				<div class="card-text" id="parrafoSisIntGes" {% if not '2' in armonizacion.tipo_armonizacion %}style="display: none"{% endif %}>
 					<div class="form-group">
-				    <label for="tipoProceso">TIPO DE PROCESO</label>
+				    <label for="tipoProceso">TIPO DE PROCESO <span style="color:#C11B17;">*</span></label>
 						{{ form_armonizacion.tipo_proceso }}
 				  	</div>
 					<div class="form-group">
