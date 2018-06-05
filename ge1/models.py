@@ -2836,7 +2836,7 @@ class Procesos(models.Model):
         db_table = 'procesos'
 
     def __str__(self):
-        return u'%s' % (self.descripcion)
+        return u'%s %s' % (self.codigo, self.descripcion)
 
 
 class ProcesosServicios(models.Model):

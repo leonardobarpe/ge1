@@ -334,7 +334,7 @@ class Armonizacion(models.Model):
 	meta = models.ForeignKey(PdeMetas, on_delete=models.DO_NOTHING, blank=True, null=True)
 
 	# Sistema integrado de gestion
-	tipo_proceso = models.SmallIntegerField(choices=TIPOS_PROCESOS, default=ESTRATEGICO, blank=True)
+	tipo_proceso = models.SmallIntegerField(choices=TIPOS_PROCESOS, blank=True)
 	proceso = models.ForeignKey(Procesos, on_delete=models.DO_NOTHING, blank=True, null=True)
 	subproceso = models.ForeignKey(Subprocesos, on_delete=models.DO_NOTHING, blank=True, null=True)
 

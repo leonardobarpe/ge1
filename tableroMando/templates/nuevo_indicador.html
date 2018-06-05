@@ -319,17 +319,39 @@ $(document).on('click','#guardar_armonizacion', function(event){
 	event.preventDefault();
 	var tipo_armonizacion = [];
 	if($('#plan_desarrollo_check').is(':checked')){
-		tipo_armonizacion.push("1");
+		tipo_armonizacion.push("1");//PLAN DESARROLLO
 	}
 	if($('#sig_check').is(':checked')){
-		tipo_armonizacion.push("2");
+		tipo_armonizacion.push("2");//SISTEMA INTEGRADO DE GESTION
 	}
 	$("#id_tipo_armonizacion").val(tipo_armonizacion);
+
+	var continuar = true;
 	// PENDIENTE HACER LA VALIDACION
-	// if(val_tipo == "1"){
-	// 	var linea = $('#id_linea option:selected').val();
-	// }
-	$("#formulario_armonizacion").submit();
+	if($.inArray("1",tipo_armonizacion) != -1){
+		var linea = parseInt($('#id_linea option:selected').val() || 0);
+		var meta = parseInt($('#id_meta option:selected').val() || 0);
+		if(linea == 0 || meta == 0){
+			continuar = false;
+			if(linea == 0){
+				alert("Seleccione una Linea, para guardar plan desarrollo")
+			}else if(meta == 0){
+				alert("Seleccione una Meta, para guardar plan desarrollo")
+			}
+		}
+	}
+	if($.inArray("2",tipo_armonizacion) != -1){
+		var tipo_proceso = parseInt($('#id_tipo_proceso').val() || 0);
+		var subproceso = parseInt($('#id_subproceso').val() || 0);
+		if(tipo_proceso == 0){
+			continuar = false;
+			if(tipo_proceso == 0){
+				alert("Seleccione un tipo de proceso, para guardar SIG");
+			}
+		}
+	}
+	if(continuar)
+		$("#formulario_armonizacion").submit();
 });
 
 
