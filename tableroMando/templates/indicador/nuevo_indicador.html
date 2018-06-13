@@ -26,6 +26,7 @@
 	  <ol class="breadcrumb">
 		<li class="breadcrumb-item"><a href="{% url 'indicador' %}?listar_i">Indicadores</a></li>
 		<li class="breadcrumb-item active" aria-current="page">{% if indicador %}Indiacador: {{indicador.str_codigo }}{% else %}Nuevo indicador{% endif %}</li>
+		<li class="breadcrumb-item"><a href="{% url 'programacion' %}?ver_base&i={{indicador.pk}}">Programación</a></li>
 	  </ol>
 	</nav>
 </div>

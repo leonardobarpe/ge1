@@ -378,7 +378,7 @@ class SistemaIntegradoGestion(models.Model):
 	indicador = models.ForeignKey(Indicador, on_delete=models.DO_NOTHING)
 	estado = models.BooleanField(default=True)
 	periodo = models.SmallIntegerField(choices=PERIODICIDAD_OPCIONES, default=SEMESTRAL)
-	itemSIG = models.ManyToManyField(ItemSistemaIntegradoGestion)
+	item_sistema_integrado = models.ManyToManyField(ItemSistemaIntegradoGestion)
 
 	def __str__(self):
 		return u'%s' % (self.periodo)

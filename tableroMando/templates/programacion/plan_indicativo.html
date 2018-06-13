@@ -1,5 +1,106 @@
-sf sdf
-sd
-f
- dsf
- sd
+{% load humanize %}
+<div>
+	<div class="row">
+		<div class="col-md-5">
+			<b>Indicador</b>
+			<span id="nombre_indicador">{{ indicador.nombre_identificador }}</span>
+		</div>
+		<div class="col-md-4">
+			<b>Unidad de medida</b>
+			<span id="porcentaje">{{ indicador.medicion.unidad_medicion|default_if_none:"No asignada" }}</span>
+		</div>
+		<div class="col-md-3">
+			<b>PERIODICIDAD</b>
+			<span id="periodicidad">{{indicador.get_periodicidad_display}}</span>
+		</div>
+	</div>
+	<hr>
+	<div class="row">
+		<div class="col-md-4">
+			<label><b>META PRODUCTO</b></label><br>
+			{{ indicador.armonizacion.meta }}
+		</div>
+		<div class="col-md-2">
+			<label><b>Unidad</b></label><br>
+			{{ indicador.medicion.unidad_medicion|default_if_none:"No asignada" }}
+		</div>
+		<div class="col-md-2 text-center">
+			<label><b>Linea Base</b></label><br>
+			{{fuente_financiacion.linea_base}}
+		</div>
+		<div class="col-md-2 text-center">
+			<label><b>Meta Periodo</b></label><br>
+			{{fuente_financiacion.meta_periodo}}
+		</div>
+		<div class="col-md-2 text-center">
+			<label><b>Meta Final</b></label><br>
+			<span id="meta_final_plan_indicativo"></span>
+		</div>
+	</div>
+	<hr>
+	<div class="row">
+		<legend align="center"><h5>PROGRAMACIÓN DE LAS METAS</h5></legend>
+		<div class="col-md-2">
+			<label><b>META</b></label><br>
+			<input type="text" name="meta_plan" id="meta_plan" class="form-control">
+		</div>
+		<div class="col-md-2 text-center">
+			<label><b>VAL DISTRIBUIR</b></label><br>
+			5
+		</div>
+		<!-- ANIOS -->
+		<div class="col-md-2 text-center">
+			<label><b>2016</b></label><br>
+			<input type="number" name="anio_meta_2016" id="anio_meta_2016" class="form-control anios" anio="2016">
+		</div>
+		<div class="col-md-2 text-center">
+			<label><b>2017</b></label><br>
+			<input type="number" name="anio_meta_2017" id="anio_meta_2017" class="form-control anios" anio="2017">
+		</div>
+		<div class="col-md-2 text-center">
+			<label><b>2018</b></label><br>
+			<input type="number" name="anio_meta_2018" id="anio_meta_2018" class="form-control anios" anio="2018">
+		</div>
+		<div class="col-md-2 text-center">
+			<label><b>2019</b></label><br>
+			<input type="number" name="anio_meta_2019" id="anio_meta_2019" class="form-control anios" anio="2019">
+		</div>
+		<!-- ANIOS -->
+	</div>
+	<hr>
+	<div class="row">
+		<legend align="center"><h5>PROGRAMACIÓN FINANCIERA (pesos corrientes)</h5></legend>
+		
+		<table id="tabla_progra_financiera" class="table thead-dark table-bordered table-hover table-sm">
+			<thead>
+				<tr>
+					<th>Fuentes</th>
+					<th>Valor a Distribuir</th>
+					<th>2016</th>
+					<th>2017</th>
+					<th>2018</th>
+					<th>2019</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for d in diccionario %}
+					<tr id="d.id_fuente" total="{{ d.total }}">
+						<td>{{ d.nombre_fuente }}</td>
+						<td>{{ d.total|intcomma }}</td>
+						<td anio="2016"></td>
+						<td anio="2017"></td>
+						<td anio="2018"></td>
+						<td anio="2019"></td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+
+	</div>
+	<script type="text/javascript">
+		$(document).on('change', '.anios', function(){
+			val_anios = $(this).val();
+			anio = $(this).attr("anio");
+		});
+	</script>
+</div>
