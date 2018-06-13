@@ -27,13 +27,13 @@ def seguimiento(request):
 class ConfiguracionIndicador(View):
 
 	ACCION_AGREGAR = 'agregar'
-	TEMPLATE_AGREGAR = 'nuevo_indicador.html'
+	TEMPLATE_AGREGAR = 'indicador/nuevo_indicador.html'
 
 	ACCION_AGREGAR_MEDICION = 'agregar_m'
 	ACCION_AGREGAR_ARMONIZACION = 'agregar_a'
 
 	ACCION_LISTAR = 'listar_i'
-	TEMPLATE_LISTAR = 'listar_indicadores.html'
+	TEMPLATE_LISTAR = 'indicador/listar_indicadores.html'
 
 	ACCION_ELIMINAR = 'eliminar'
 	ACCION_VERIFICAR = 'verificar'
@@ -188,8 +188,26 @@ class ProgramacionIndicador(View):
 
 		periodos = PERIODICIDAD_OPCIONES
 		sisfuentesfinanciacion = SisFuentesFinanciacion.objects.all()
+
+		diccionario = []
 		try:
 			fuente_financiacion = FuenteFinanciacion.objects.get(indicador=indicador, estado=True)
+			itemsff = ItemFuenteFinanciacion.objects.filter(fuentefinanciacion__indicador=indicador).distinct('fuente')
+			# Armar diccionario
+			for f in itemsff.all():
+				# print("fuente: %s" % f.fuente.codigo_fuente)
+				# sff = SisFuentesFinanciacion.objects.get()
+				codigo_fuente = f.fuente.codigo_fuente
+				suma = 0
+				items = ItemFuenteFinanciacion.objects.filter(fuentefinanciacion__indicador=indicador, fuente__codigo_fuente=codigo_fuente)
+				for i in items:
+					suma += i.valor
+				diccionario.append({
+					"id_fuente": codigo_fuente,
+					"nombre_fuente":f.fuente.nombre_fuente,
+					"total":suma
+					})
+			pass
 		except FuenteFinanciacion.DoesNotExist:
 			pass
 
@@ -255,8 +273,8 @@ class ProgramacionIndicador(View):
 			sistema_integrado_gestion.periodo = request.POST['periodo']
 			sistema_integrado_gestion.save()
 
-			if (sistema_integrado_gestion.itemSIG.count() > 0):
-				sistema_integrado_gestion.itemSIG.all().delete()
+			if (sistema_integrado_gestion.item_sistema_integrado.count() > 0):
+				sistema_integrado_gestion.item_sistema_integrado.all().delete()
 			for s in sistemas:
 				dicc = json.loads(s)
 				val_anio = int(dicc['anio'])
@@ -271,7 +289,7 @@ class ProgramacionIndicador(View):
 					item.valor_inicial = val_valor_inicial
 					item.valor_esperado = val_valor_esperado
 					item.save()
-					sistema_integrado_gestion.itemSIG.add(item)
+					sistema_integrado_gestion.item_sistema_integrado.add(item)
 					sistema_integrado_gestion.save()
 
 			respuesta['mensaje'] = "Se almaceno sistema integrado de gestion correctamente"
