@@ -6,26 +6,28 @@
 
 <div class="container">
 	<div class="table-responsive">
-		<table class="table" style="margin-top: 10px">
-			<thead>
-				<tr>
-					<th colspan="4"><h6 class="text-primary">TABLERO DE MANDO</h6></th>
+		<table class="table table-hover" style="margin-top: 10px">
+			<thead >
+				<tr align="center">
+					<th colspan="4"><h3 class="text-primary">Tablero De Mando</h3></th>
 				</tr>
 			</thead>
 			<tbody>
 				<tr>
-					<td>
+					<td align="center">
+						<h4 class="text-success">INDIRECTOS</h4>
 						<div class="btn-group">
 							<button type="button" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img class="rounded float-left" src="{% static 'imagenes/logos/menu/tableroControl/MenuBotonIndicadores.png' %}" height="120" width="120"></button>
 								<div class="dropdown-menu">
-									<a class="dropdown-item" href="{% url 'indicador' %}?listar_i"><i class="fab fa-sistrix"></i> | Ver</a>
+									<a class="dropdown-item" href="{% url 'indicador' %}?listar_i"><i class="fab fa-sistrix"></i> | Listar</a>
 									<a class="dropdown-item" href="{% url 'indicador' %}?agregar"><i class="fas fa-plus-circle"></i> | Crear</a>
-									<a class="dropdown-item disabled" href="#"><i class="far fa-calendar-alt"></i> | Programacion (en construccion) <i class="fas fa-wrench"></i></a>
+									<a class="dropdown-item" href="{% url 'indicador' %}?listar_i"><i class="far fa-calendar-alt"></i> | Programacion </a>
 									<a class="dropdown-item disabled" href="#"><i class="far fa-calendar-check"></i> | Seguimiento (en construccion) <i class="fas fa-wrench"></i></a>									
 								</div>
 						</div>
 					</td>
-					<td>
+					<td align="center">
+						<h4 class="text-success">PLAN DE DESARROLLO</h4>
 						<div class="btn-group">
 							<button type="button" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img class="rounded float-left" src="{% static 'imagenes/logos/menu/tableroControl/MenuBotonTabPlan.png' %}" height="120" width="120"></button>
 								<div class="dropdown-menu">
@@ -33,7 +35,8 @@
 								</div>
 						</div>
 					</td>
-					<td>
+					<td align="center">
+						<h4 class="text-success">SISTEMA DE GESTION</h4>
 						<div class="btn-group">
 							<button type="button" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img class="rounded float-left" src="{% static 'imagenes/logos/menu/tableroControl/MenuBotonTabSIG.png' %}" height="120" width="120"></button>
 								<div class="dropdown-menu">
@@ -41,7 +44,8 @@
 								</div>
 						</div>
 					</td>
-					<td>
+					<td align="center">
+						<h4 class="text-success">MIPG</h4>
 						<div class="btn-group">
 							<button type="button" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img class="rounded float-left" src="{% static 'imagenes/logos/menu/tableroControl/MenuBotonTabMIPG.png' %}" height="120" width="120"></button>
 								<div class="dropdown-menu">

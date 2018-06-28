@@ -93,6 +93,25 @@
 </div>
 </form>
 
+<script>
+    function ordenarSelect(id_componente){
+      var selectToSort = jQuery('#' + id_componente);
+      var optionActual = selectToSort.val();
+      selectToSort.html(selectToSort.children('option').sort(function (a, b) {
+        return a.text === b.text ? 0 : a.text < b.text ? -1 : 1;
+      })).val(optionActual);
+    }
+    $(document).ready(function () {
+      ordenarSelect('id_linea');
+      ordenarSelect('id_programa');
+      ordenarSelect('id_subprograma');
+      ordenarSelect('id_meta');
+      ordenarSelect('id_tipo_proceso');
+      ordenarSelect('id_proceso');
+      ordenarSelect('id_subproceso');
+    });
+</script>
+
 <script type="text/javascript">
 	$(document).ready(function(){
 		$(".select-chossen").chosen({width: "100%"}); 
@@ -301,4 +320,7 @@
 		$(id_elemento).trigger("chosen:updated");
 	}
 
+
+
 </script>
+

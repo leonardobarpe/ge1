@@ -4,11 +4,11 @@
 
 {% block contenido %}
 
-<div class="container-fluid">
+<div class="container">
 	<div class="card" style="margin-top: 10px">
 		<div class="card-header bg-light">
-			<span><i class="fab fa-sistrix"></i> INDICADORES</span>
-			<span class="float-right"><a href="{% url 'indicador' %}?agregar" class="btn btn-success btn-sm"><i class="fas fa-plus"></i> Nuevo</a></span>
+			<span class="font-weight-bold"><i class="fas fa-tachometer-alt"></i> | Indicadores</span>
+			<span class="float-right"><a href="{% url 'indicador' %}?agregar" class="btn btn-success btn-sm" data-toggle="tooltip" data-placement="top" title="Nuevo indicador"><i class="fas fa-plus-circle" style="font-size: 1.5em"></i></a></span>
 		</div>
 		<div class="card-body">
 			<div class="col-md-12">
@@ -21,7 +21,7 @@
 				           <th>Ambito</th>
 				           <th>Dimensión</th>
 				           <th>Fecha registro</th>
-				           <th>Opciones</th>
+				           <th>OPCIONES</th>
 				        </tr>
 				    </thead>
 				    <tbody>
@@ -34,13 +34,13 @@
 								<td>{{ i.get_dimension_display }}</td>
 								<td>{{ i.fecha_registro|date:"Y-m-d" }}</td>
 								<td align="center">
-									<a href="{% url 'indicador' %}?agregar&indicador={{i.id}}" data-toggle="tooltip" title="Editar"><i class="fas fa-edit"></i></a>
-									<a href="{% url 'programacion' %}?ver_base&i={{i.id}}" style="color:black;"><i class="fas fa-tasks" data-toggle="tooltip" title="Ver programación"></i></a>
-									<a data-toggle="tooltip" title="Eliminar" eliminar-indicador="{{i.id}}" ><i class="far fa-trash-alt" style="color:#DC381F;"></i></a>
+									<a href="{% url 'indicador' %}?agregar&indicador={{i.id}}" data-toggle="tooltip" title="Editar"><i class="fas fa-edit" style="font-size: 1.5em"></i></a>
+									<a href="{% url 'programacion' %}?ver_base&i={{i.id}}" style="color:black;"><i class="far fa-calendar-alt" data-toggle="tooltip" title="Ver programación" style="font-size: 1.5em"></i></a>
+									<a data-toggle="tooltip" title="Eliminar" eliminar-indicador="{{i.id}}" ><i class="far fa-trash-alt" style="color:#DC381F; font-size: 1.5em"></i></a>
 									{% if i.verificado %}
-										<span data-toggle="tooltip" title="Verificado"><i class="fas fa-check"></i></span>
+										<span data-toggle="tooltip" title="Verificado"><i class="fas fa-check" style="font-size: 1.5em"></i></span>
 									{% else %}
-										<a data-toggle="tooltip" title="Sin verificar" onclick="return confirm('Desea verificar el indicador?')" href="{% url 'indicador' %}?verificar&indicador={{i.id}}" style="color:#ccbb31;"><i class="fas fa-times"></i></a>
+										<a data-toggle="tooltip" title="Sin verificar" onclick="return confirm('Desea verificar el indicador?')" href="{% url 'indicador' %}?verificar&indicador={{i.id}}" style="color:#ccbb31;"><i class="fas fa-times" style="font-size: 1.5em"></i></a>
 									{% endif %}
 								</td>
 							</tr>
@@ -129,6 +129,13 @@
 	$(document).on('click', '#cancelar', function(){
 		id_indicador = 0;
 	});
+</script>
+
+<script>
+	$(function () {
+  $('[data-toggle="tooltip"]').tooltip()
+})
+
 </script>
 
 {% endblock contenido %}
