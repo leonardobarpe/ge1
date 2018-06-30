@@ -1,6 +1,7 @@
-/tableroMando/migrations/
-/ge1/settings.py
-/tableroMando/__pycache__/
-/ge1/__pycache__/
-/front1/
 *.pyc
+/front1/migrations/
+/front1/_pycache__/
+/ge1/__pycache__/
+/ge1/settings.py
+/tableroMando/migrations/
+/tableroMando/__pycache__/
