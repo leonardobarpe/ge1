@@ -1,0 +1,442 @@
+{% extends "plantilla.html" %}
+{% load static %}
+{% block title %}Indicador {{indicador.str_codigo }}{% endblock title %}
+
+{% block extra_header %}
+	{# <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script> #}
+	<script src="{% static 'librerias/library/canvasjs/canvasjs.min.js' %}"></script>
+
+	{# <script src="{% static 'library/mathJax/MathJax.js' %}"></script> #}
+
+	<script src="{% static 'librerias/library/bootstrap-slider-master/bootstrap-slider.min.js' %}"></script>
+	<link href="{% static 'librerias/library/bootstrap-slider-master/css/bootstrap-slider.min.css' %}" rel="stylesheet" type="text/css" media="screen">
+	<script src="{% static 'librerias/chosen_v1.8.5/chosen.jquery.min.js' %}"></script>
+	<link href="{% static 'librerias/chosen_v1.8.5/chosen.min.css' %}" rel="stylesheet" type="text/css">
+
+	{# <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/MathJax.js?config=TeX-MML-AM_CHTML"></script> #}
+	<script type="text/javascript" async
+	  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=AM_CHTML">
+	</script>
+{% endblock extra_header %}
+
+{% block contenido %}
+
+<div class="container-fluid">
+	<nav aria-label="breadcrumb">
+	  <ol class="breadcrumb">
+		<li class="breadcrumb-item"><a href="{% url 'indicador' %}?listar_i">Indicadores</a></li>
+		<li class="breadcrumb-item active" aria-current="page">Indiacador: {{indicador.str_codigo }}</li>
+		<li class="breadcrumb-item"><a href="{% url 'programacion' %}?ver_base&i={{indicador.pk}}">Programación</a></li>
+	  </ol>
+	</nav>
+</div>
+
+<div class="container">
+<table class="table table-bordered table-striped" style="margin-top: 10px">
+	<thead class="bg-primary">
+		<tr>
+			<th class="text-white">INDICADOR: {{indicador.str_codigo }}</th>
+		</tr>
+	</thead>
+	<tbody>
+	<tr>
+	<td>
+		<div class="card text-center">
+			<div class="card-header bg-light" id="nav_tabs">
+				<ul class="nav nav-tabs card-header-tabs" id="myTab" role="tablist">
+					<li class="nav-item">
+						<a class="nav-link active" id="identificacion-tab" data-toggle="tab" href="#identificacion" role="tab" aria-controls="identificacion" aria-selected="true">IDENTIFICACIÓN</a>
+				  	</li>
+					<li class="nav-item">
+					    <a class="nav-link {% if not indicador %}disabled{% endif %}" id="armonizacion-tab" data-toggle="tab" href="#armonizacion" role="tab" aria-controls="armonizacion" aria-selected="false">ARMONIZACIÓN</a>
+					</li>
+					<li class="nav-item">
+					    <a class="nav-link {% if not indicador %}disabled{% endif %}" id="medicion-tab" data-toggle="tab" href="#medicion" role="tab" aria-controls="medicion" aria-selected="false">MEDICIÓN</a>
+					</li>
+				</ul>
+			</div>
+
+
+			<div class="card-body">
+				<div class="tab-content text-left">
+					<div class="tab-pane fade show active" id="identificacion" role="tabpanel" aria-labelledby="identificacion-tab">
+						{% include 'indicador/ver_identificacion.html' %}
+					</div>
+
+					<div class="tab-pane fade" id="armonizacion" role="tabpanel" aria-labelledby="armonizacion-tab">
+						{% include "indicador/armonizacion.html" %}	
+					</div>
+
+					<div class="tab-pane fade" id="medicion" role="tabpanel" aria-labelledby="medicion-tab">
+						{% include 'indicador/medicion.html' %}
+					</div>
+
+
+				</div>
+			</div><!-- DIV PANE -->
+
+		</div>
+	</td>
+	</tr>
+</tbody>
+</table>
+</div>
+
+{% endblock contenido %}
+
+
+{% block extra_script %}
+
+<script type="text/javascript">
+
+$(document).on('change', '#id_tipo_formula', function(){
+	var seleccion = parseInt($('#id_tipo_formula option:selected').val());
+	if (seleccion == 1) { //PORCENTAJE
+    	$('.f_denominador').css("display", "");
+		$('.f_tasa_variacion').css("display", "none");
+		// INIT
+		$("#id_nomenclaruta_1").val("NEAG");
+		$("#id_nomenclaruta_2").val("NEM");
+
+    }else if (seleccion == 2) {//TASA DE VARIACION
+    	$('.f_denominador').css("display", "none");
+		$('.f_tasa_variacion').css("display", "");
+		// INIT
+		$("#id_nomenclaruta_1").val("NEAG");
+		$("#id_nomenclaruta_2").val("");
+    } else if (seleccion == 3) {//PROMEDIO
+    	$('.f_denominador').css("display", "");
+		$('.f_tasa_variacion').css("display", "none");
+		// INIT
+		$("#id_nomenclaruta_1").val("NEC");
+		$("#id_nomenclaruta_2").val("NGC");
+    } else if (seleccion == 4) {//NUMERO ENTERO
+    	$('.f_denominador').css("display", "none");
+		$('.f_tasa_variacion').css("display", "none");
+		// INIT
+		$("#id_nomenclaruta_1").val("NEC");
+		$("#id_nomenclaruta_2").val("");
+    }
+});
+
+{% comment %}
+// ASIGNA VALOR A PREJIJO DEPENDIENDO DEL TIPO DE INDICDOR SELECCIONADO
+$(document).on('change', '#id_tipo', function(){
+	var tipo_selecionado = parseInt($('#id_tipo option:selected').val());
+	{% for a in abrebiatura_indicadores %}
+		if (tipo_selecionado == parseInt('{{a.0}}')) {
+			$('#id_prefijo').text("{{a.1}}");
+		}
+	{% endfor %}
+});
+{% endcomment %}
+
+function actualizarRangos(){
+	$("#rangos_medicion").slider({});
+	$('#span_rangos').text($('#rangos_medicion').data('slider').getValue());
+
+	var valor_inicial;
+	$('#rangos_medicion').slider().on('slideStart', function(ev){
+	    valor_inicial = $('#rangos_medicion').data('slider').getValue();
+	});
+
+	$('#rangos_medicion').slider().on('slideStop', function(ev){
+	    var nuevo_valor = $('#rangos_medicion').data('slider').getValue();
+	    if(valor_inicial != nuevo_valor) {
+	        $('#span_rangos').text(nuevo_valor);
+	    }
+	});
+}
+
+$(document).ready(function(){
+	$("#id_tipo_indicador").chosen({width: "100%"}); 
+	$("#id_normatividad").chosen({width: "100%"});
+	$("#id_responsable").chosen({width: "100%"}); 
+	$("#id_responsable_reporte").chosen({width: "100%"}); 
+	$("#id_responsable_consolidacion").chosen({width: "100%"}); 
+	$("#id_responsable_analisis_seguimiento").chosen({width: "100%"}); 
+	$("#id_responsable_decisiones").chosen({width: "100%"}); 
+	
+	$('[data-toggle="tooltip"]').tooltip(); 
+
+	$('#id_nomenclaruta_respuesta').val('TDE');
+
+	// TAB MEDICION 
+	actualizarRangos();
+
+	{% if medicion %}
+		initMedicion();
+	{% endif %}
+	// END MEDICION
+
+	{% if armonizacion %}
+		initArmonizacion();
+	{% endif %}
+
+});
+
+function initIndicador(){
+	{% for n in indicador.tipo_indicador %}
+		$("#id_tipo_indicador option[value='{{n.0}}']").prop('selected', true);
+	{% endfor %}
+	$('#id_consecutivo').val('{{indicador.consecutivo}}');
+	$('#id_nombre_identificador').val('{{indicador.nombre_identificador}}');
+	$('#id_objetivo').val('{{indicador.objetivo|escapejs}}');
+	$('#id_producto_mide').val('{{indicador.producto_mide|escapejs}}');
+	$('#id_tipo_medicion').val('{{indicador.tipo_medicion}}');
+	$('#id_ciclo').val('{{indicador.ciclo}}');
+	$('#id_periodicidad').val('{{indicador.periodicidad}}');
+	$('#id_ambito').val('{{indicador.ambito}}');
+	$('#id_dimension').val('{{indicador.dimension}}');
+	$('#id_version').val('{{indicador.version}}');
+	$('#id_responsable').val('{{indicador.responsable.codigo}}');
+	// $('#id_normatividad').val('{{indicador.normatividad}}');
+	{% for n in indicador.normatividad %}
+	    $("#id_normatividad option[value='{{n.0}}']").prop('selected', true);
+	{% endfor %}
+	$('#id_limite_reporte').val('{{indicador.limite_reporte}}');
+	var recurrencia = '{{indicador.recurrencia}}';
+	if (recurrencia == 'True')
+		$('#id_recurrencia').val(2);
+	else if (recurrencia == 'False')
+		$('#id_recurrencia').val(3);
+	else
+		$('#id_recurrencia').val(1);
+
+	$('#id_tipo_indicador').trigger("chosen:updated");
+	$('#id_normatividad').trigger("chosen:updated");
+	$('#id_responsable').trigger("chosen:updated");
+}
+
+function initMedicion(){
+	$('#id_tipo_formula').val('{{medicion.tipo_formula}}')
+	$('#id_unidad_medicion').val('{{medicion.unidad_medicion.codigo_unidad}}');
+	$('#id_tendencia').val('{{medicion.tendencia}}');
+	$('#id_archivo_asociado').val('{{medicion.archivo_asociado|default_if_none:""}}');
+
+	$('#id_nombre_variable_1').val('{{medicion.nombre_variable_1}}');
+	$('#id_nomenclaruta_1').val('{{medicion.nomenclaruta_1}}');
+	$('#id_unidad_1').val('{{medicion.unidad_1.codigo_unidad}}');
+	$('#id_fuente_1').val('{{medicion.fuente_1|default_if_none:""}}');
+
+	$('#id_nombre_variable_2').val('{{medicion.nombre_variable_2}}');
+	$('#id_nomenclaruta_2').val('{{medicion.nomenclaruta_2}}');
+	$('#id_unidad_2').val('{{medicion.unidad_2.codigo_unidad}}');
+	$('#id_fuente_2').val('{{medicion.fuente_2|default_if_none:""}}');
+
+	$('#id_nombre_respuesta').val('{{medicion.nombre_respuesta|default_if_none:""}}');
+	$('#id_nomenclaruta_respuesta').val('{{medicion.nomenclaruta_respuesta}}');
+	$('#id_unidad_respuesta').val('{{medicion.unidad_respuesta.codigo_unidad}}');
+	$('#id_fuente_respuesta').val('{{medicion.fuente_respuesta|default_if_none:""}}');
+
+	$('#id_interpretacion_resultado').text("{{medicion.interpretacion_resultado|default_if_none:""|escapejs}}");
+	$('#id_responsable_reporte').val('{{medicion.responsable_reporte.codigo}}');
+	$('#id_responsable_consolidacion').val('{{medicion.responsable_consolidacion.codigo}}');
+	$('#id_responsable_analisis_seguimiento').val('{{medicion.responsable_analisis_seguimiento.codigo}}');
+	$('#id_responsable_decisiones').val('{{medicion.responsable_decisiones.codigo}}');
+
+	$('#id_responsable_reporte').trigger("chosen:updated");
+	$('#id_responsable_consolidacion').trigger("chosen:updated");
+	$('#id_responsable_analisis_seguimiento').trigger("chosen:updated");
+	$('#id_responsable_decisiones').trigger("chosen:updated");
+}
+
+function initArmonizacion(){
+	$('#id_linea').val('{{armonizacion.linea.id_unidad_nivel}}');
+	$('#id_programa').val('{{armonizacion.programa.id_unidad_nivel}}');
+	$('#id_subprograma').val('{{armonizacion.subprograma.id_unidad_nivel}}');
+	$('#id_meta').val('{{armonizacion.meta.id_meta}}');
+
+	$('#id_tipo_proceso').val('{{armonizacion.tipo_proceso}}');
+	$('#id_proceso').val('{{armonizacion.proceso.codigo}}');
+	$('#id_subproceso').val('{{armonizacion.subproceso.codigo}}');
+
+	$('.select-chossen').trigger("chosen:updated");
+}
+
+function enviarFormula(formula){
+	var el = document.getElementById("contenedor_formula");
+    el.innerHTML=formula;
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub, el]);
+}
+
+function generarFormula(){
+	var seleccion = parseInt($('#id_tipo_formula option:selected').val());
+	var nomenclaruta_1 = $("#id_nomenclaruta_1").val();
+	var nomenclaruta_2 = $("#id_nomenclaruta_2").val();
+	var respuesta = $('#id_nomenclaruta_respuesta').val();
+
+	var formula = "";
+	if (seleccion == 1) { //PORCENTAJE
+		formula = respuesta+" = ("+nomenclaruta_1+")/("+nomenclaruta_2+") * 100";
+	}else if (seleccion == 2) {//TASA DE VARIACION
+		formula = respuesta+" = (("+nomenclaruta_1+"(Tn) -  "+nomenclaruta_1+"(T0))/("+nomenclaruta_1+"(T0))) * 100";
+	} else if (seleccion == 3) {//PROMEDIO
+		formula = respuesta+" = ("+nomenclaruta_1+")/("+nomenclaruta_2+")";
+	} else if (seleccion == 4) {//NUMERO ENTERO
+		formula = respuesta+" = "+nomenclaruta_1;
+	}
+	return formula;
+}
+
+$(document).on('click', '#btn_actualizar', function(){
+	var formula = generarFormula();
+	enviarFormula("`"+formula+"`");
+});
+
+$(document).on('click','#guardar_indicador', function(event){
+	event.preventDefault();
+	if(validarIndicador()){
+		$("#formulario_indicador").submit();
+	}
+});
+
+$(document).on('click','#guardar_medicion', function(event){
+	$("#formula").val(generarFormula());
+	
+	var rangos = $('#rangos_medicion').data('slider').getValue()+"";
+	var res = rangos.split(",");
+	$("#rango_inicial").val(parseInt(res[0]));
+	$("#rango_final").val(parseInt(res[1]));
+
+	event.preventDefault();
+	if($('#id_nombre_variable_1').val()==""){
+		alert("Digite un nombre para la variable");
+	}else{
+		$("#formulario_medicion").submit();
+	}
+});
+
+
+$(document).on('click','#guardar_armonizacion', function(event){
+	event.preventDefault();
+	var tipo_armonizacion = [];
+	if($('#plan_desarrollo_check').is(':checked')){
+		tipo_armonizacion.push("1");//PLAN DESARROLLO
+	}
+	if($('#sig_check').is(':checked')){
+		tipo_armonizacion.push("2");//SISTEMA INTEGRADO DE GESTION
+	}
+	$("#id_tipo_armonizacion").val(tipo_armonizacion);
+
+	var continuar = true;
+	// PENDIENTE HACER LA VALIDACION
+	if($.inArray("1",tipo_armonizacion) != -1){
+		var linea = parseInt($('#id_linea option:selected').val() || 0);
+		var meta = parseInt($('#id_meta option:selected').val() || 0);
+		if(linea == 0 || meta == 0){
+			continuar = false;
+			if(linea == 0){
+				alert("Seleccione una Linea, para guardar plan desarrollo")
+			}else if(meta == 0){
+				alert("Seleccione una Meta, para guardar plan desarrollo")
+			}
+		}
+	}
+	if($.inArray("2",tipo_armonizacion) != -1){
+		var tipo_proceso = parseInt($('#id_tipo_proceso').val() || 0);
+		var subproceso = parseInt($('#id_subproceso').val() || 0);
+		if(tipo_proceso == 0){
+			continuar = false;
+			if(tipo_proceso == 0){
+				alert("Seleccione un tipo de proceso, para guardar SIG");
+			}
+		}
+	}
+	if(continuar)
+		$("#formulario_armonizacion").submit();
+});
+
+
+function validarIndicador(){
+	var is_valid = true;
+	if ($('#id_tipo_indicador').val() == "" || $('#id_consecutivo').val() == "" || $('#id_nombre_identificador').val() == "" || $('#id_normatividad').val() == "" || $('#id_responsable').val() == ""){
+		is_valid = false;
+	}
+	if($('#id_consecutivo').val() == ""){
+		alert("Digite un número codigo");
+	}else if ($('#id_nombre_identificador').val() == ""){
+		alert("Digite un nombre de indicador");
+	}else if($('#id_responsable').val() == ""){
+		alert("Seleccione un responsable");
+	}else if($('#id_normatividad').val() == ""){
+		alert("Seleccione una o varias Normatividades");
+	}
+	return is_valid;
+}
+
+</script>
+
+<script type="text/javascript">
+	var hash = document.location.hash;
+	var prefix = "tab_";
+	if (hash) {
+	    $('.nav-tabs a[href="'+hash.replace(prefix,"")+'"]').tab('show');
+	} 
+
+	// Cambio de hash para recargar la pagina
+	$('.nav-tabs a').on('shown', function (e) {
+	    window.location.hash = e.target.hash.replace("#", "#" + prefix);
+	});
+
+	$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+		var target = $(e.target).attr("href"); // activated tab
+		if (target == '#medicion'){
+			$('#id_tipo_formula').change();
+		}
+	});
+</script>
+
+
+<!--<script type="text/javascript">
+	window.onload = function () {
+		// GRAFICA DE MEDICION
+		var tam_ancho = (window.innerWidth*30)/100;
+		var grafica_medicion = new CanvasJS.Chart("graficaMedicion", {
+			animationEnabled: true,
+			theme: "light1", //"light2", "dark1", "dark2"
+			axisY:{
+				interval: 10,
+				suffix: ""
+			},
+			toolTip:{
+				shared: true
+			},
+			data:[
+				{
+					type: "stackedBar100",
+					showInLegend: true, 
+					name: "CRITICO",
+					dataPoints: [
+						{ y: 20, label: "Resultado" },
+					]
+				},
+				{
+					type: "stackedBar100",
+					showInLegend: true, 
+					name: "EN RIESGO",
+					dataPoints: [
+						{ y: 60, label: "Resultado" },
+
+					]
+				}, 
+				{
+					type: "stackedBar100",
+					showInLegend: true, 
+					name: "ADECUADO",
+					dataPoints: [
+						{ y: 20, label: "Resultado" },
+
+					]
+				}
+			],
+			height: 120,
+			width: tam_ancho,
+		});
+		grafica_medicion.render();
+		// function canvas_resize(){
+        
+		// }
+	}
+</script>-->
+{% endblock extra_script %}

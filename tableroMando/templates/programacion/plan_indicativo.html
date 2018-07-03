@@ -38,35 +38,41 @@
 		</div>
 	</div>
 	<hr>
+	<form id="programacion_metas" name="programacion_metas" method="POST">
 	<div class="row">
 		<legend align="center"><h5>PROGRAMACIÓN DE LAS METAS</h5></legend>
-		<div class="col-md-2">
-			<label><b>META</b></label><br>
-			<input type="text" name="meta_plan" id="meta_plan" class="form-control">
-		</div>
-		<div class="col-md-2 text-center">
-			<label><b>VAL DISTRIBUIR</b></label><br>
-			5
-		</div>
-		<!-- ANIOS -->
-		<div class="col-md-2 text-center">
-			<label><b>2016</b></label><br>
-			<input type="number" name="anio_meta_2016" id="anio_meta_2016" class="form-control anios" anio="2016">
-		</div>
-		<div class="col-md-2 text-center">
-			<label><b>2017</b></label><br>
-			<input type="number" name="anio_meta_2017" id="anio_meta_2017" class="form-control anios" anio="2017">
-		</div>
-		<div class="col-md-2 text-center">
-			<label><b>2018</b></label><br>
-			<input type="number" name="anio_meta_2018" id="anio_meta_2018" class="form-control anios" anio="2018">
-		</div>
-		<div class="col-md-2 text-center">
-			<label><b>2019</b></label><br>
-			<input type="number" name="anio_meta_2019" id="anio_meta_2019" class="form-control anios" anio="2019">
-		</div>
-		<!-- ANIOS -->
+			<div class="col-md-2">
+				<label><b>META</b></label><br>
+				<input type="text" name="meta_plan" id="meta_plan" class="form-control" value="{{programa_metas.nombre}}">
+			</div>
+			<div class="col-md-2 text-center">
+				<label><b>VAL DISTRIBUIR</b></label><br>
+				<span id="valor_distribuir">5</span>
+			</div>
+			<!-- ANIOS -->
+			<div class="col-md-2 text-center">
+				<label><b>2016</b></label><br>
+				<input type="number" name="anio_meta_2016" id="anio_meta_2016" class="form-control anios" anio="2016">
+			</div>
+			<div class="col-md-2 text-center">
+				<label><b>2017</b></label><br>
+				<input type="number" name="anio_meta_2017" id="anio_meta_2017" class="form-control anios" anio="2017">
+			</div>
+			<div class="col-md-2 text-center">
+				<label><b>2018</b></label><br>
+				<input type="number" name="anio_meta_2018" id="anio_meta_2018" class="form-control anios" anio="2018">
+			</div>
+			<div class="col-md-2 text-center">
+				<label><b>2019</b></label><br>
+				<input type="number" name="anio_meta_2019" id="anio_meta_2019" class="form-control anios" anio="2019">
+			</div>
+			<!-- ANIOS -->
 	</div>
+	<br>
+	<div class="form-group" align="right">
+		<a type="button" class="btn btn-success" id="guardar_programacion_metas"><i class="fa fa-save"></i> Guardar</a>
+	</div>
+	</form>
 	<hr>
 	<div class="row">
 		<legend align="center"><h5>PROGRAMACIÓN FINANCIERA (pesos corrientes)</h5></legend>
@@ -87,20 +93,88 @@
 					<tr id="d.id_fuente" total="{{ d.total }}">
 						<td>{{ d.nombre_fuente }}</td>
 						<td>{{ d.total|intcomma }}</td>
-						<td anio="2016"></td>
-						<td anio="2017"></td>
-						<td anio="2018"></td>
-						<td anio="2019"></td>
+						<td anio-fuente="2016"></td>
+						<td anio-fuente="2017"></td>
+						<td anio-fuente="2018"></td>
+						<td anio-fuente="2019"></td>
 					</tr>
 				{% endfor %}
 			</tbody>
+			<tfoot>
+				<tr>
+					<td align="right"><b>TOTAL</b></td>
+					<td><b>{{ total_fuentes|intcomma }}</b></td>
+					<td><b><span anio-total="2016">0</span></b></td>
+					<td><b><span anio-total="2017">0</span></b></td>
+					<td><b><span anio-total="2018">0</span></b></td>
+					<td><b><span anio-total="2019">0</span></b></td>
+				</tr>
+			</tfoot>
 		</table>
-
 	</div>
+
 	<script type="text/javascript">
-		$(document).on('change', '.anios', function(){
-			val_anios = $(this).val();
-			anio = $(this).attr("anio");
+		$(document).on('change', 'input[anio]', function(){
+			var val_distribuir = parseInt($('#valor_distribuir').text());
+			var val_input = $(this).val();
+			if(val_input < 0 || val_input > val_distribuir){
+				alert("El valor debe ser menor que "+val_distribuir+" y mayor que 0");
+				$(this).val("0");
+			}else{
+				var anio_input = $(this).attr("anio");
+				var total_anios = 0;
+				$('td[anio-fuente]').each(function(){
+					var valor_fuente = parseFloat($(this).closest('tr').attr('total'));
+					if(anio_input == $(this).attr("anio-fuente")){
+						var res = (valor_fuente*val_input)/val_distribuir;
+						total_anios += res;
+						$(this).text(numberWithCommas(res));
+					}
+				});
+				$("span[anio-total="+anio_input+"]").text(numberWithCommas(total_anios));
+			}
 		});
+
+		$(document).on('click', '#guardar_programacion_metas', function(){
+			if($('#meta_plan').val()!=""){
+				var valores_metas = [];
+				$('input[anio]').each(function(){
+					var val_input = parseInt($(this).val() || 0);
+					if(val_input > 0){
+						var anio = $(this).attr("anio");
+						var dic = {
+							"anio":anio,
+							"valor":val_input
+						}
+						valores_metas.push(JSON.stringify(dic));
+					}
+				});
+
+				$.ajax({
+			        type: "POST",
+			        url: "/tablero-Mando/programacion/?agregar_pm",
+			        data: {
+			        	"csrfmiddlewaretoken": getCookie('csrftoken'),
+						"indicador":"{{indicador.pk}}",
+						"programacion_metas":$('#meta_plan').val(),
+						"valores_metas[]":valores_metas
+			       	},
+			        error: function(respuesta){
+			            console.log("Hubo un problema, guardando programacion de las metas.");
+			        },
+			        success: function(respuesta){
+			        	respuesta = jQuery.parseJSON(respuesta);
+			            if (respuesta.mensaje_error){
+			            }else{
+			            	alert(respuesta.mensaje);
+			            }
+			        }
+			    })
+			}
+		});
+
+		const numberWithCommas = (x) => {
+		  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+		}
 	</script>
 </div>

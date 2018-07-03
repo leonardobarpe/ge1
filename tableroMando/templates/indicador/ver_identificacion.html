@@ -1,0 +1,151 @@
+<form method="POST" role="form" id="indicador_indicador" method="multipart/form-data">
+{% csrf_token %}
+	<div class="col-md-12">
+		<div class="row">
+			<div class="form-group col-md-3" align="center">
+				<label for="id_consecutivo"><b>CÓDIGO</b></label><br>
+				<div class="row">
+					<div class="form-group col-md-5" align="right" style="font-size: 1.3em;">
+						<b>IND</b> -
+					</div>
+					<div class="form-group col-md-7">
+					{{indicador.consecutivo}}
+					</div>
+				</div>
+			</div>
+			
+			<div class="form-group col-md-3">
+			    <label for="id_tipoIndicador"><b>TIPO INDICADOR</b></label><br>
+	    		{{ indicador.tipo_indicador }}
+		  	</div>
+
+			<div class="form-group col-md-3">
+				<label for="id_nombre"><b>NOMBRE</b></label><br>
+				{{ indicador.nombre_identificador }}
+			</div>
+
+			<div class="form-group col-md-3">
+				<label for="id_tipo_medicion"><b>TIPO DE MEDICIÓN</b></label><br>
+				{{ indicador.get_tipo_medicion_display }}
+			</div>	
+		</div>
+		
+		<div class="row">
+			<div class="form-group col-md-6">
+				<label for="id_objetivo"><b>OBJETIVO</b></label><br>
+				{{ indicador.objetivo }}
+			</div>
+
+			<div class="form-group col-md-6">
+				<label for="producto_mide"><b>PRODUCTO QUE MIDE</b></label><br>
+				{{ indicador.producto_mide }}
+			</div>
+		</div>
+	
+		<div class="row">
+			<div class="form-group col-md-2">
+				<label for="id_ciclo"><b>CICLO</b></label><br>
+				{{ indicador.get_ciclo_display }}
+			</div>
+
+			<div class="form-group col-md-2">
+				<label for="id_periodicidad"><b>PERIODICIDAD</b></label><br>
+				{{ indicador.get_periodicidad_display }}
+			</div>
+			
+			<div class="form-group col-md-2">
+				<label for="id_ambito"><b>AMBITO</b></label><br>
+				{{ indicador.get_ambito_display }}  
+			</div>
+			
+			<div class="form-group col-md-2">
+				<label for="dimension"><b>DIMENSION</b></label><br>
+				{{ indicador.get_dimension_display }}
+			</div>
+
+			<div class="form-group col-md-4">
+				<label for="id_responsable"><b>RESPONSABLE</b></label><br>
+				{{ indicador.responsable }}
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="form-group col-md-3">
+				<label for="id_noratividad"><b>NORMATIVIDAD APLICABLE</b></label><br>
+				{{ indicador.normatividad }}
+			</div>
+			
+			{% if indicador %}
+				<div class="form-group col-md-3">
+					<label for="fecha_actualizacion"><b>ACTUALIZACION</b></label><br>
+					{{ indicador.fecha_actualizacion|date:"d/m/Y" }}
+				</div>
+			{% endif %}
+
+			<div class="form-group col-md-3">
+				<label for="id_limite_reporte"><b>LIMITE DEL REPORTE</b></label><br>
+				{{ indicador.limite_reporte }}
+			</div>
+
+			<div class="form-group col-md-1">
+				<label for="id_version"><b>VERSIÓN</b></label><br>
+				{{ indicador.version }}
+			</div>
+
+			<div class="form-group col-md-2">
+				<label for="id_recurrencia"><b>RECURRENCIA</b></label><br>
+				{% if indicador.recurrencia %}
+					Si
+				{% else %}
+					No
+				{% endif %}
+			</div>
+		</div>
+		
+		<br>
+
+		<div class="btn-group" role="group" aria-label="Basic example" class="float-right">
+		  <a href="{% url 'indicador' %}?agregar&indicador={{indicador.id}}" role="button" class="btn btn-info"><i class="fas fa-edit"></i> Editar</a>
+		  <a role="button" class="btn btn-danger" eliminar-indicador="{{indicador.id}}" href="#"><i class="far fa-trash-alt"></i> Eliminar</a>
+		  <a role="button" class="btn btn-secondary" href="#"><i class="far fa-question-circle"></i> Ayuda</a>
+		</div>
+	</div>
+</form>
+
+{# IGUAL QUE EN LISTAR INDICADORES #}
+<div class="modal" tabindex="-1" role="dialog" id="modal-mensajes">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Eliminar Indicador</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<p>Esta seguro de eliminar el indicador.</p>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-warning" id="aceptar-eliminar">Aceptar</button>
+				<button type="button" class="btn btn-secondary" data-dismiss="modal" id="cancelar">Cancelar</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+	var id_indicador = 0;
+	$(document).on('click', 'a[eliminar-indicador]', function(){
+		$('#modal-mensajes').modal("show");
+		id_indicador = $(this).attr("eliminar-indicador");
+	})
+
+	$(document).on('click', '#aceptar-eliminar', function(){
+		var table = $('#tabla_indicadores').DataTable();
+		if (id_indicador!=0){
+			document.location.href = "{% url 'indicador' %}?eliminar&indicador="+id_indicador;
+			table.row( $("a[eliminar-indicador="+id_indicador+"]").parents('tr') ).remove().draw();
+			id_indicador = 0;
+		}
+	});
+</script>

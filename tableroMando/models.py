@@ -392,3 +392,20 @@ class SistemaIntegradoGestion(models.Model):
 
 # 	def __str__(self):
 # 		return u'%s' % (self.id)
+
+
+class AniosValor(models.Model):
+	anio = models.IntegerField()
+	valor = models.FloatField()
+
+	def __str__(self):
+		return u'%s %s' % (self.anio, self.valor)
+
+
+class ProgramaMetas(models.Model):
+	indicador = models.ForeignKey(Indicador, on_delete=models.DO_NOTHING)
+	nombre = models.CharField(max_length = 100)
+	anios_valor = models.ManyToManyField(AniosValor)
+
+	def __str__(self):
+		return u'%s' % (self.nombre)

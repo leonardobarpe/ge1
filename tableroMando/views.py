@@ -38,6 +38,8 @@ class ConfiguracionIndicador(View):
 	ACCION_ELIMINAR = 'eliminar'
 	ACCION_VERIFICAR = 'verificar'
 	ACCION_AGREGAR_PROGRAMACION = 'agregar_progra'
+	ACCION_VER_INDICADOR = 'ver'
+	TEMPATE_VER_INDICADOR = 'indicador/ver_indicador.html'
 
 
 	def agregar_indicador(self, request):
@@ -140,6 +142,31 @@ class ConfiguracionIndicador(View):
 			return HttpResponse("peticion invalida, not ajax", status=403)
 
 
+	def ver_indicador(self, request):
+		abrebiatura_indicadores = Indicador.ABREBIATURA_INDICADORES
+
+		indicador = None
+		if 'indicador' in request.GET:
+			indicador = Indicador.objects.get(pk=request.GET['indicador'])
+
+		form_medicion = MedicionForm(request.POST or None)
+		form_armonizacion = ArmonizacionForm(request.POST or None)
+
+		try:
+			medicion = Medicion.objects.get(indicador=indicador)
+		except Medicion.DoesNotExist:
+			medicion = None
+			pass
+
+		try:
+			armonizacion = Armonizacion.objects.get(indicador=indicador)
+		except Armonizacion.DoesNotExist:
+			armonizacion = None
+			pass
+
+		return render(request, self.TEMPATE_VER_INDICADOR, locals())
+
+
 	def get(self, request):
 		if self.ACCION_AGREGAR in request.GET:
 			return self.agregar_indicador(request)
@@ -152,6 +179,9 @@ class ConfiguracionIndicador(View):
 
 		if self.ACCION_VERIFICAR in request.GET:
 			return self.verificar_indicador(request)
+
+		if self.ACCION_VER_INDICADOR in request.GET:
+			return self.ver_indicador(request)
 
 		return HttpResponse("peticion invalida", status=403)
 
@@ -179,6 +209,7 @@ class ProgramacionIndicador(View):
 
 	AGREGAR_FUENTE_FINANCIACION ='agregar_ff'
 	AGREGAR_SISTEMA_INTEGRADO_GESTION = 'agregar_sig'
+	AGREGAR_PROGRAMAS_METAS = 'agregar_pm'
 
 	def ver_informacion_base(self, request):
 		indicador = Indicador.objects.get(pk=request.GET['i'])
@@ -194,6 +225,7 @@ class ProgramacionIndicador(View):
 			fuente_financiacion = FuenteFinanciacion.objects.get(indicador=indicador, estado=True)
 			itemsff = ItemFuenteFinanciacion.objects.filter(fuentefinanciacion__indicador=indicador).distinct('fuente')
 			# Armar diccionario
+			total_fuentes = 0
 			for f in itemsff.all():
 				# print("fuente: %s" % f.fuente.codigo_fuente)
 				# sff = SisFuentesFinanciacion.objects.get()
@@ -207,6 +239,7 @@ class ProgramacionIndicador(View):
 					"nombre_fuente":f.fuente.nombre_fuente,
 					"total":suma
 					})
+				total_fuentes += suma
 			pass
 		except FuenteFinanciacion.DoesNotExist:
 			pass
@@ -214,6 +247,11 @@ class ProgramacionIndicador(View):
 		try:
 			sistema_integrado_gestion = SistemaIntegradoGestion.objects.get(indicador=indicador, estado=True)
 		except SistemaIntegradoGestion.DoesNotExist:
+			pass
+
+		try:
+			programa_metas = ProgramaMetas.objects.get(indicador=indicador)
+		except ProgramaMetas.DoesNotExist:
 			pass
 
 		return render_to_response(self.TEMPLATE_VER_PROGRAMACION, locals())
@@ -298,6 +336,42 @@ class ProgramacionIndicador(View):
 			return HttpResponse("peticion invalida, not ajax", status=403)
 
 
+	def agregar_plan_indicativo_ajax(self, request):
+		respuesta = {}
+		if request.is_ajax():
+			indicador = Indicador.objects.get(pk=request.POST['indicador'])
+			valores_metas = request.POST.getlist('valores_metas[]')
+
+			try:
+				programa_metas = ProgramaMetas.objects.get(indicador=indicador)
+			except ProgramaMetas.DoesNotExist:
+				programa_metas = ProgramaMetas()	
+			
+			programa_metas.indicador = indicador
+			programa_metas.nombre = request.POST['programacion_metas']
+			programa_metas.save()
+
+			if(programa_metas.anios_valor.count() > 0):
+				programa_metas.anios_valor.all().delete()
+
+			for vm in valores_metas:
+				dicc = json.loads(vm)
+				val_anio = int(dicc['anio'])
+				val_valor = float(dicc['valor'])
+				if(val_valor > 0 and val_anio > 1900 and val_anio < 2500):
+					item = AniosValor()
+					item.anio = val_anio
+					item.valor = val_valor
+					item.save()
+					programa_metas.anios_valor.add(item)
+					programa_metas.save()
+			# print("valores_metas %s" % valores_metas)
+			respuesta['mensaje'] = "Se almaceno programacion de las metas"
+			return HttpResponse(json.dumps(respuesta))
+		else:
+			return HttpResponse("peticion invalida, not ajax", status=403)
+
+
 	def get(self, request):
 		if self.VER_PROGRAMACION in request.GET:
 			return self.ver_informacion_base(request)
@@ -311,5 +385,8 @@ class ProgramacionIndicador(View):
 
 		if self.AGREGAR_SISTEMA_INTEGRADO_GESTION in request.GET:
 			return self.agregar_sistema_integrado_gestion(request)
+
+		if self.AGREGAR_PROGRAMAS_METAS in request.GET:
+			return self.agregar_plan_indicativo_ajax(request)
 
 		return HttpResponse("peticion invalida", status=403)
