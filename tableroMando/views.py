@@ -40,6 +40,7 @@ class ConfiguracionIndicador(View):
 	ACCION_AGREGAR_PROGRAMACION = 'agregar_progra'
 	ACCION_VER_INDICADOR = 'ver'
 	TEMPATE_VER_INDICADOR = 'indicador/ver_indicador.html'
+	ACCION_AGREGAR_NOMBRE_INDICADOR = 'guardar_nombre_indicador'
 
 
 	def agregar_indicador(self, request):
@@ -167,6 +168,28 @@ class ConfiguracionIndicador(View):
 		return render(request, self.TEMPATE_VER_INDICADOR, locals())
 
 
+	def agregar_nombre_indicador_ajax(self, request):
+		respuesta = {}
+		if request.is_ajax():
+			try:
+				nind = NombreIndicador.objects.get(nombre=request.POST['nombre_indicador'])
+			except NombreIndicador.DoesNotExist:
+				nind = None
+				pass
+			if not nind:
+				item = NombreIndicador()
+				item.nombre = request.POST['nombre_indicador']
+				item.save()
+				respuesta['id_indicador'] = item.id
+				respuesta['mensaje'] = (u'Se han almacenado.')
+			else:
+				respuesta['id_indicador'] = nind.id
+				respuesta['mensaje'] = (u'El nombre ya existe.')
+			return HttpResponse(json.dumps(respuesta))
+		else:
+			return HttpResponse("peticion invalida, not ajax", status=403)
+
+
 	def get(self, request):
 		if self.ACCION_AGREGAR in request.GET:
 			return self.agregar_indicador(request)
@@ -198,6 +221,9 @@ class ConfiguracionIndicador(View):
 
 		if self.ACCION_AGREGAR_PROGRAMACION in request.GET:
 			return self.agregar_programacion_ajax(request)
+
+		if self.ACCION_AGREGAR_NOMBRE_INDICADOR in request.GET:
+			return self.agregar_nombre_indicador_ajax(request)
 
 		return HttpResponse("peticion invalida", status=403)
 

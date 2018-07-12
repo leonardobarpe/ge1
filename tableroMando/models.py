@@ -34,6 +34,13 @@ PERIODICIDAD_OPCIONES = (
 	# (OTRO, 'Otro'),
 )
 
+class NombreIndicador(models.Model):
+	nombre = models.CharField(max_length=300,unique=True)
+
+	def __str__(self):
+		return u'%s' % (self.nombre)
+
+
 class Indicador(models.Model):
 
 # IDENTIFICADOR
@@ -183,6 +190,8 @@ class Indicador(models.Model):
 	tipo_indicador 		= MultiSelectField(max_length=10,choices=TIPO_INDICADOR_OPCIONES, default="")
 	consecutivo			= models.IntegerField()
 	nombre_identificador= models.CharField(max_length = 300,blank=True, null=True)
+	# QUITAR!!!!!!!!!!!!!!!!!!!!!!!! , blank=True, null=True
+	nombre_indicador 	= models.ForeignKey(NombreIndicador, on_delete=models.DO_NOTHING,blank=True, null=True)
 	objetivo  			= models.TextField(blank=True, null=True)
 	producto_mide		= models.TextField(blank=True, null=True)
 	tipo_medicion		= models.SmallIntegerField(choices=TIPOS_MEDICIONES, default=MANUAL)
@@ -226,7 +235,7 @@ class Indicador(models.Model):
 
 
 	def __str__(self):
-		return u'IND - %s %s' % (self.consecutivo, self.nombre_identificador)
+		return u'IND - %s %s' % (self.consecutivo, self.nombre_indicador)
 
 
 

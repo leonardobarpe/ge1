@@ -12,11 +12,13 @@ class IndicadorFormulario(forms.ModelForm):
 			'rango_final',
 			# 'tipo',
 			# 'usuario_registro',
+			'nombre_identificador', #eliminar
 			)
 		fields = (
 			'tipo_indicador',
 			'consecutivo',
-			'nombre_identificador',
+			# 'nombre_identificador', #eliminar
+			'nombre_indicador',
 			'objetivo',
 			'producto_mide',
 			'tipo_medicion',
@@ -34,6 +36,7 @@ class IndicadorFormulario(forms.ModelForm):
 		widgets = {
             'normatividad': forms.SelectMultiple(attrs={'class': 'form-control','multiple':'','data-placeholder':'Seleccione algunas opciones'}),
             'tipo_indicador': forms.SelectMultiple(attrs={'class': 'form-control','multiple':'','data-placeholder':'Seleccione algunas opciones'}),
+            # 'nombre_indicador': forms.Select(attrs={'class': 'form-control'}, initial={'0': 'Initial headline'}),
         }
 
 	# Constructor que asigna form-control a todos los elemtos del formulario

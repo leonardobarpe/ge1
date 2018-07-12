@@ -19,13 +19,20 @@
 	    		{{ formulario.tipo_indicador }}
 		  	</div>
 
-			<div class="form-group col-md-3">
+			<div class="form-group col-md-4">
 				<label for="id_nombre">NOMBRE</label>
-				{{ formulario.nombre_identificador }}
+				<div class="input-group">
+					<div class="col-md-10">
+						{{ formulario.nombre_indicador }}
+					</div>
+					<span class="input-group-btn col-md-2">
+						<button type="button" class="btn btn-primary btn-sm float-right" id="btn_agregar_nombre"><i class="fas fa-plus"></i></button>
+					</span>
+				</div>
 			</div>
 
-			<div class="form-group col-md-3">
-				<label for="id_tipo_medicion">TIPO DE MEDICIÓN</label>
+			<div class="form-group col-md-2">
+				<label for="id_tipo_medicion">TIPO MEDICIÓN</label>
 				{{ formulario.tipo_medicion }}
 			</div>	
 		</div>
@@ -104,3 +111,69 @@
 		</div>
 	</div>
 </form>
+
+<div class="modal" tabindex="-1" role="dialog" id="modal_nombre_indicador">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Registrar nombre</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+			<div class="col-md-12">
+				<div class="form-group">
+					<label><b>Nombre indicador:</b></label>
+					<input type="text" id="nombre_indicador" name="nombre_indicador" class="form-control">
+				</div>
+			</div>
+		</div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+        <button type="button" class="btn btn-success" id="btn_guardar_nombre"><i class="fa fa-save"></i> Guardar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+	$(document).on('click','#btn_agregar_nombre', function(){
+		$('#modal_nombre_indicador').modal('show');
+		$('#nombre_indicador').trigger('focus');
+	});
+
+	$(document).on('click','#btn_guardar_nombre', function(){
+		var nombre_indicador = $("#nombre_indicador").val();
+		if(nombre_indicador!=""){
+			$.ajax({
+		        type: "POST",
+		        url: "/tablero-Mando/indicador/?guardar_nombre_indicador",
+		        data: {
+		        	"csrfmiddlewaretoken": getCookie('csrftoken'),
+					"nombre_indicador":nombre_indicador,
+		       	},
+		        error: function(respuesta){
+		            console.log("Hubo un problema, guardando guardar_nombre_indicador.");
+		        },
+		        success: function(respuesta){
+		        	respuesta = jQuery.parseJSON(respuesta);
+		            if (respuesta.mensaje_error){
+		            }else{
+		            	alert(respuesta.mensaje);
+		            	$('#modal_nombre_indicador').modal('hide');
+		            	$('#id_nombre_indicador').append($('<option>', {
+						    value: respuesta.id_indicador,
+						    text: nombre_indicador,
+						    selected: "selected"
+						}));
+						$('#id_nombre_indicador').trigger("chosen:updated");
+		            }
+		        }
+		    })
+		}
+	});
+</script>
+

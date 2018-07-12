@@ -104,10 +104,10 @@
 		
 		<br>
 
-		<div class="btn-group" role="group" aria-label="Basic example" class="float-right">
-		  <a href="{% url 'indicador' %}?agregar&indicador={{indicador.id}}" role="button" class="btn btn-info"><i class="fas fa-edit"></i> Editar</a>
-		  <a role="button" class="btn btn-danger" eliminar-indicador="{{indicador.id}}" href="#"><i class="far fa-trash-alt"></i> Eliminar</a>
-		  <a role="button" class="btn btn-secondary" href="#"><i class="far fa-question-circle"></i> Ayuda</a>
+		<div class="btn-group float-right" role="group">
+			<a href="{% url 'indicador' %}?agregar&indicador={{indicador.id}}" role="button" class="btn btn-info"><i class="fas fa-edit"></i> Editar</a>
+			<a role="button" class="btn btn-warning" eliminar-indicador="{{indicador.id}}" href="#"><i class="far fa-trash-alt"></i> Eliminar</a>
+			<a role="button" class="btn btn-secondary" href="#"><i class="far fa-question-circle"></i> Ayuda</a>
 		</div>
 	</div>
 </form>

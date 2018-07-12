@@ -159,7 +159,9 @@ $(document).ready(function(){
 	$("#id_responsable_consolidacion").chosen({width: "100%"}); 
 	$("#id_responsable_analisis_seguimiento").chosen({width: "100%"}); 
 	$("#id_responsable_decisiones").chosen({width: "100%"}); 
-	
+	$("#id_nombre_indicador").chosen({width: "100%"}); 
+	$('#id_nombre_indicador').trigger("chosen:updated");
+
 	$('[data-toggle="tooltip"]').tooltip(); 
 
 	$('#id_nomenclaruta_respuesta').val('TDE');
@@ -183,12 +185,15 @@ $(document).ready(function(){
 
 });
 
+
 function initIndicador(){
 	{% for n in indicador.tipo_indicador %}
 		$("#id_tipo_indicador option[value='{{n.0}}']").prop('selected', true);
 	{% endfor %}
 	$('#id_consecutivo').val('{{indicador.consecutivo}}');
-	$('#id_nombre_identificador').val('{{indicador.nombre_identificador}}');
+	// $('#id_nombre_identificador').val('{{indicador.nombre_identificador}}');
+
+	$('#id_nombre_indicador').val('{{indicador.nombre_indicador.id}}');
 	$('#id_objetivo').val('{{indicador.objetivo|escapejs}}');
 	$('#id_producto_mide').val('{{indicador.producto_mide|escapejs}}');
 	$('#id_tipo_medicion').val('{{indicador.tipo_medicion}}');
