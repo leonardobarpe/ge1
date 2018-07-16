@@ -2,6 +2,11 @@
 {% load static %}
 {% block title %}Ver Indicadores{% endblock title %}
 
+{% block extra_header %}
+	<script src="{% static 'librerias/chosen_v1.8.5/chosen.jquery.min.js' %}"></script>
+	<link href="{% static 'librerias/chosen_v1.8.5/chosen.min.css' %}" rel="stylesheet" type="text/css">
+{% endblock extra_header %}
+
 {% block contenido %}
 
 <div class="container">
@@ -9,6 +14,46 @@
 		<div class="card-header bg-light">
 			<span class="font-weight-bold"><i class="fas fa-tachometer-alt"></i> | Indicadores</span>
 			<span class="float-right"><a href="{% url 'indicador' %}?agregar" class="btn btn-success btn-sm" data-toggle="tooltip" data-placement="top" title="Nuevo indicador"><i class="fas fa-plus-circle"></i> Crear</a></span>
+		</div>
+		<div class="col-12">
+			<form action="{{request.get_full_path}}" method="POST" enctype="multipart/form-data">
+				{% csrf_token %}
+				<div class="form-row">
+					<div class="col-5 form-inline">
+						<label class="col-sm-5 col-form-label" for="codigo_indicador">Código Indicador</label>
+						{#<input class="col-sm-7 form-control form-control-sm" type="number" name="codigo_indicador">#}
+						{{ formulario.codigo_indicador }}
+					</div>
+					<div class="col-7 form-inline">
+						<label class="col-sm-3 col-form-label" for="nombre_indicador">Nombre</label>
+						<span class="col-sm-9">
+							{% comment %}
+							<select class="form-control form-control-sm" id="nombre_indicador">
+								{% for i in indicadores %}
+									<option value="{{ i.id }}">{{ i.nombre_indicador.nombre }}</option>
+								{% endfor %}
+							</select>
+							{% endcomment %}
+							{{ formulario.nombre_indicador }}
+						</span>
+					</div>
+				</div>
+				<div class="form-row">
+					<div class="col-5 form-inline">
+						<label class="col-sm-5 col-form-label" for="tipo_proceso">Tipo de Proceso</label>
+						{#<input class="col-sm-7 form-control form-control-sm" type="text" name="tipo_proceso">#}
+						{{ formulario.tipo_proceso }}
+					</div>
+					<div class="col-5 form-inline">
+						<label class="col-sm-4 col-form-label" for="ciclo">Ciclo</label>
+						{#<input class="col-sm-8 form-control form-control-sm" type="text" name="ciclo">#}
+						{{ formulario.ciclo }}
+					</div>
+					<div class="col-2 form-inline">
+						<button class="btn btn-info btn-sm"><i class="fas fa-search"></i> Consultar</button>
+					</div>
+				</div>
+			</form>
 		</div>
 		<div class="card-body">
 			<div class="col-md-12">
@@ -28,7 +73,7 @@
 				        {% for i in indicadores %}
 					    	<tr>
 								<td><a href="{% url 'indicador' %}?ver&indicador={{i.id}}">{{ i.str_codigo }}</a></td>
-								<td>{{ i.nombre_identificador }}</td>
+								<td>{{ i.nombre_indicador.nombre }}</td>
 								<td>{{ i.tipo_indicador }}</td>
 								<td>{{ i.get_ambito_display }}</td>
 								<td>{{ i.get_dimension_display }}</td>
@@ -109,6 +154,8 @@
 	        }
 	    });
 	    $('[data-toggle="tooltip"]').tooltip();
+
+	    $("#id_nombre_indicador").chosen({width: "100%"}); 
 	});
 
 	var id_indicador = 0;

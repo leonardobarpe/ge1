@@ -15,7 +15,7 @@
 			</div>
 			
 			<div class="form-group col-md-3">
-			    <label for="id_tipoIndicador">TIPO INDICADOR</label>
+			    <label for="id_tipoIndicador">TIPO INDICADOR <i class="fas fa-caret-down"></i></label>
 	    		{{ formulario.tipo_indicador }}
 		  	</div>
 
@@ -78,7 +78,7 @@
 
 		<div class="row">
 			<div class="form-group col-md-3">
-				<label for="id_noratividad">NORMATIVIDAD APLICABLE</label>
+				<label for="id_noratividad">NORMATIVIDAD APLICABLE <i class="fas fa-caret-down"></i></label>
 				{{ formulario.normatividad }}
 			</div>
 			
@@ -126,7 +126,7 @@
 			<div class="col-md-12">
 				<div class="form-group">
 					<label><b>Nombre indicador:</b></label>
-					<input type="text" id="nombre_indicador" name="nombre_indicador" class="form-control">
+					<textarea id="nombre_indicador" name="nombre_indicador" class="form-control" rows="2" maxlength="300"></textarea>
 				</div>
 			</div>
 		</div>
@@ -164,12 +164,16 @@
 		            }else{
 		            	alert(respuesta.mensaje);
 		            	$('#modal_nombre_indicador').modal('hide');
-		            	$('#id_nombre_indicador').append($('<option>', {
-						    value: respuesta.id_indicador,
-						    text: nombre_indicador,
-						    selected: "selected"
-						}));
+		            	if(respuesta.mensaje != 'El nombre ya existe.')
+			            	$('#id_nombre_indicador').append($('<option>', {
+							    value: respuesta.id_indicador,
+							    text: nombre_indicador,
+							    selected: "selected"
+							}));
+			            else
+			            	$('#id_nombre_indicador').val(respuesta.id_indicador);
 						$('#id_nombre_indicador').trigger("chosen:updated");
+						$('#nombre_indicador').val("");
 		            }
 		        }
 		    })

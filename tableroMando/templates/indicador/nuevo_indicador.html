@@ -26,7 +26,9 @@
 	  <ol class="breadcrumb">
 		<li class="breadcrumb-item"><a href="{% url 'indicador' %}?listar_i">Indicadores</a></li>
 		<li class="breadcrumb-item active" aria-current="page">{% if indicador %}Indiacador: {{indicador.str_codigo }}{% else %}Nuevo indicador{% endif %}</li>
-		<li class="breadcrumb-item"><a href="{% url 'programacion' %}?ver_base&i={{indicador.pk}}">Programación</a></li>
+		{% if indicador %}
+			<li class="breadcrumb-item"><a href="{% url 'programacion' %}?ver_base&i={{indicador.pk}}">Programación</a></li>
+		{% endif %}
 	  </ol>
 	</nav>
 </div>
@@ -216,6 +218,7 @@ function initIndicador(){
 	else
 		$('#id_recurrencia').val(1);
 
+	$('#id_nombre_indicador').trigger("chosen:updated");
 	$('#id_tipo_indicador').trigger("chosen:updated");
 	$('#id_normatividad').trigger("chosen:updated");
 	$('#id_responsable').trigger("chosen:updated");

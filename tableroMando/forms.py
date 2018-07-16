@@ -12,12 +12,10 @@ class IndicadorFormulario(forms.ModelForm):
 			'rango_final',
 			# 'tipo',
 			# 'usuario_registro',
-			'nombre_identificador', #eliminar
 			)
 		fields = (
 			'tipo_indicador',
 			'consecutivo',
-			# 'nombre_identificador', #eliminar
 			'nombre_indicador',
 			'objetivo',
 			'producto_mide',
@@ -36,7 +34,6 @@ class IndicadorFormulario(forms.ModelForm):
 		widgets = {
             'normatividad': forms.SelectMultiple(attrs={'class': 'form-control','multiple':'','data-placeholder':'Seleccione algunas opciones'}),
             'tipo_indicador': forms.SelectMultiple(attrs={'class': 'form-control','multiple':'','data-placeholder':'Seleccione algunas opciones'}),
-            # 'nombre_indicador': forms.Select(attrs={'class': 'form-control'}, initial={'0': 'Initial headline'}),
         }
 
 	# Constructor que asigna form-control a todos los elemtos del formulario
@@ -125,4 +122,27 @@ class ArmonizacionForm(forms.ModelForm):
 			visible.field.widget.attrs['class'] = 'form-control select-chossen'
 
 
+class FiltrosIndicadoresForm(forms.Form):
+
+	def __init__(self, *args, **kwargs):
+		super(FiltrosIndicadoresForm, self).__init__(*args, **kwargs)
+		# formulario
+		self.fields['codigo_indicador'] = forms.IntegerField(required=False)
+		choices_n = [(0, 'Ninguno'),]
+		choices_n.extend([(i.id, i.nombre_indicador.nombre) for i in Indicador.objects.filter(estado=True)])
+		self.fields['nombre_indicador'] = forms.ChoiceField(choices=choices_n, required=False)
+
+		choices_t = [(0, 'Ninguno'),]
+		choices_t.extend(Indicador.TIPO_INDICADOR_OPCIONES)
+		self.fields['tipo_proceso'] = forms.ChoiceField(choices=choices_t, required=False)
+
+		choices_c = [(0, 'Ninguno'),]
+		choices_c.extend(Indicador.CICLO_OPCIONES)
+		self.fields['ciclo'] = forms.ChoiceField(choices=choices_c, required=False)
 		
+		#atributos
+		self.fields['codigo_indicador'].widget.attrs['class'] = 'col-sm-7 form-control form-control-sm'
+		self.fields['codigo_indicador'].widget.attrs['placeholder'] ='Digita el código'
+		self.fields['nombre_indicador'].widget.attrs['class'] = 'col-sm-7 form-control form-control-sm'
+		self.fields['tipo_proceso'].widget.attrs['class'] = 'col-sm-7 form-control form-control-sm'
+		self.fields['ciclo'].widget.attrs['class'] = 'col-sm-8 form-control form-control-sm'

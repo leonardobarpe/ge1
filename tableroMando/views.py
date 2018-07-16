@@ -75,7 +75,7 @@ class ConfiguracionIndicador(View):
 			else:
 				indicador.tipo_indicador = formulario.cleaned_data.get('tipo_indicador')
 				indicador.consecutivo = formulario.cleaned_data.get('consecutivo')
-				indicador.nombre_identificador = formulario.cleaned_data.get('nombre_identificador')
+				indicador.nombre_indicador = formulario.cleaned_data.get('nombre_indicador')
 				indicador.objetivo = formulario.cleaned_data.get('objetivo')
 				indicador.producto_mide = formulario.cleaned_data.get('producto_mide')
 				indicador.ciclo = formulario.cleaned_data.get('ciclo')
@@ -86,6 +86,7 @@ class ConfiguracionIndicador(View):
 				indicador.normatividad = formulario.cleaned_data.get('normatividad')
 				indicador.limite_reporte = formulario.cleaned_data.get('limite_reporte')
 				indicador.fecha_actualizacion = formulario.cleaned_data.get('fecha_actualizacion')
+				# indicador.nombre_identificador = formulario.cleaned_data.get('nombre_identificador')
 				# indicador.version = formulario.cleaned_data.get('version')
 				# indicador.tipo_medicion = formulario.cleaned_data.get('tipo_medicion')
 				# indicador.recurrencia = formulario.cleaned_data.get('recurrencia')
@@ -119,6 +120,24 @@ class ConfiguracionIndicador(View):
 
 	def listar_indicadores(self, request):
 		indicadores = Indicador.objects.filter(estado=True)
+		formulario = FiltrosIndicadoresForm(request.POST or None)
+		if formulario.is_valid():
+			codigo_indicador = formulario.cleaned_data.get('codigo_indicador')
+			nombre_indicador = formulario.cleaned_data.get('nombre_indicador')
+			tipo_proceso = formulario.cleaned_data.get('tipo_proceso')
+			ciclo = formulario.cleaned_data.get('ciclo')
+			if(codigo_indicador is not None):
+				print("ENTRO CODIGO %s" % codigo_indicador)
+				indicadores = indicadores.filter(consecutivo=codigo_indicador)
+			if(nombre_indicador != '0'):
+				print("ENTRO NOMBRE %s" % nombre_indicador)
+				indicadores = indicadores.filter(nombre_indicador__pk=int(nombre_indicador))
+			if(tipo_proceso != '0'):
+				print("ENTRO TP %s" % tipo_proceso)
+				indicadores = indicadores.filter(tipo_indicador=str(tipo_proceso))
+			if(ciclo != "0"):
+				print("ENTRO CICLO %s" % ciclo)
+				indicadores = indicadores.filter(ciclo=str(ciclo))
 		return render(request, self.TEMPLATE_LISTAR, locals())
 
 
@@ -172,7 +191,7 @@ class ConfiguracionIndicador(View):
 		respuesta = {}
 		if request.is_ajax():
 			try:
-				nind = NombreIndicador.objects.get(nombre=request.POST['nombre_indicador'])
+				nind = NombreIndicador.objects.get(nombre__iexact=request.POST['nombre_indicador'])
 			except NombreIndicador.DoesNotExist:
 				nind = None
 				pass
@@ -181,7 +200,7 @@ class ConfiguracionIndicador(View):
 				item.nombre = request.POST['nombre_indicador']
 				item.save()
 				respuesta['id_indicador'] = item.id
-				respuesta['mensaje'] = (u'Se han almacenado.')
+				respuesta['mensaje'] = (u'Se ha almacenado.')
 			else:
 				respuesta['id_indicador'] = nind.id
 				respuesta['mensaje'] = (u'El nombre ya existe.')
@@ -212,6 +231,9 @@ class ConfiguracionIndicador(View):
 	def post(self, request):
 		if self.ACCION_AGREGAR in request.GET:
 			return self.agregar_indicador(request)
+
+		if self.ACCION_LISTAR in request.GET:
+			return self.listar_indicadores(request)
 
 		if self.ACCION_AGREGAR_MEDICION in request.GET:
 			return self.agregar_medicion(request)
